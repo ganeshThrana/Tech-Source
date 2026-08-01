@@ -1,767 +1,258 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QA Forge — Creativity it's an peak!</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<title>Tech Source | Creativity at it's peak!</title>
 <link rel="stylesheet" href="main.css">
 </head>
 <body>
 
-<!-- ============ ANIMATED BACKGROUND ============ -->
-<div class="bg-anim" aria-hidden="true">
-  <span class="circle c1"></span>
-  <span class="circle c2"></span>
-  <span class="circle c3"></span>
-  <span class="circle c4"></span>
-  <div class="grid-overlay"></div>
-</div>
-
-<!-- ============ LOADER ============ -->
-<div id="loader" class="loader">
-  <div class="loader-logo">
-    <i class="fa-solid fa-bug"></i>
-  </div>
-  <p class="loader-text">Booting QA Forge<span class="dots"><span>.</span><span>.</span><span>.</span></span></p>
-</div>
-
-<!-- ============ TOP NAVBAR ============ -->
+<!-- ===================== TOP BAR ===================== -->
 <header class="topbar">
-  <button id="sidebarToggle" class="icon-btn" title="Toggle Sidebar" aria-label="Toggle Sidebar">
-    <i class="fa-solid fa-bars"></i>
-  </button>
+  <div class="clock" id="clock">--:--:--</div>
 
   <div class="brand">
-    <div class="logo" id="rotatingLogo">
-      <i class="fa-solid fa-vial-circle-check"></i>
-    </div>
+    <svg class="logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <circle class="logo-ring" cx="60" cy="60" r="46" />
+      <circle class="logo-dot d1" cx="94" cy="34" r="3" />
+      <circle class="logo-dot d2" cx="102" cy="46" r="2.4" />
+      <circle class="logo-dot d3" cx="88" cy="24" r="2" />
+      <text x="34" y="76" class="logo-letters">TS</text>
+    </svg>
     <div class="brand-text">
-      <h1>QA Forge</h1>
-      <p class="slogan" id="slogan">Creativity it's an peak!</p>
+      <h1>Tech <span>Source</span></h1>
+      <p class="slogan">Creativity at it's peak!</p>
     </div>
   </div>
 
-  <div class="search-wrap">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <input type="text" id="globalSearch" placeholder="Search topics, MCQs, notes...">
-  </div>
-
-  <div class="topbar-actions">
-    <button class="icon-btn" id="notifBtn" title="Notifications" aria-label="Notifications">
-      <i class="fa-solid fa-bell"></i>
-      <span class="pulse-dot"></span>
-    </button>
-    <button class="icon-btn" id="themeToggle" title="Toggle Dark / Light Mode" aria-label="Toggle theme">
-      <i class="fa-solid fa-moon"></i>
-    </button>
-    <button class="icon-btn" id="chatToggleTop" title="AI Study Assistant" aria-label="Open chat">
-      <i class="fa-solid fa-message"></i>
-    </button>
-    <div class="admin-profile">
-      <img src="https://api.dicebear.com/7.x/initials/svg?seed=QA%20Admin&backgroundColor=2f80ed,27ae60" alt="Admin avatar">
-      <div class="admin-meta">
-        <strong>Admin</strong>
-        <span>QA Lead</span>
-      </div>
-    </div>
-  </div>
+  <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark and light mode">
+    <span class="toggle-icon">🌙</span> <span class="toggle-label">Dark Mode</span>
+  </button>
 </header>
 
-<!-- Notification Panel -->
-<div class="notif-panel" id="notifPanel">
-  <h3>Notifications</h3>
-  <ul>
-    <li><i class="fa-solid fa-circle-check" style="color:var(--green-500)"></i> New Playwright notes added</li>
-    <li><i class="fa-solid fa-triangle-exclamation" style="color:#f2994a"></i> 3 MCQs left in today's practice</li>
-    <li><i class="fa-solid fa-robot" style="color:var(--blue-500)"></i> AI Assistant learned 2 new answers</li>
-    <li><i class="fa-solid fa-book" style="color:var(--green-500)"></i> ISTQB syllabus updated</li>
-  </ul>
-</div>
+<!-- ===================== APP BODY ===================== -->
+<div class="app-body">
 
-<div class="app-shell">
-
-  <!-- ============ SIDEBAR NAVIGATION ============ -->
-  <aside class="sidebar" id="sidebar">
-    <nav class="side-nav" id="sideNav">
-
-      <p class="nav-label">Overview</p>
-      <button class="nav-btn active" data-target="dashboard"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></button>
-
-      <p class="nav-label">Core Testing</p>
-      <button class="nav-btn" data-target="manual-testing"><i class="fa-solid fa-clipboard-check"></i><span>Manual Testing</span></button>
-      <button class="nav-btn" data-target="automation-testing"><i class="fa-solid fa-robot"></i><span>Automation Testing</span></button>
-
-      <p class="nav-label">Languages &amp; Tools</p>
-      <button class="nav-btn" data-target="java"><i class="fa-brands fa-java"></i><span>Java</span></button>
-      <button class="nav-btn" data-target="selenium"><i class="fa-solid fa-circle-nodes"></i><span>Selenium</span></button>
-      <button class="nav-btn" data-target="playwright"><i class="fa-solid fa-masks-theater"></i><span>Playwright</span></button>
-      <button class="nav-btn" data-target="cypress"><i class="fa-solid fa-tree"></i><span>Cypress</span></button>
-      <button class="nav-btn" data-target="api-testing"><i class="fa-solid fa-plug"></i><span>API Testing</span></button>
-      <button class="nav-btn" data-target="sql"><i class="fa-solid fa-database"></i><span>SQL</span></button>
-      <button class="nav-btn" data-target="git"><i class="fa-brands fa-git-alt"></i><span>Git</span></button>
-      <button class="nav-btn" data-target="jenkins"><i class="fa-brands fa-jenkins"></i><span>Jenkins</span></button>
-      <button class="nav-btn" data-target="cicd"><i class="fa-solid fa-infinity"></i><span>CI/CD</span></button>
-
-      <p class="nav-label">Process</p>
-      <button class="nav-btn" data-target="agile"><i class="fa-solid fa-people-arrows"></i><span>Agile</span></button>
-      <button class="nav-btn" data-target="jira"><i class="fa-brands fa-jira"></i><span>Jira</span></button>
-
-      <p class="nav-label">Practice</p>
-      <button class="nav-btn" data-target="interview-questions"><i class="fa-solid fa-comments"></i><span>Interview Questions</span></button>
-      <button class="nav-btn" data-target="mcq"><i class="fa-solid fa-list-check"></i><span>MCQ Practice</span></button>
-      <button class="nav-btn" data-target="notes"><i class="fa-solid fa-note-sticky"></i><span>Daily Notes</span></button>
-      <button class="nav-btn" data-target="pdfs"><i class="fa-solid fa-file-pdf"></i><span>PDFs</span></button>
-      <button class="nav-btn" data-target="ai-chat"><i class="fa-solid fa-wand-magic-sparkles"></i><span>AI Chat</span></button>
-      <button class="nav-btn" data-target="settings"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
-
-      <p class="nav-label">More · Edit Freely</p>
-      <!-- Extra empty buttons for future use -- edit label/target/icon as needed -->
-      <button class="nav-btn" data-target="blank-21"><i class="fa-regular fa-square"></i><span>Button 21</span></button>
-      <button class="nav-btn" data-target="blank-22"><i class="fa-regular fa-square"></i><span>Button 22</span></button>
-      <button class="nav-btn" data-target="blank-23"><i class="fa-regular fa-square"></i><span>Button 23</span></button>
-      <button class="nav-btn" data-target="blank-24"><i class="fa-regular fa-square"></i><span>Button 24</span></button>
-      <button class="nav-btn" data-target="blank-25"><i class="fa-regular fa-square"></i><span>Button 25</span></button>
-      <button class="nav-btn" data-target="blank-26"><i class="fa-regular fa-square"></i><span>Button 26</span></button>
-      <button class="nav-btn" data-target="blank-27"><i class="fa-regular fa-square"></i><span>Button 27</span></button>
-      <button class="nav-btn" data-target="blank-28"><i class="fa-regular fa-square"></i><span>Button 28</span></button>
-      <button class="nav-btn" data-target="blank-29"><i class="fa-regular fa-square"></i><span>Button 29</span></button>
-      <button class="nav-btn" data-target="blank-30"><i class="fa-regular fa-square"></i><span>Button 30</span></button>
-    </nav>
-
-    <div class="sidebar-tools">
-      <p class="nav-label">Learning Tools</p>
-      <a class="tool-link" href="https://chatgpt.com/" target="_blank" rel="noopener"><i class="fa-solid fa-comments"></i> ChatGPT</a>
-      <a class="tool-link" href="https://claude.ai/" target="_blank" rel="noopener"><i class="fa-solid fa-sparkles"></i> Claude</a>
-      <a class="tool-link" href="https://onecompiler.com/java" target="_blank" rel="noopener"><i class="fa-brands fa-java"></i> OneCompiler Java</a>
-      <a class="tool-link" href="https://www.w3schools.com/" target="_blank" rel="noopener"><i class="fa-solid fa-code"></i> W3Schools</a>
-      <a class="tool-link" href="https://academy.selfmade.ninja/login" target="_blank" rel="noopener"><i class="fa-solid fa-graduation-cap"></i> SelfMade Ninja</a>
+  <!-- SIDEBAR NAVIGATION -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-search">
+      <input type="text" id="navSearch" placeholder="🔍 Search a topic...">
     </div>
-  </aside>
+    <div class="nav-group-title">📘 Learning Topics</div>
+<button class="nav-btn" data-target="agile">Agile</button>
+<button class="nav-btn" data-target="jira">JIRA</button>
+<button class="nav-btn" data-target="istqb">ISTQB</button>
+<div class="nav-item-parent">
+  <button class="nav-btn parent-btn" data-toggle="sub-java" data-target="java">JAVA – Updated <span class="arrow">▾</span></button>
+  <div class="sub-nav" id="sub-java">
+    <button class="nav-btn sub-btn" data-target="java-core-java">Core Java</button>
+    <button class="nav-btn sub-btn" data-target="java-programming">Programming</button>
+    <button class="nav-btn sub-btn" data-target="java-interview-programs">Interview Programs</button>
+    <button class="nav-btn sub-btn" data-target="java-pojo">POJO</button>
+    <button class="nav-btn sub-btn" data-target="java-java-theory">Java Theory</button>
+  </div>
+</div>
+<div class="nav-item-parent">
+  <button class="nav-btn parent-btn" data-toggle="sub-selenium" data-target="selenium">Selenium <span class="arrow">▾</span></button>
+  <div class="sub-nav" id="sub-selenium">
+    <button class="nav-btn sub-btn" data-target="selenium-basics">Basics</button>
+    <button class="nav-btn sub-btn" data-target="selenium-webdriver-methods">WebDriver Methods</button>
+    <button class="nav-btn sub-btn" data-target="selenium-webelement-methods">WebElement Methods</button>
+    <button class="nav-btn sub-btn" data-target="selenium-locators">Locators</button>
+    <button class="nav-btn sub-btn" data-target="selenium-xpath">XPath</button>
+    <button class="nav-btn sub-btn" data-target="selenium-css-selector">CSS Selector</button>
+    <button class="nav-btn sub-btn" data-target="selenium-checkbox---radio-button">CheckBox & Radio Button</button>
+    <button class="nav-btn sub-btn" data-target="selenium-select-class">Select Class</button>
+    <button class="nav-btn sub-btn" data-target="selenium-actions-class">Actions Class</button>
+    <button class="nav-btn sub-btn" data-target="selenium-javascript-executor">JavaScript Executor</button>
+    <button class="nav-btn sub-btn" data-target="selenium-waits">Waits</button>
+    <button class="nav-btn sub-btn" data-target="selenium-frames">Frames</button>
+    <button class="nav-btn sub-btn" data-target="selenium-alerts">Alerts</button>
+    <button class="nav-btn sub-btn" data-target="selenium-windows">Windows</button>
+    <button class="nav-btn sub-btn" data-target="selenium-web-tables">Web Tables</button>
+    <button class="nav-btn sub-btn" data-target="selenium-calendar">Calendar</button>
+    <button class="nav-btn sub-btn" data-target="selenium-file-upload---download">File Upload & Download</button>
+    <button class="nav-btn sub-btn" data-target="selenium-screenshot">Screenshot</button>
+    <button class="nav-btn sub-btn" data-target="selenium-testng">TestNG</button>
+  </div>
+</div>
+<button class="nav-btn" data-target="maven">Maven</button>
+<button class="nav-btn" data-target="git-github">Git & GitHub</button>
+<button class="nav-btn" data-target="sql">SQL</button>
+<button class="nav-btn" data-target="api-testing">API Testing</button>
+<button class="nav-btn" data-target="postman">Postman</button>
+<button class="nav-btn" data-target="playwright">Playwright</button>
+<button class="nav-btn" data-target="cucumber">Cucumber (BDD)</button>
+<button class="nav-btn" data-target="jenkins">Jenkins (CI/CD)</button>
+<button class="nav-btn" data-target="docker">Docker</button>
+<button class="nav-btn" data-target="linux">Linux Commands</button>
+<button class="nav-btn" data-target="framework-dev">Framework Development</button>
+<button class="nav-btn" data-target="design-patterns">Design Patterns</button>
+<button class="nav-btn" data-target="excel-poi">Excel (Apache POI)</button>
+<div class="nav-group-title">💼 Interview Tips / Scenarios</div>
+<button class="nav-btn" data-target="int-project">Project</button>
+<button class="nav-btn" data-target="int-testing-concepts">Testing Concepts</button>
+<button class="nav-btn" data-target="int-framework">Framework</button>
+<button class="nav-btn" data-target="int-automation">Automation</button>
+<button class="nav-btn" data-target="int-agile-sprint">Agile Sprint</button>
+<button class="nav-btn" data-target="int-github">GitHub</button>
+<button class="nav-btn" data-target="int-ci-cd">CI/CD</button>
+<button class="nav-btn" data-target="int-data-driven-framework">Data Driven Framework</button>
+<button class="nav-btn" data-target="int-defect-management">Defect Management</button>
+<button class="nav-btn" data-target="int-api-testing">API Testing</button>
+<button class="nav-btn" data-target="int-cloud-testing">Cloud Testing</button>
+<button class="nav-btn" data-target="int-mobile-testing">Mobile Testing</button>
+<button class="nav-btn" data-target="int-performance-testing">Performance Testing</button>
+<button class="nav-btn" data-target="int-security-testing">Security Testing</button>
+<button class="nav-btn" data-target="int-team-collaboration">Team Collaboration</button>
+<button class="nav-btn" data-target="int-client-communication">Client Communication</button>
+<button class="nav-btn" data-target="int-debugging-scenarios">Debugging Scenarios</button>
+<button class="nav-btn" data-target="int-real-time-selenium-scenarios">Real-Time Selenium Scenarios</button>
+<button class="nav-btn" data-target="int-playwright-scenarios">Playwright Scenarios</button>
+<button class="nav-btn" data-target="int-api-scenarios">API Scenarios</button>
+<button class="nav-btn" data-target="int-hr-interview">HR Interview</button>
+  </nav>
 
-  <!-- ============ MAIN CONTENT ============ -->
-  <main class="content" id="content">
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
 
-    <!-- ================= DASHBOARD ================= -->
-    <section class="page active" id="dashboard">
-
-      <div class="hero glass">
-        <div class="hero-text">
-          <p class="eyebrow">Manual + Automation Learning Hub</p>
-          <h2>Master QA, one <span class="grad-text">assertion</span> at a time.</h2>
-          <p class="hero-sub">Track courses, practice MCQs, read interview questions and chat with your AI study assistant — all in one dashboard.</p>
-          <div class="hero-cta">
-            <button class="btn btn-primary ripple" data-target="mcq">Start MCQ Practice <i class="fa-solid fa-arrow-right"></i></button>
-            <button class="btn btn-ghost ripple" data-target="automation-testing">Explore Automation <i class="fa-solid fa-robot"></i></button>
-          </div>
-        </div>
-        <div class="hero-terminal">
-          <div class="terminal-bar">
-            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-            <span class="terminal-title">TestRunner.java</span>
-          </div>
-          <pre class="terminal-body"><code id="typingCode"></code><span class="cursor">|</span></pre>
-          <div class="terminal-result" id="terminalResult">
-            <i class="fa-solid fa-circle-check"></i> 3 passed · 0 failed
-          </div>
-        </div>
+    <section class="content-panel">
+      <div class="panel-header">
+        <h2>Learning Panel</h2>
+        <span class="badge" id="activeTopicBadge">Select a topic from the left menu</span>
       </div>
-
-      <div class="stats-grid">
-        <div class="stat-card glass fade-in">
-          <i class="fa-solid fa-book-open"></i>
-          <div><h3 data-count="14">0</h3><p>Total Courses</p></div>
-        </div>
-        <div class="stat-card glass fade-in">
-          <i class="fa-solid fa-file-pdf"></i>
-          <div><h3 data-count="86">0</h3><p>PDF Resources</p></div>
-        </div>
-        <div class="stat-card glass fade-in">
-          <i class="fa-solid fa-circle-question"></i>
-          <div><h3 data-count="40">0</h3><p>Interview Questions</p></div>
-        </div>
-        <div class="stat-card glass fade-in">
-          <i class="fa-solid fa-list-check"></i>
-          <div><h3 data-count="20">0</h3><p>MCQs Available</p></div>
-        </div>
-        <div class="stat-card glass fade-in">
-          <i class="fa-solid fa-chart-line"></i>
-          <div><h3 data-count="0" id="practiceCompleted">0</h3><p>Practice Completed</p></div>
-        </div>
-        <div class="stat-card glass fade-in">
-          <i class="fa-solid fa-robot"></i>
-          <div><h3>Online</h3><p>AI Assistant</p></div>
-        </div>
-      </div>
-
-      <div class="dash-row">
-        <div class="panel glass fade-in">
-          <h3><i class="fa-solid fa-chart-simple"></i> Daily Progress</h3>
-          <div class="progress-item">
-            <span>Manual Testing</span>
-            <div class="progress-bar"><div class="progress-fill" style="--val:80%"></div></div>
-          </div>
-          <div class="progress-item">
-            <span>Selenium</span>
-            <div class="progress-bar"><div class="progress-fill" style="--val:65%"></div></div>
-          </div>
-          <div class="progress-item">
-            <span>Playwright</span>
-            <div class="progress-bar"><div class="progress-fill" style="--val:45%"></div></div>
-          </div>
-          <div class="progress-item">
-            <span>Java</span>
-            <div class="progress-bar"><div class="progress-fill" style="--val:70%"></div></div>
-          </div>
-          <div class="progress-item">
-            <span>SQL</span>
-            <div class="progress-bar"><div class="progress-fill" style="--val:55%"></div></div>
-          </div>
-        </div>
-
-        <div class="panel glass fade-in">
-          <h3><i class="fa-solid fa-note-sticky"></i> Latest Notes</h3>
-          <ul class="mini-list" id="latestNotesList">
-            <li><strong>Playwright locators</strong><span>get_by_role vs CSS — pick semantic first.</span></li>
-            <li><strong>Selenium waits</strong><span>Prefer explicit WebDriverWait over Thread.sleep.</span></li>
-            <li><strong>Agile ceremonies</strong><span>Standup, planning, review, retro — recap.</span></li>
-          </ul>
-          <h3 style="margin-top:18px"><i class="fa-solid fa-forward"></i> Upcoming Topics</h3>
-          <div class="chip-row">
-            <span class="chip">Cypress Custom Commands</span>
-            <span class="chip">API Chaining</span>
-            <span class="chip">Jenkins Pipelines</span>
-          </div>
-        </div>
-      </div>
-
-      <h3 class="section-title"><i class="fa-solid fa-layer-group"></i> Course Sections</h3>
-      <div class="card-grid" id="courseCards">
-        <!-- injected by JS from courseData, also works with plain HTML fallback below -->
-      </div>
-    </section>
-
-    <!-- ================= MANUAL TESTING ================= -->
-    <section class="page" id="manual-testing">
-      <h2 class="page-title"><i class="fa-solid fa-clipboard-check"></i> Manual Testing</h2>
-      <p class="page-sub">Foundations every tester needs before touching a framework.</p>
-
-      <div class="two-col">
-        <div class="panel glass">
-          <h3>Key Concepts</h3>
-          <ul class="concept-list">
-            <li>SDLC vs STLC — where testing fits in the software lifecycle</li>
-            <li>Test case design: equivalence partitioning, boundary value analysis, decision tables</li>
-            <li>Levels of testing — Unit, Integration, System, Acceptance</li>
-            <li>Types — Functional, Regression, Smoke, Sanity, Exploratory, UAT</li>
-            <li>Severity vs Priority in bug reports</li>
-            <li>Writing a clear bug report: steps, expected, actual, evidence</li>
-            <li>Test plan vs test strategy vs test case</li>
-            <li>Traceability matrix — mapping requirements to test cases</li>
-          </ul>
-        </div>
-        <div class="panel glass">
-          <h3>Bug Report Template</h3>
-          <pre class="code-block"><code>Title: Login button unresponsive on Safari 17
-Environment: macOS 14, Safari 17.4
-Steps to Reproduce:
- 1. Open login page
- 2. Enter valid credentials
- 3. Click "Login"
-Expected: User redirected to dashboard
-Actual: Button click has no effect, no console error
-Severity: High   Priority: P1
-Attachments: screen-recording.mp4</code></pre>
-          <h3 style="margin-top:16px">Reference Links</h3>
-          <div class="chip-row">
-            <a class="chip chip-link" href="https://www.w3schools.com/" target="_blank" rel="noopener">W3Schools</a>
-            <a class="chip chip-link" href="https://academy.selfmade.ninja/login" target="_blank" rel="noopener">SelfMade Ninja</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= AUTOMATION TESTING ================= -->
-    <section class="page" id="automation-testing">
-      <h2 class="page-title"><i class="fa-solid fa-robot"></i> Automation Testing</h2>
-      <p class="page-sub">Turning repeatable manual checks into scripted, reliable regression suites.</p>
-
-      <div class="two-col">
-        <div class="panel glass">
-          <h3>Why Automate</h3>
-          <ul class="concept-list">
-            <li>Repeated regression runs, faster feedback in CI/CD</li>
-            <li>Consistent execution — removes human error on repetitive steps</li>
-            <li>Good candidates: stable, repetitive, data-driven, high-risk flows</li>
-            <li>Bad candidates: one-off tests, UI still changing daily, exploratory checks</li>
-            <li>Framework layers: driver/config, page objects, test data, reporting</li>
-            <li>Automation pyramid: many unit tests, fewer API tests, fewest UI tests</li>
-          </ul>
-        </div>
-        <div class="panel glass">
-          <h3>Sample Page Object (Selenium + Java)</h3>
-          <pre class="code-block"><code>public class LoginPage {
-  WebDriver driver;
-  By username = By.id("username");
-  By password = By.id("password");
-  By loginBtn = By.cssSelector("button[type=submit]");
-
-  public LoginPage(WebDriver driver) { this.driver = driver; }
-
-  public void login(String user, String pass) {
-    driver.findElement(username).sendKeys(user);
-    driver.findElement(password).sendKeys(pass);
-    driver.findElement(loginBtn).click();
-  }
-}</code></pre>
-        </div>
+      <div class="content-display" id="contentDisplay">
+        <div class="content-pane" id="agile"><h3>Agile</h3><p>will add</p></div>
+<div class="content-pane" id="jira"><h3>JIRA</h3><p>will add</p></div>
+<div class="content-pane" id="istqb"><h3>ISTQB</h3><p>will add</p></div>
+<div class="content-pane" id="java"><h3>JAVA – Updated</h3><p>will add</p></div>
+<div class="content-pane" id="java-core-java"><h3>JAVA – Updated &rsaquo; Core Java</h3><p>will add</p></div>
+<div class="content-pane" id="java-programming"><h3>JAVA – Updated &rsaquo; Programming</h3><p>will add</p></div>
+<div class="content-pane" id="java-interview-programs"><h3>JAVA – Updated &rsaquo; Interview Programs</h3><p>will add</p></div>
+<div class="content-pane" id="java-pojo"><h3>JAVA – Updated &rsaquo; POJO</h3><p>will add</p></div>
+<div class="content-pane" id="java-java-theory"><h3>JAVA – Updated &rsaquo; Java Theory</h3><p>will add</p></div>
+<div class="content-pane" id="selenium"><h3>Selenium</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-basics"><h3>Selenium &rsaquo; Basics</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-webdriver-methods"><h3>Selenium &rsaquo; WebDriver Methods</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-webelement-methods"><h3>Selenium &rsaquo; WebElement Methods</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-locators"><h3>Selenium &rsaquo; Locators</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-xpath"><h3>Selenium &rsaquo; XPath</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-css-selector"><h3>Selenium &rsaquo; CSS Selector</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-checkbox---radio-button"><h3>Selenium &rsaquo; CheckBox & Radio Button</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-select-class"><h3>Selenium &rsaquo; Select Class</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-actions-class"><h3>Selenium &rsaquo; Actions Class</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-javascript-executor"><h3>Selenium &rsaquo; JavaScript Executor</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-waits"><h3>Selenium &rsaquo; Waits</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-frames"><h3>Selenium &rsaquo; Frames</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-alerts"><h3>Selenium &rsaquo; Alerts</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-windows"><h3>Selenium &rsaquo; Windows</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-web-tables"><h3>Selenium &rsaquo; Web Tables</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-calendar"><h3>Selenium &rsaquo; Calendar</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-file-upload---download"><h3>Selenium &rsaquo; File Upload & Download</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-screenshot"><h3>Selenium &rsaquo; Screenshot</h3><p>will add</p></div>
+<div class="content-pane" id="selenium-testng"><h3>Selenium &rsaquo; TestNG</h3><p>will add</p></div>
+<div class="content-pane" id="maven"><h3>Maven</h3><p>will add</p></div>
+<div class="content-pane" id="git-github"><h3>Git & GitHub</h3><p>will add</p></div>
+<div class="content-pane" id="sql"><h3>SQL</h3><p>will add</p></div>
+<div class="content-pane" id="api-testing"><h3>API Testing</h3><p>will add</p></div>
+<div class="content-pane" id="postman"><h3>Postman</h3><p>will add</p></div>
+<div class="content-pane" id="playwright"><h3>Playwright</h3><p>will add</p></div>
+<div class="content-pane" id="cucumber"><h3>Cucumber (BDD)</h3><p>will add</p></div>
+<div class="content-pane" id="jenkins"><h3>Jenkins (CI/CD)</h3><p>will add</p></div>
+<div class="content-pane" id="docker"><h3>Docker</h3><p>will add</p></div>
+<div class="content-pane" id="linux"><h3>Linux Commands</h3><p>will add</p></div>
+<div class="content-pane" id="framework-dev"><h3>Framework Development</h3><p>will add</p></div>
+<div class="content-pane" id="design-patterns"><h3>Design Patterns</h3><p>will add</p></div>
+<div class="content-pane" id="excel-poi"><h3>Excel (Apache POI)</h3><p>will add</p></div>
+<div class="content-pane" id="int-project"><h3>Project</h3><p>will add</p></div>
+<div class="content-pane" id="int-testing-concepts"><h3>Testing Concepts</h3><p>will add</p></div>
+<div class="content-pane" id="int-framework"><h3>Framework</h3><p>will add</p></div>
+<div class="content-pane" id="int-automation"><h3>Automation</h3><p>will add</p></div>
+<div class="content-pane" id="int-agile-sprint"><h3>Agile Sprint</h3><p>will add</p></div>
+<div class="content-pane" id="int-github"><h3>GitHub</h3><p>will add</p></div>
+<div class="content-pane" id="int-ci-cd"><h3>CI/CD</h3><p>will add</p></div>
+<div class="content-pane" id="int-data-driven-framework"><h3>Data Driven Framework</h3><p>will add</p></div>
+<div class="content-pane" id="int-defect-management"><h3>Defect Management</h3><p>will add</p></div>
+<div class="content-pane" id="int-api-testing"><h3>API Testing</h3><p>will add</p></div>
+<div class="content-pane" id="int-cloud-testing"><h3>Cloud Testing</h3><p>will add</p></div>
+<div class="content-pane" id="int-mobile-testing"><h3>Mobile Testing</h3><p>will add</p></div>
+<div class="content-pane" id="int-performance-testing"><h3>Performance Testing</h3><p>will add</p></div>
+<div class="content-pane" id="int-security-testing"><h3>Security Testing</h3><p>will add</p></div>
+<div class="content-pane" id="int-team-collaboration"><h3>Team Collaboration</h3><p>will add</p></div>
+<div class="content-pane" id="int-client-communication"><h3>Client Communication</h3><p>will add</p></div>
+<div class="content-pane" id="int-debugging-scenarios"><h3>Debugging Scenarios</h3><p>will add</p></div>
+<div class="content-pane" id="int-real-time-selenium-scenarios"><h3>Real-Time Selenium Scenarios</h3><p>will add</p></div>
+<div class="content-pane" id="int-playwright-scenarios"><h3>Playwright Scenarios</h3><p>will add</p></div>
+<div class="content-pane" id="int-api-scenarios"><h3>API Scenarios</h3><p>will add</p></div>
+<div class="content-pane" id="int-hr-interview"><h3>HR Interview</h3><p>will add</p></div>
       </div>
     </section>
 
-    <!-- ================= JAVA ================= -->
-    <section class="page" id="java">
-      <h2 class="page-title"><i class="fa-brands fa-java"></i> Java</h2>
-      <p class="page-sub">The backbone language for Selenium and TestNG based frameworks.</p>
-      <div class="two-col">
-        <div class="panel glass">
-          <h3>Core Topics</h3>
-          <ul class="concept-list">
-            <li>OOP: classes, objects, inheritance, polymorphism, encapsulation, abstraction</li>
-            <li>Collections: List, Set, Map — when to use which</li>
-            <li>Exception handling: try/catch/finally, custom exceptions</li>
-            <li>String vs StringBuilder, immutability</li>
-            <li>Streams &amp; lambda expressions (Java 8+)</li>
-            <li>Access modifiers, static vs instance members</li>
-          </ul>
-        </div>
-        <div class="panel glass">
-          <h3>Try it live</h3>
-          <p>Run and edit Java snippets instantly using the embedded compiler tool.</p>
-          <pre class="code-block"><code>public class Main {
-  public static void main(String[] args) {
-    System.out.println("Creativity it's an peak!");
-  }
-}</code></pre>
-          <a class="btn btn-primary ripple" href="https://onecompiler.com/java" target="_blank" rel="noopener">
-            <i class="fa-brands fa-java"></i> Open OneCompiler Java
-          </a>
-        </div>
+    <!-- ===================== QUIZ SECTION ===================== -->
+    <section class="quiz-panel" id="quizPanel">
+      <div class="panel-header">
+        <h2>📝 Quick Quiz</h2>
+        <span class="badge">Answer, submit and see explanations</span>
+      </div>
+
+      <div id="quizContainer"></div>
+
+      <div class="quiz-actions">
+        <button id="submitQuiz" class="btn-primary">Submit Answers</button>
+        <button id="resetQuiz" class="btn-secondary">Reset Quiz</button>
+      </div>
+
+      <div id="quizResult" class="quiz-result"></div>
+    </section>
+
+    <!-- ===================== REFERENCE LINKS ===================== -->
+    <section class="links-panel">
+      <div class="panel-header">
+        <h2>🔗 Helpful References</h2>
+      </div>
+      <div class="links-grid">
+        <a href="https://chatgpt.com/" target="_blank" rel="noopener" class="link-card">
+          <span class="link-icon">💬</span> ChatGPT
+        </a>
+        <a href="https://claude.ai/" target="_blank" rel="noopener" class="link-card">
+          <span class="link-icon">🤖</span> Claude AI
+        </a>
+        <a href="https://onecompiler.com/java" target="_blank" rel="noopener" class="link-card">
+          <span class="link-icon">☕</span> OneCompiler (Java)
+        </a>
+        <a href="https://www.w3schools.com/" target="_blank" rel="noopener" class="link-card">
+          <span class="link-icon">📚</span> W3Schools
+        </a>
+        <a href="https://academy.selfmade.ninja/login" target="_blank" rel="noopener" class="link-card">
+          <span class="link-icon">🥷</span> Selfmade Ninja Academy
+        </a>
       </div>
     </section>
 
-    <!-- ================= SELENIUM ================= -->
-    <section class="page" id="selenium">
-      <h2 class="page-title"><i class="fa-solid fa-circle-nodes"></i> Selenium</h2>
-      <p class="page-sub">Cross-browser WebDriver automation for web applications.</p>
-      <div class="two-col">
-        <div class="panel glass">
-          <h3>Key Concepts</h3>
-          <ul class="concept-list">
-            <li>WebDriver architecture &amp; browser drivers</li>
-            <li>Locators: id, name, css, xpath — priority order</li>
-            <li>Waits: implicit, explicit (WebDriverWait), fluent wait</li>
-            <li>Actions class for hover, drag-drop, keyboard events</li>
-            <li>Handling alerts, frames, multiple windows</li>
-            <li>TestNG / JUnit integration &amp; parallel execution</li>
-          </ul>
-        </div>
-        <div class="panel glass">
-          <h3>Explicit Wait Example</h3>
-          <pre class="code-block"><code>WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-WebElement el = wait.until(
-    ExpectedConditions.elementToBeClickable(By.id("submit"))
-);
-el.click();</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= PLAYWRIGHT ================= -->
-    <section class="page" id="playwright">
-      <h2 class="page-title"><i class="fa-solid fa-masks-theater"></i> Playwright</h2>
-      <p class="page-sub">Modern, fast, auto-waiting browser automation from Microsoft.</p>
-      <div class="two-col">
-        <div class="panel glass">
-          <h3>Key Concepts</h3>
-          <ul class="concept-list">
-            <li>Auto-waiting — no manual sleeps needed</li>
-            <li>Locators: get_by_role, get_by_text, get_by_test_id</li>
-            <li>Built-in test runner with parallel workers</li>
-            <li>Trace viewer for debugging failed runs</li>
-            <li>Multi-browser: Chromium, Firefox, WebKit from one API</li>
-            <li>Network interception &amp; API mocking</li>
-          </ul>
-        </div>
-        <div class="panel glass">
-          <h3>Sample Test</h3>
-          <pre class="code-block"><code>import { test, expect } from '@playwright/test';
-
-test('login works', async ({ page }) => {
-  await page.goto('https://example.com/login');
-  await page.getByLabel('Username').fill('admin');
-  await page.getByLabel('Password').fill('secret');
-  await page.getByRole('button', { name: 'Login' }).click();
-  await expect(page).toHaveURL(/dashboard/);
-});</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= CYPRESS ================= -->
-    <section class="page" id="cypress">
-      <h2 class="page-title"><i class="fa-solid fa-tree"></i> Cypress</h2>
-      <p class="page-sub">Developer-friendly end-to-end testing that runs inside the browser.</p>
-      <div class="two-col">
-        <div class="panel glass">
-          <h3>Key Concepts</h3>
-          <ul class="concept-list">
-            <li>Runs directly in-browser — real-time reload &amp; time travel debugging</li>
-            <li>Automatic retries on assertions</li>
-            <li>Custom commands for reusable steps</li>
-            <li>cy.intercept for network stubbing</li>
-            <li>No native multi-tab support (by design)</li>
-          </ul>
-        </div>
-        <div class="panel glass">
-          <h3>Sample Test</h3>
-          <pre class="code-block"><code>describe('login flow', () => {
-  it('logs in successfully', () => {
-    cy.visit('/login');
-    cy.get('#username').type('admin');
-    cy.get('#password').type('secret');
-    cy.get('button[type=submit]').click();
-    cy.url().should('include', '/dashboard');
-  });
-});</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= API TESTING ================= -->
-    <section class="page" id="api-testing">
-      <h2 class="page-title"><i class="fa-solid fa-plug"></i> API Testing</h2>
-      <p class="page-sub">Verifying services at the HTTP layer — faster and more stable than UI tests.</p>
-      <div class="two-col">
-        <div class="panel glass">
-          <h3>Key Concepts</h3>
-          <ul class="concept-list">
-            <li>HTTP methods: GET, POST, PUT, PATCH, DELETE</li>
-            <li>Status codes: 2xx success, 4xx client error, 5xx server error</li>
-            <li>Request/response validation — schema, headers, body</li>
-            <li>Authentication: API keys, Bearer tokens, OAuth2</li>
-            <li>Tools: Postman, RestAssured, Playwright API testing</li>
-          </ul>
-        </div>
-        <div class="panel glass">
-          <h3>RestAssured Example</h3>
-          <pre class="code-block"><code>given()
-  .header("Content-Type", "application/json")
-.when()
-  .get("/api/users/1")
-.then()
-  .statusCode(200)
-  .body("name", equalTo("Admin"));</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= SQL ================= -->
-    <section class="page" id="sql">
-      <h2 class="page-title"><i class="fa-solid fa-database"></i> SQL</h2>
-      <p class="page-sub">Backend data validation — every QA engineer's second language.</p>
-      <div class="two-col">
-        <div class="panel glass">
-          <h3>Key Concepts</h3>
-          <ul class="concept-list">
-            <li>SELECT, WHERE, JOIN (inner/left/right), GROUP BY, HAVING</li>
-            <li>Primary key vs foreign key</li>
-            <li>Aggregate functions: COUNT, SUM, AVG, MAX, MIN</li>
-            <li>Subqueries vs joins</li>
-            <li>Using SQL to validate test data setup/teardown</li>
-          </ul>
-        </div>
-        <div class="panel glass">
-          <h3>Sample Query</h3>
-          <pre class="code-block"><code>SELECT u.id, u.name, COUNT(o.id) AS orders
-FROM users u
-LEFT JOIN orders o ON o.user_id = u.id
-GROUP BY u.id, u.name
-HAVING COUNT(o.id) > 0
-ORDER BY orders DESC;</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= GIT ================= -->
-    <section class="page" id="git">
-      <h2 class="page-title"><i class="fa-brands fa-git-alt"></i> Git</h2>
-      <p class="page-sub">Version control for test scripts and framework code.</p>
-      <div class="two-col">
-        <div class="panel glass">
-          <h3>Key Concepts</h3>
-          <ul class="concept-list">
-            <li>init, clone, add, commit, push, pull</li>
-            <li>Branching strategy: feature branches, PRs, merge vs rebase</li>
-            <li>Resolving merge conflicts</li>
-            <li>.gitignore for build artifacts &amp; secrets</li>
-            <li>Tags for release versions</li>
-          </ul>
-        </div>
-        <div class="panel glass">
-          <h3>Everyday Commands</h3>
-          <pre class="code-block"><code>git checkout -b feature/login-tests
-git add .
-git commit -m "Add login regression suite"
-git push origin feature/login-tests</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= JENKINS ================= -->
-    <section class="page" id="jenkins">
-      <h2 class="page-title"><i class="fa-brands fa-jenkins"></i> Jenkins</h2>
-      <p class="page-sub">Automation server that triggers test suites on every build.</p>
-      <div class="two-col">
-        <div class="panel glass">
-          <h3>Key Concepts</h3>
-          <ul class="concept-list">
-            <li>Freestyle jobs vs Declarative pipelines</li>
-            <li>Jenkinsfile stored in source control</li>
-            <li>Triggers: SCM polling, webhooks, scheduled (cron)</li>
-            <li>Plugins for reporting (Allure, JUnit, HTML publisher)</li>
-            <li>Parameterized builds for cross-browser runs</li>
-          </ul>
-        </div>
-        <div class="panel glass">
-          <h3>Sample Jenkinsfile</h3>
-          <pre class="code-block"><code>pipeline {
-  agent any
-  stages {
-    stage('Test') {
-      steps { sh 'mvn test' }
-    }
-  }
-  post {
-    always { junit 'target/surefire-reports/*.xml' }
-  }
-}</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= CI/CD ================= -->
-    <section class="page" id="cicd">
-      <h2 class="page-title"><i class="fa-solid fa-infinity"></i> CI/CD</h2>
-      <p class="page-sub">Continuous Integration &amp; Continuous Delivery — shipping with confidence.</p>
-      <div class="two-col">
-        <div class="panel glass">
-          <h3>Key Concepts</h3>
-          <ul class="concept-list">
-            <li>CI: merge code frequently, run automated tests on every push</li>
-            <li>CD: automatically prepare/deploy a release-ready build</li>
-            <li>Pipeline stages: build → test → package → deploy</li>
-            <li>Shift-left testing — catching bugs earlier in the pipeline</li>
-            <li>Tools: Jenkins, GitHub Actions, GitLab CI, CircleCI</li>
-          </ul>
-        </div>
-        <div class="panel glass">
-          <h3>GitHub Actions Snippet</h3>
-          <pre class="code-block"><code>name: Run Tests
-on: [push]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npx playwright test</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= AGILE ================= -->
-    <section class="page" id="agile">
-      <h2 class="page-title"><i class="fa-solid fa-people-arrows"></i> Agile</h2>
-      <p class="page-sub">The framework most QA teams plan and deliver within.</p>
-      <div class="two-col">
-        <div class="panel glass">
-          <h3>Key Concepts</h3>
-          <ul class="concept-list">
-            <li>Scrum roles: Product Owner, Scrum Master, Dev Team</li>
-            <li>Ceremonies: Sprint Planning, Daily Standup, Review, Retrospective</li>
-            <li>Artifacts: Product Backlog, Sprint Backlog, Increment</li>
-            <li>Story points &amp; velocity for estimation</li>
-            <li>Definition of Done vs Definition of Ready</li>
-          </ul>
-        </div>
-        <div class="panel glass">
-          <h3>QA in a Sprint</h3>
-          <ul class="concept-list">
-            <li>Refine acceptance criteria during backlog grooming</li>
-            <li>Write test cases alongside development, not after</li>
-            <li>Automate regression as stories close</li>
-            <li>Report bugs directly against the sprint board</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= JIRA ================= -->
-    <section class="page" id="jira">
-      <h2 class="page-title"><i class="fa-brands fa-jira"></i> Jira</h2>
-      <p class="page-sub">Tracking stories, bugs, and sprints in one board.</p>
-      <div class="two-col">
-        <div class="panel glass">
-          <h3>Key Concepts</h3>
-          <ul class="concept-list">
-            <li>Issue types: Epic, Story, Task, Bug, Sub-task</li>
-            <li>Workflow states: To Do → In Progress → In Review → Done</li>
-            <li>Linking test cases to stories for traceability</li>
-            <li>Filters &amp; JQL for custom bug queries</li>
-            <li>Dashboards for sprint burndown &amp; bug trends</li>
-          </ul>
-        </div>
-        <div class="panel glass">
-          <h3>Sample JQL</h3>
-          <pre class="code-block"><code>project = "QA" AND issuetype = Bug
-AND status != Done
-AND priority in (High, Highest)
-ORDER BY created DESC</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= INTERVIEW QUESTIONS ================= -->
-    <section class="page" id="interview-questions">
-      <h2 class="page-title"><i class="fa-solid fa-comments"></i> Interview Questions</h2>
-      <p class="page-sub">Common manual + automation interview questions. Click a question to expand.</p>
-      <div class="accordion" id="faqAccordion"></div>
-    </section>
-
-    <!-- ================= MCQ ================= -->
-    <section class="page" id="mcq">
-      <h2 class="page-title"><i class="fa-solid fa-list-check"></i> MCQ Practice</h2>
-      <p class="page-sub">Objective-type questions. Pick an option to check instantly.</p>
-      <div class="mcq-toolbar">
-        <span id="mcqScoreLabel">Score: 0 / 0</span>
-        <button class="btn btn-ghost ripple" id="resetMcqBtn"><i class="fa-solid fa-rotate-left"></i> Reset</button>
-      </div>
-      <div id="mcqList" class="mcq-list"></div>
-    </section>
-
-    <!-- ================= NOTES ================= -->
-    <section class="page" id="notes">
-      <h2 class="page-title"><i class="fa-solid fa-note-sticky"></i> Daily Notes</h2>
-      <p class="page-sub">Jot down what you learned today. Saved locally in your browser.</p>
-      <div class="panel glass">
-        <textarea id="notesArea" rows="10" placeholder="Today I learned..."></textarea>
-        <div class="notes-actions">
-          <button class="btn btn-primary ripple" id="saveNoteBtn"><i class="fa-solid fa-floppy-disk"></i> Save Note</button>
-          <button class="btn btn-ghost ripple" id="downloadNoteBtn"><i class="fa-solid fa-download"></i> Download Notes</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= PDFS ================= -->
-    <section class="page" id="pdfs">
-      <h2 class="page-title"><i class="fa-solid fa-file-pdf"></i> PDF Library</h2>
-      <p class="page-sub">Reference PDFs organized by topic. Add your own files into <code>/pdfs</code> and update the links below.</p>
-      <div class="pdf-grid" id="pdfGrid"></div>
-    </section>
-
-    <!-- ================= AI CHAT (full page shortcut) ================= -->
-    <section class="page" id="ai-chat">
-      <h2 class="page-title"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Study Assistant</h2>
-      <p class="page-sub">Ask about manual or automation testing topics. This opens the same assistant as the floating chat button.</p>
-      <button class="btn btn-primary ripple" id="openChatFromPage"><i class="fa-solid fa-message"></i> Open Chat Panel</button>
-      <div class="two-col" style="margin-top:20px">
-        <div class="panel glass">
-          <h3>External AI Tools</h3>
-          <div class="chip-row">
-            <a class="chip chip-link" href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a>
-            <a class="chip chip-link" href="https://claude.ai/" target="_blank" rel="noopener">Claude</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= SETTINGS ================= -->
-    <section class="page" id="settings">
-      <h2 class="page-title"><i class="fa-solid fa-gear"></i> Settings</h2>
-      <div class="panel glass">
-        <h3>Appearance</h3>
-        <div class="settings-row">
-          <span>Theme</span>
-          <button class="btn btn-ghost ripple" id="settingsThemeBtn"><i class="fa-solid fa-circle-half-stroke"></i> Toggle Dark / Light</button>
-        </div>
-        <h3 style="margin-top:18px">Data</h3>
-        <div class="settings-row">
-          <span>Clear saved notes &amp; MCQ progress</span>
-          <button class="btn btn-ghost ripple" id="clearDataBtn"><i class="fa-solid fa-trash"></i> Clear Local Data</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= EMPTY / FUTURE-USE PAGES ================= -->
-    <section class="page" id="blank-21"><div class="empty-page"><i class="fa-regular fa-square-plus"></i><p>Button 21 — edit this section in index.html</p></div></section>
-    <section class="page" id="blank-22"><div class="empty-page"><i class="fa-regular fa-square-plus"></i><p>Button 22 — edit this section in index.html</p></div></section>
-    <section class="page" id="blank-23"><div class="empty-page"><i class="fa-regular fa-square-plus"></i><p>Button 23 — edit this section in index.html</p></div></section>
-    <section class="page" id="blank-24"><div class="empty-page"><i class="fa-regular fa-square-plus"></i><p>Button 24 — edit this section in index.html</p></div></section>
-    <section class="page" id="blank-25"><div class="empty-page"><i class="fa-regular fa-square-plus"></i><p>Button 25 — edit this section in index.html</p></div></section>
-    <section class="page" id="blank-26"><div class="empty-page"><i class="fa-regular fa-square-plus"></i><p>Button 26 — edit this section in index.html</p></div></section>
-    <section class="page" id="blank-27"><div class="empty-page"><i class="fa-regular fa-square-plus"></i><p>Button 27 — edit this section in index.html</p></div></section>
-    <section class="page" id="blank-28"><div class="empty-page"><i class="fa-regular fa-square-plus"></i><p>Button 28 — edit this section in index.html</p></div></section>
-    <section class="page" id="blank-29"><div class="empty-page"><i class="fa-regular fa-square-plus"></i><p>Button 29 — edit this section in index.html</p></div></section>
-    <section class="page" id="blank-30"><div class="empty-page"><i class="fa-regular fa-square-plus"></i><p>Button 30 — edit this section in index.html</p></div></section>
-
-    <footer class="site-footer">
-      <p>© <span id="year"></span> QA Forge — <em>Creativity it's an peak!</em></p>
-      <div class="footer-links">
-        <a href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a>
-        <a href="https://claude.ai/" target="_blank" rel="noopener">Claude</a>
-        <a href="https://onecompiler.com/java" target="_blank" rel="noopener">OneCompiler</a>
-        <a href="https://www.w3schools.com/" target="_blank" rel="noopener">W3Schools</a>
-        <a href="https://academy.selfmade.ninja/login" target="_blank" rel="noopener">SelfMade Ninja</a>
-      </div>
+    <footer class="app-footer">
+      <p>Tech Source &copy; <span id="year"></span> — Creativity at it's peak!</p>
     </footer>
+
   </main>
 </div>
 
-<!-- ============ FLOATING ACTION BUTTONS ============ -->
-<div class="fab-stack">
-  <button class="fab" id="fabTop" title="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
-  <button class="fab fab-main" id="fabChat" title="AI Study Assistant"><i class="fa-solid fa-message"></i></button>
-</div>
+<!-- ===================== CHAT BOX ===================== -->
+<div class="chat-widget">
+  <button id="chatToggle" class="chat-toggle" aria-label="Open chat">💬</button>
 
-<!-- ============ CHAT BOX ============ -->
-<div class="chat-panel" id="chatPanel">
-  <div class="chat-header">
-    <div class="chat-header-left">
-      <i class="fa-solid fa-robot"></i>
-      <div>
-        <strong>AI Study Assistant</strong>
-        <span>Ask about manual / automation testing</span>
-      </div>
+  <div class="chat-box" id="chatBox">
+    <div class="chat-header">
+      <span>Tech Source Assistant</span>
+      <button id="chatClose" aria-label="Close chat">✕</button>
     </div>
-    <div class="chat-header-actions">
-      <button id="clearChatBtn" title="Clear chat"><i class="fa-solid fa-broom"></i></button>
-      <button id="closeChatBtn" title="Close"><i class="fa-solid fa-xmark"></i></button>
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg bot">👋 Hi! Ask me about Java, Selenium, Agile, JIRA, or how to use this app.</div>
     </div>
-  </div>
-
-  <div class="chat-suggestions" id="chatSuggestions">
-    <button class="suggestion-chip">What is Selenium?</button>
-    <button class="suggestion-chip">Difference between Cypress and Playwright</button>
-    <button class="suggestion-chip">What is smoke testing?</button>
-    <button class="suggestion-chip">Explicit vs implicit wait</button>
-  </div>
-
-  <div class="chat-body" id="chatBody"></div>
-
-  <div class="chat-input-row">
-    <input type="text" id="chatInput" placeholder="Ask a question...">
-    <button id="sendChatBtn" title="Ask"><i class="fa-solid fa-paper-plane"></i></button>
+    <form id="chatForm" class="chat-input-row">
+      <input type="text" id="chatInput" placeholder="Type your question..." autocomplete="off">
+      <button type="submit" class="btn-send">Send</button>
+    </form>
   </div>
 </div>
 
