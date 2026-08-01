@@ -114,9 +114,8 @@
 <button class="nav-btn" data-target="int-hr-interview">HR Interview</button>
   </nav>
 
-  <!-- MAIN CONTENT -->
+  <!-- MAIN CONTENT (content only) -->
   <main class="main-content">
-
     <section class="content-panel">
       <div class="panel-header">
         <h2>Learning Panel</h2>
@@ -127,9 +126,9 @@
 <div class="content-pane" id="jira"><h3>JIRA</h3><p>will add</p></div>
 <div class="content-pane" id="istqb"><h3>ISTQB</h3><p>will add</p></div>
 <div class="content-pane" id="java"><h3>JAVA – Updated</h3><p>will add</p></div>
-<div class="content-pane" id="java-core-java"><h3>JAVA – Updated &rsaquo; Core Java</h3><p>will add</p></div>
-<div class="content-pane" id="java-programming"><h3>JAVA – Updated &rsaquo; Programming</h3><p>will add</p></div>
-<div class="content-pane" id="java-interview-programs"><h3>JAVA – Updated &rsaquo; Interview Programs</h3><p>will add</p></div>
+<div class="content-pane" id="java-core-java"><h3>JAVA – Updated &rsaquo; Core Java</h3><div class="inner-nav-wrap" data-inner-parent="java-core-java"></div></div>
+<div class="content-pane" id="java-programming"><h3>JAVA – Updated &rsaquo; Programming</h3><div class="inner-nav-wrap" data-inner-parent="java-programming"></div></div>
+<div class="content-pane" id="java-interview-programs"><h3>JAVA – Updated &rsaquo; Interview Programs</h3><div class="inner-nav-wrap" data-inner-parent="java-interview-programs"></div></div>
 <div class="content-pane" id="java-pojo"><h3>JAVA – Updated &rsaquo; POJO</h3><p>will add</p></div>
 <div class="content-pane" id="java-java-theory"><h3>JAVA – Updated &rsaquo; Java Theory</h3><p>will add</p></div>
 <div class="content-pane" id="selenium"><h3>Selenium</h3><p>will add</p></div>
@@ -157,7 +156,7 @@
 <div class="content-pane" id="sql"><h3>SQL</h3><p>will add</p></div>
 <div class="content-pane" id="api-testing"><h3>API Testing</h3><p>will add</p></div>
 <div class="content-pane" id="postman"><h3>Postman</h3><p>will add</p></div>
-<div class="content-pane" id="playwright"><h3>Playwright</h3><p>will add</p></div>
+<div class="content-pane" id="playwright"><h3>Playwright</h3><div class="inner-nav-wrap" data-inner-parent="playwright"></div></div>
 <div class="content-pane" id="cucumber"><h3>Cucumber (BDD)</h3><p>will add</p></div>
 <div class="content-pane" id="jenkins"><h3>Jenkins (CI/CD)</h3><p>will add</p></div>
 <div class="content-pane" id="docker"><h3>Docker</h3><p>will add</p></div>
@@ -188,54 +187,64 @@
 <div class="content-pane" id="int-hr-interview"><h3>HR Interview</h3><p>will add</p></div>
       </div>
     </section>
-
-    <!-- ===================== QUIZ SECTION ===================== -->
-    <section class="quiz-panel" id="quizPanel">
-      <div class="panel-header">
-        <h2>📝 Quick Quiz</h2>
-        <span class="badge">Answer, submit and see explanations</span>
-      </div>
-
-      <div id="quizContainer"></div>
-
-      <div class="quiz-actions">
-        <button id="submitQuiz" class="btn-primary">Submit Answers</button>
-        <button id="resetQuiz" class="btn-secondary">Reset Quiz</button>
-      </div>
-
-      <div id="quizResult" class="quiz-result"></div>
-    </section>
-
-    <!-- ===================== REFERENCE LINKS ===================== -->
-    <section class="links-panel">
-      <div class="panel-header">
-        <h2>🔗 Helpful References</h2>
-      </div>
-      <div class="links-grid">
-        <a href="https://chatgpt.com/" target="_blank" rel="noopener" class="link-card">
-          <span class="link-icon">💬</span> ChatGPT
-        </a>
-        <a href="https://claude.ai/" target="_blank" rel="noopener" class="link-card">
-          <span class="link-icon">🤖</span> Claude AI
-        </a>
-        <a href="https://onecompiler.com/java" target="_blank" rel="noopener" class="link-card">
-          <span class="link-icon">☕</span> OneCompiler (Java)
-        </a>
-        <a href="https://www.w3schools.com/" target="_blank" rel="noopener" class="link-card">
-          <span class="link-icon">📚</span> W3Schools
-        </a>
-        <a href="https://academy.selfmade.ninja/login" target="_blank" rel="noopener" class="link-card">
-          <span class="link-icon">🥷</span> Selfmade Ninja Academy
-        </a>
-      </div>
-    </section>
-
-    <footer class="app-footer">
-      <p>Tech Source &copy; <span id="year"></span> — Creativity at it's peak!</p>
-    </footer>
-
   </main>
+
+  <!-- ===================== QUIZ SIDE PANEL (right, one-by-one) ===================== -->
+  <aside class="quiz-panel" id="quizPanel">
+    <div class="panel-header">
+      <h2>📝 Quick Quiz</h2>
+      <span class="badge" id="quizTopicBadge">General</span>
+    </div>
+    <p class="quiz-sub">Answer one question at a time, check it, then navigate.</p>
+
+    <div class="quiz-progress" id="quizProgress">Question 1 of 1</div>
+
+    <div class="quiz-single" id="quizSingle"><!-- current question renders here --></div>
+
+    <!-- INNER NAVIGATION BUTTONS (per-topic quiz stepper) -->
+    <div class="quiz-inner-nav">
+      <button id="prevQ" class="btn-secondary" type="button">◀ Prev</button>
+      <button id="checkQ" class="btn-primary" type="button">Check Answer</button>
+      <button id="nextQ" class="btn-secondary" type="button">Next ▶</button>
+    </div>
+
+    <div class="quiz-dots" id="quizDots"></div>
+
+    <div class="quiz-actions">
+      <button id="resetQuiz" class="btn-secondary" type="button">Reset Quiz</button>
+    </div>
+
+    <div id="quizResult" class="quiz-result"></div>
+  </aside>
 </div>
+
+<!-- ===================== REFERENCE LINKS ===================== -->
+<section class="links-panel">
+  <div class="panel-header">
+    <h2>🔗 Helpful References</h2>
+  </div>
+  <div class="links-grid">
+    <a href="https://chatgpt.com/" target="_blank" rel="noopener" class="link-card">
+      <span class="link-icon">💬</span> ChatGPT
+    </a>
+    <a href="https://claude.ai/" target="_blank" rel="noopener" class="link-card">
+      <span class="link-icon">🤖</span> Claude AI
+    </a>
+    <a href="https://onecompiler.com/java" target="_blank" rel="noopener" class="link-card">
+      <span class="link-icon">☕</span> OneCompiler (Java)
+    </a>
+    <a href="https://www.w3schools.com/" target="_blank" rel="noopener" class="link-card">
+      <span class="link-icon">📚</span> W3Schools
+    </a>
+    <a href="https://academy.selfmade.ninja/login" target="_blank" rel="noopener" class="link-card">
+      <span class="link-icon">🥷</span> Selfmade Ninja Academy
+    </a>
+  </div>
+</section>
+
+<footer class="app-footer">
+  <p>Tech Source &copy; <span id="year"></span> — Creativity at it's peak!</p>
+</footer>
 
 <!-- ===================== CHAT BOX ===================== -->
 <div class="chat-widget">

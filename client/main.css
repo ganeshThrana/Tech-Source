@@ -153,10 +153,11 @@ button{ font-family: inherit; cursor: pointer; }
 
 /* ===================== APP BODY LAYOUT ===================== */
 .app-body{
-  display:flex;
-  align-items:flex-start;
+  display:grid;
+  grid-template-columns: 280px minmax(0,1fr) 340px;
+  align-items:start;
   gap: 18px;
-  padding: 18px 24px 40px;
+  padding: 18px 24px 24px;
 }
 
 /* ===================== SIDEBAR ===================== */
@@ -254,10 +255,6 @@ button{ font-family: inherit; cursor: pointer; }
 
 /* ===================== MAIN CONTENT ===================== */
 .main-content{
-  flex: 1;
-  display:flex;
-  flex-direction:column;
-  gap: 20px;
   min-width: 0;
 }
 
@@ -306,13 +303,120 @@ button{ font-family: inherit; cursor: pointer; }
 .content-pane.active{ display:block; animation: fadeIn .3s ease; }
 .content-pane h3{ color: var(--accent-green-strong); margin-top:0; }
 
-/* ===================== QUIZ ===================== */
+/* ===================== INNER TOPIC NAVIGATION (3rd level, lives in the middle panel) ===================== */
+.inner-nav-wrap{ margin-top: 6px; }
+
+.inner-nav-bar{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.inner-nav-btn{
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 600;
+  transition: background .2s ease, color .2s ease, transform .15s ease;
+}
+.inner-nav-btn:hover{ background: var(--accent-blue); color:#0b2b3d; transform: translateY(-2px); }
+.inner-nav-btn.active{
+  background: var(--accent-blue);
+  color: #0b2b3d;
+  border-color: var(--accent-blue);
+  font-weight: 800;
+}
+
+.inner-content{
+  min-height: 160px;
+}
+
+.inner-pane{ display:none; }
+.inner-pane.active{
+  display:block;
+  animation: fadeIn .3s ease;
+  max-width: 75ch;
+  line-height: 1.75;
+  font-size: 1rem;
+}
+.inner-pane h4{
+  margin: 0 0 10px;
+  color: var(--accent-blue-hover);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+.inner-pane .inner-pane-meta{
+  display:inline-block;
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--text-soft);
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.inner-page-nav{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border);
+  flex-wrap: wrap;
+}
+.inner-page-nav button{ flex: 0 0 auto; }
+.inner-page-nav button:disabled{
+  opacity: .4;
+  cursor: not-allowed;
+  transform:none !important;
+}
+.inner-page-indicator{
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--text-soft);
+}
+
+/* ===================== QUIZ (right-side, one question at a time) ===================== */
+.quiz-panel{
+  position: sticky;
+  top: 90px;
+  max-height: calc(100vh - 110px);
+  overflow-y: auto;
+}
+
+.quiz-sub{
+  margin: -6px 0 12px;
+  font-size: .8rem;
+  color: var(--text-soft);
+}
+
+.quiz-progress{
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--accent-green-strong);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.quiz-single{ min-height: 60px; }
+
 .quiz-question{
   background: var(--bg-alt);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 14px 16px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
+  animation: fadeIn .3s ease;
 }
 .quiz-question p.q-text{ font-weight:700; margin: 0 0 10px; }
 .quiz-options label{
@@ -325,6 +429,10 @@ button{ font-family: inherit; cursor: pointer; }
 }
 .quiz-options label:hover{ background: var(--accent-blue); }
 .quiz-options input{ margin-right: 8px; }
+.quiz-options label.opt-correct{ background: #c8f3d8; font-weight:700; }
+.quiz-options label.opt-incorrect{ background: #ffd6d6; font-weight:700; }
+[data-theme="dark"] .quiz-options label.opt-correct{ background: #1c4a30; }
+[data-theme="dark"] .quiz-options label.opt-incorrect{ background: #4a1f1f; }
 
 .quiz-question.correct{ border-color: var(--success); background: #e9fbef; }
 .quiz-question.incorrect{ border-color: var(--danger); background: #fff0f0; }
@@ -340,6 +448,45 @@ button{ font-family: inherit; cursor: pointer; }
   display:none;
 }
 .explanation.show{ display:block; }
+
+/* Inner navigation buttons for stepping through a topic's quiz one by one */
+.quiz-inner-nav{
+  display:flex;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.quiz-inner-nav button{ flex: 1; min-width: 86px; }
+.quiz-inner-nav button:disabled{
+  opacity: .45;
+  cursor: not-allowed;
+  transform:none !important;
+}
+
+.quiz-dots{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0;
+}
+.quiz-dot{
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  color: var(--text);
+  font-size: .7rem;
+  font-weight: 700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition: transform .15s ease, background .2s ease;
+}
+.quiz-dot:hover{ transform: translateY(-2px); }
+.quiz-dot.current{ border: 2px solid var(--accent-blue); }
+.quiz-dot.answered-correct{ background: var(--success); color:#fff; border-color: var(--success); }
+.quiz-dot.answered-incorrect{ background: var(--danger); color:#fff; border-color: var(--danger); }
 
 .quiz-actions{
   display:flex;
@@ -373,6 +520,7 @@ button{ font-family: inherit; cursor: pointer; }
   margin-top: 14px;
   font-weight: 800;
   font-size: 1.05rem;
+  white-space: pre-line;
 }
 
 /* ===================== REFERENCE LINKS ===================== */
@@ -511,9 +659,14 @@ button{ font-family: inherit; cursor: pointer; }
 }
 
 /* ===================== RESPONSIVE ===================== */
-@media (max-width: 860px){
-  .app-body{ flex-direction:column; }
+@media (max-width: 1180px){
+  .app-body{ grid-template-columns: 240px minmax(0,1fr) 300px; }
+}
+
+@media (max-width: 980px){
+  .app-body{ grid-template-columns: 1fr; }
   .sidebar{ width: 100%; position: static; max-height: 320px; }
+  .quiz-panel{ position: static; max-height: none; }
   .chat-box{ width: 85vw; }
 }
 
