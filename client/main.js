@@ -475,33 +475,6 @@ EXTERNAL_LINKS.forEach((l) => {
   topLinksEl.appendChild(a);
 });
 
-const themeToggle = document.getElementById("themeToggle");
-function applyTheme(theme) {
-  document.documentElement.setAttribute("data-theme", theme);
-  if (themeToggle) {
-    themeToggle.setAttribute(
-      "aria-label",
-      theme === "light" ? "Switch to dark mode" : "Switch to light mode",
-    );
-    themeToggle.title =
-      theme === "light" ? "Switch to dark mode" : "Switch to light mode";
-    themeToggle.textContent = theme === "light" ? "☀️" : "🌙";
-  }
-}
-
-const savedTheme = localStorage.getItem("techsource-theme");
-const initialTheme = savedTheme === "light" ? "light" : "dark";
-applyTheme(initialTheme);
-
-themeToggle?.addEventListener("click", () => {
-  const nextTheme =
-    document.documentElement.getAttribute("data-theme") === "light"
-      ? "dark"
-      : "light";
-  localStorage.setItem("techsource-theme", nextTheme);
-  applyTheme(nextTheme);
-});
-
 const quickGridEl = document.getElementById("quickGrid");
 EXTERNAL_LINKS.forEach((l) => {
   const a = document.createElement("a");
@@ -736,11 +709,7 @@ function selectLeaf(path, treeKey) {
   nextBtn.disabled =
     state.activeFlatIndex === -1 || state.activeFlatIndex >= flat.length - 1;
 
-  homeView.hidden = true;
-  topicView.hidden = false;
-  const chatViewElx = document.getElementById("chatView");
-  if (chatViewElx) chatViewElx.hidden = true;
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  showPage("topic");
 
   highlightActiveInTree(key);
   closeMobileSidebar();
@@ -820,9 +789,6 @@ document.querySelectorAll(".tab").forEach((btn) => {
     state.tab = btn.dataset.tab;
     treeLearnEl.hidden = state.tab !== "learn";
     treePrepEl.hidden = state.tab !== "prep";
-    const chatTopicsEl = document.getElementById("chatTopics");
-    if (chatTopicsEl) chatTopicsEl.hidden = state.tab !== "chat";
-    if (state.tab === "chat") openChatView();
   });
 });
 
@@ -923,357 +889,1303 @@ function closeMobileSidebar() {
 /* =====================================================================
    Home link (breadcrumb "Home"/logo click returns to hero)
    ===================================================================== */
-document.querySelector(".brand").addEventListener("click", () => {
-  topicView.hidden = true;
-  homeView.hidden = false;
-  const chatViewEl = document.getElementById("chatView");
-  if (chatViewEl) chatViewEl.hidden = true;
+document.getElementById("brandHome").addEventListener("click", () => {
+  showPage("home");
   crumbEl.innerHTML = '<span class="crumb-item">Home</span>';
-  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+document.getElementById("brandHome").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    document.getElementById("brandHome").click();
+  }
 });
 
 /* =====================================================================
-   LIVE CLOCK — sidebar pill + topbar
+   PAGE ROUTER (Home / Topic / Quiz / Manual Admin / Auto Admin / Resources)
    ===================================================================== */
-const clockTimeEl = document.getElementById("clockTime");
-const clockDateEl = document.getElementById("clockDate");
-const topbarTimeEl = document.getElementById("topbarTime");
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-function pad2(n) {
-  return n < 10 ? "0" + n : "" + n;
-}
-
-function tickClock() {
-  const now = new Date();
-  const hh = pad2(now.getHours());
-  const mm = pad2(now.getMinutes());
-  const ss = pad2(now.getSeconds());
-  const timeStr = `${hh}:${mm}:${ss}`;
-  const dateStr = `${WEEKDAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
-  if (clockTimeEl) clockTimeEl.textContent = timeStr;
-  if (clockDateEl) clockDateEl.textContent = dateStr;
-  if (topbarTimeEl) topbarTimeEl.textContent = timeStr;
-}
-tickClock();
-setInterval(tickClock, 1000);
-
-/* =====================================================================
-   PARTICLE CANVAS — animated ambient circuit-dust background
-   ===================================================================== */
-(function initParticles() {
-  const canvas = document.getElementById("particleCanvas");
-  if (!canvas || !canvas.getContext) return;
-  const ctx = canvas.getContext("2d");
-  let W,
-    H,
-    particles = [];
-  const COUNT = window.innerWidth < 720 ? 34 : 70;
-
-  function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener("resize", resize);
-
-  function Particle() {
-    this.x = Math.random() * W;
-    this.y = Math.random() * H;
-    this.vx = (Math.random() - 0.5) * 0.22;
-    this.vy = (Math.random() - 0.5) * 0.22;
-    this.r = Math.random() * 1.6 + 0.6;
-  }
-  for (let i = 0; i < COUNT; i++) particles.push(new Particle());
-
-  function step() {
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = "rgba(41,182,246,0.55)";
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.x < 0) p.x = W;
-      if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H;
-      if (p.y > H) p.y = 0;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.strokeStyle = "rgba(41,182,246,0.10)";
-    ctx.lineWidth = 1;
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 130) {
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.stroke();
-        }
-      }
-    }
-    requestAnimationFrame(step);
-  }
-  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    requestAnimationFrame(step);
-  }
-})();
-
-/* =====================================================================
-   HOME — "many buttons with learning topics"
-   Build a button grid from the top-level LEARN_TREE categories.
-   ===================================================================== */
-function countLeaves(node) {
-  if (!node.children || !node.children.length) return 1;
-  return node.children.reduce((sum, c) => sum + countLeaves(c), 0);
-}
-function firstLeafPath(node, trail) {
-  const path = [...trail, node.title];
-  if (!node.children || !node.children.length) return path;
-  return firstLeafPath(node.children[0], path);
-}
-
-const topicBtnGridEl = document.getElementById("topicBtnGrid");
-if (topicBtnGridEl) {
-  LEARN_TREE.forEach((node) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "topic-btn";
-    const total = countLeaves(node);
-    btn.innerHTML = `
-      <span class="tb-icon">${node.icon || "📄"}</span>
-      <span class="tb-name">${stripEmoji(node.title)}</span>
-      <span class="tb-count">${total} topic${total === 1 ? "" : "s"}</span>`;
-    btn.addEventListener("click", () => {
-      const path = firstLeafPath(node, []);
-      selectLeaf(path, "learn");
-    });
-    topicBtnGridEl.appendChild(btn);
-  });
-}
-
-/* =====================================================================
-   AI CHAT ASSISTANT
-   ===================================================================== */
-const TOPIC_CONTENT = {
-  agile: [
-    "Agile is an iterative approach to software delivery that breaks work into short cycles called sprints, usually one to four weeks long, so teams can inspect progress and adapt quickly.",
-    "Instead of trying to plan an entire release upfront, an agile team plans just enough to start the next sprint, then re-plans as real feedback comes in from stakeholders and users.",
-    "Core ceremonies — sprint planning, daily standup, sprint review and retrospective — keep the team aligned on what is being built, what is done, and what should change next time.",
-  ],
-  jira: [
-    "JIRA is a work-tracking tool most agile teams use to manage backlogs, sprints, and issues such as stories, bugs, and tasks.",
-    "Boards give a visual view of work moving through a workflow (To Do → In Progress → Done), while JQL (JIRA Query Language) lets you filter and report on issues precisely.",
-    "For QA, JIRA is usually where bugs are logged, linked to the story that introduced them, and tracked through triage to resolution.",
-  ],
-  istqb: [
-    "ISTQB (International Software Testing Qualifications Board) defines a syllabus of core testing theory: test levels, test types, static vs dynamic testing, and test design techniques.",
-    "The Foundation Level certification is the most common entry point and covers fundamentals like the test process, defect lifecycle, and black-box/white-box techniques such as equivalence partitioning and boundary value analysis.",
-    "Many interviewers use ISTQB terminology as a shared vocabulary, so it is worth being fluent in it even outside the exam.",
-  ],
-  java: [
-    "Java is the most common language for building Selenium and REST Assured based automation frameworks because of its strong typing, mature ecosystem, and huge community support.",
-    "Foundational concepts to be solid on include OOP (inheritance, polymorphism, encapsulation, abstraction), collections, exception handling, and Java 8 features like lambdas and streams.",
-    "A framework typically leans on interfaces and the Page Object Model to keep test code readable and maintainable as the suite grows.",
-  ],
-  selenium: [
-    "Selenium WebDriver automates real browser interactions — clicking, typing, navigating — by sending commands to a browser driver that mimics a human user.",
-    "Locator strategy matters a lot: ID and CSS selectors tend to be fastest and most stable, while XPath is more flexible for complex, dynamic pages.",
-    "Waits (implicit, explicit, fluent) are essential for reliability, since modern web apps render content asynchronously and a script that runs too fast will fail against elements that are not ready yet.",
-  ],
-  api: [
-    "API testing validates a service directly at the HTTP layer — checking status codes, response bodies, headers, and timing — without needing a UI.",
-    "REST Assured is a popular Java library for this: you build a request, send it, and assert on the response using a fluent given/when/then syntax.",
-    "Good API tests also check negative cases (bad input, missing auth, rate limits) and validate response structure with JSON schema validation.",
-  ],
-  sql: [
-    "SQL is essential for testers who need to verify what actually landed in the database after an action in the UI or API.",
-    "CRUD operations (Create, Read, Update, Delete), JOINs across tables, and GROUP BY/HAVING for aggregation are the bread-and-butter queries used in backend validation.",
-    "Stored procedures are also common in enterprise systems, and testers are often asked to validate their output against expected business rules.",
-  ],
-  playwright: [
-    "Playwright is a modern browser automation library (from Microsoft) that supports Chromium, Firefox and WebKit from a single API, with built-in auto-waiting.",
-    "It ships with strong tooling out of the box: a trace viewer for debugging failed runs, a codegen tool that records actions into a script, and first-class support for API testing.",
-    "Because it auto-waits for elements to be actionable, Playwright scripts tend to be less flaky than traditional Selenium scripts that rely on manual wait strategies.",
-  ],
-  cicd: [
-    "CI/CD (Continuous Integration / Continuous Delivery) automatically builds, tests, and often deploys code every time it changes, catching regressions early.",
-    "Jenkins, GitHub Actions, GitLab CI and Azure DevOps are common pipeline tools that can trigger your automated test suite on every pull request or merge.",
-    "A healthy pipeline fails fast, reports clearly (often via Extent or Allure reports), and keeps the feedback loop short enough that developers actually act on it.",
-  ],
-  framework: [
-    "A test automation framework is the set of conventions, libraries, and structure that make automated tests reliable, reusable, and easy to maintain.",
-    "Common styles include data-driven (tests driven by external data sets), keyword-driven (tests built from reusable action keywords), and hybrid frameworks that combine both.",
-    "TestNG or JUnit typically provide the test runner, annotations, and assertions, while Page Object Model keeps locators and page logic out of the test methods themselves.",
-  ],
-  interview: [
-    'QA interviews usually mix theory (testing types, SDLC/STLC, defect lifecycle) with practical coding (write a locator, debug a flaky test) and scenario questions ("how would you test X").',
-    "Be ready to walk through a project you actually worked on: the framework, the tools, the CI setup, and a hard bug you found.",
-    "For behavioral rounds, structure answers with a brief situation, the action you took, and the measurable result — it keeps answers tight and easy to follow.",
-  ],
-  genai: [
-    "Generative AI tools like ChatGPT, Claude, Copilot and Gemini are increasingly used in QA to draft test cases, explain unfamiliar code, and speed up boilerplate automation scripting.",
-    "Prompt engineering — being specific about the framework, language, and constraints — makes a big difference in how usable the generated output is.",
-    "These tools are best treated as a fast first draft: still review generated test logic and assertions carefully before trusting them in a suite.",
-  ],
+const pageEls = {
+  home: document.getElementById("homeView"),
+  topic: document.getElementById("topicView"),
+  quiz: document.getElementById("quizView"),
+  manualAdmin: document.getElementById("manualAdminView"),
+  autoAdmin: document.getElementById("autoAdminView"),
+  resources: document.getElementById("resourcesView"),
 };
 
-const CHAT_TOPIC_BUTTONS = [
-  { key: "agile", icon: "🧠", label: "Agile" },
-  { key: "jira", icon: "🎟️", label: "JIRA" },
-  { key: "istqb", icon: "👨‍🎓", label: "ISTQB" },
-  { key: "java", icon: "☕", label: "Core Java" },
-  { key: "selenium", icon: "🌐", label: "Selenium" },
-  { key: "api", icon: "🌍", label: "API Testing" },
-  { key: "sql", icon: "🗄️", label: "SQL" },
-  { key: "playwright", icon: "▶️", label: "Playwright" },
-  { key: "cicd", icon: "🚀", label: "CI/CD" },
-  { key: "framework", icon: "🏗️", label: "Frameworks" },
-  { key: "interview", icon: "💼", label: "Interview Tips" },
-  { key: "genai", icon: "🤖", label: "Gen AI for QA" },
-];
+function showPage(name) {
+  Object.entries(pageEls).forEach(([k, el]) => {
+    if (el) el.hidden = k !== name;
+  });
+  const navKey = name === "topic" ? "home" : name;
+  document
+    .querySelectorAll(".pn-btn")
+    .forEach((b) => b.classList.toggle("active", b.dataset.page === navKey));
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  closeMobileSidebar();
+}
 
-const chatMessagesEl = document.getElementById("chatMessages");
-const chatFormEl = document.getElementById("chatForm");
-const chatInputEl = document.getElementById("chatInput");
-const chatTypingEl = document.getElementById("chatTyping");
-const chatClearBtn = document.getElementById("chatClearBtn");
-const chatBtnGridEl = document.getElementById("chatBtnGrid");
-const chatViewEl = document.getElementById("chatView");
+document.querySelectorAll("[data-page]").forEach((btn) => {
+  btn.addEventListener("click", () => showPage(btn.dataset.page));
+});
+
+/* =====================================================================
+   THEME TOGGLE (persisted)
+   ===================================================================== */
+const htmlEl = document.documentElement;
+const themeToggle = document.getElementById("themeToggle");
+const savedTheme = localStorage.getItem("ts-theme");
+if (savedTheme) htmlEl.setAttribute("data-theme", savedTheme);
+else if (
+  window.matchMedia &&
+  window.matchMedia("(prefers-color-scheme: light)").matches
+)
+  htmlEl.setAttribute("data-theme", "light");
+
+themeToggle.addEventListener("click", () => {
+  const next = htmlEl.getAttribute("data-theme") === "light" ? "dark" : "light";
+  htmlEl.setAttribute("data-theme", next);
+  localStorage.setItem("ts-theme", next);
+});
+
+/* =====================================================================
+   Live hub pulse (animated counters on Home)
+   ===================================================================== */
+function animateCount(el, target, suffix) {
+  let cur = 0;
+  const step = Math.max(1, Math.round(target / 40));
+  const id = setInterval(() => {
+    cur += step;
+    if (cur >= target) {
+      cur = target;
+      clearInterval(id);
+    }
+    el.textContent = cur + (suffix || "");
+  }, 18);
+}
+const pulseRowEl = document.getElementById("pulseRow");
+const pulseData = [
+  {
+    label: "Learning topics mapped",
+    value: state.flatLearn.length,
+    suffix: "",
+  },
+  {
+    label: "Interview & scenario prompts",
+    value: state.flatPrep.length,
+    suffix: "",
+  },
+  { label: "MCQs to practice", value: 0, suffix: "", id: "pulseMcq" },
+  {
+    label: "External learning tools",
+    value: EXTERNAL_LINKS.length,
+    suffix: "",
+  },
+];
+pulseData.forEach((p) => {
+  const card = document.createElement("div");
+  card.className = "pulse-card";
+  card.innerHTML = `<span class="pulse-num" ${p.id ? `id="${p.id}"` : ""}>0</span><span class="pulse-label">${p.label}</span>`;
+  pulseRowEl.appendChild(card);
+});
+function renderPulseNumbers() {
+  document
+    .querySelectorAll(".pulse-num")
+    .forEach((el, i) =>
+      animateCount(el, pulseData[i].value, pulseData[i].suffix),
+    );
+}
+
+/* =====================================================================
+   Resources page grid (mirrors quick-grid)
+   ===================================================================== */
+const resourceGridEl = document.getElementById("resourceGrid");
+EXTERNAL_LINKS.forEach((l) => {
+  const a = document.createElement("a");
+  a.className = "quick-card";
+  a.href = l.url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  a.innerHTML = `
+    <span class="qc-icon">${l.icon}</span>
+    <span class="qc-name">${l.name}</span>
+    <span class="qc-desc">${l.desc}</span>
+    <span class="qc-go">Open ↗</span>`;
+  resourceGridEl.appendChild(a);
+});
+
+/* =====================================================================
+   MCQ QUIZ — objective questions & answers built from the content map
+   ===================================================================== */
+const QUIZ_BANK = {
+  agile: {
+    icon: "🧠",
+    name: "Agile & Scrum",
+    questions: [
+      {
+        q: "Who is responsible for maximizing the value of the product in Scrum?",
+        options: [
+          "Scrum Master",
+          "Product Owner",
+          "Development Team",
+          "Project Manager",
+        ],
+        correct: 1,
+        explain:
+          "The Product Owner owns and prioritizes the Product Backlog to maximize value.",
+      },
+      {
+        q: "What is the recommended maximum length of a Sprint?",
+        options: ["1 week", "2 weeks", "1 month", "2 months"],
+        correct: 2,
+        explain: "The Scrum Guide caps a Sprint at one calendar month.",
+      },
+      {
+        q: "Which artifact represents the work planned for a Sprint?",
+        options: [
+          "Product Backlog",
+          "Sprint Backlog",
+          "Burn Down Chart",
+          "Definition of Done",
+        ],
+        correct: 1,
+        explain:
+          "The Sprint Backlog is the Sprint Goal plus the items selected for that Sprint.",
+      },
+      {
+        q: "What is the purpose of the Daily Standup?",
+        options: [
+          "Assign blame for missed tasks",
+          "Sync the team and surface blockers in ~15 minutes",
+          "Report status to management",
+          "Estimate story points",
+        ],
+        correct: 1,
+        explain:
+          "It is a short inspect-and-adapt event for the Development Team.",
+      },
+      {
+        q: "Which technique commonly estimates relative story size?",
+        options: [
+          "Gantt chart",
+          "Planning Poker",
+          "Critical path method",
+          "PERT chart",
+        ],
+        correct: 1,
+        explain:
+          "Planning Poker uses relative sizing (often Fibonacci-like numbers) for story points.",
+      },
+      {
+        q: "The Sprint Retrospective is held to…",
+        options: [
+          "Demo the increment to stakeholders",
+          "Inspect how the last Sprint went and plan process improvements",
+          "Refine the backlog",
+          "Sign off releases",
+        ],
+        correct: 1,
+        explain:
+          "Retrospective = team reflects on people, process and tools to improve next Sprint.",
+      },
+    ],
+  },
+  jira: {
+    icon: "🎟️",
+    name: "JIRA",
+    questions: [
+      {
+        q: "What does JQL stand for?",
+        options: [
+          "JIRA Quick Language",
+          "JIRA Query Language",
+          "Java Query Logic",
+          "JIRA Queue List",
+        ],
+        correct: 1,
+        explain:
+          "JQL (JIRA Query Language) is used to search and filter issues.",
+      },
+      {
+        q: "Which JIRA feature lets you visualize a team\u2019s workflow as columns?",
+        options: ["Board", "Component", "Version", "Filter"],
+        correct: 0,
+        explain:
+          "Scrum/Kanban Boards visualize issues moving through workflow statuses.",
+      },
+      {
+        q: 'A "Bug" in JIRA is an example of an…',
+        options: ["Issue Type", "Sprint", "Epic Link", "Workflow Scheme"],
+        correct: 0,
+        explain: "Story, Task, Bug and Epic are common default Issue Types.",
+      },
+      {
+        q: "What is used to group related issues released together?",
+        options: ["Component", "Version/Release", "Label", "Filter"],
+        correct: 1,
+        explain:
+          "Versions represent a release; issues can be tagged as Fix Version.",
+      },
+      {
+        q: "Which JIRA feature auto-transitions issues based on triggers/conditions?",
+        options: ["Automation Rules", "Dashboards", "Reports", "Backlog"],
+        correct: 0,
+        explain:
+          "Automation Rules run trigger → condition → action logic on issues.",
+      },
+    ],
+  },
+  istqb: {
+    icon: "👨‍🎓",
+    name: "ISTQB Foundations",
+    questions: [
+      {
+        q: 'Which testing principle states "testing shows presence of defects, not their absence"?',
+        options: [
+          "Pesticide Paradox",
+          "Exhaustive testing is impossible",
+          "Defect Clustering",
+          "Testing shows presence of defects",
+        ],
+        correct: 3,
+        explain: "One of the seven ISTQB testing principles.",
+      },
+      {
+        q: "Repeating the same tests until they stop finding new bugs is known as…",
+        options: [
+          "Regression Testing",
+          "Pesticide Paradox",
+          "Early Testing",
+          "Defect Clustering",
+        ],
+        correct: 1,
+        explain:
+          "The Pesticide Paradox: the same tests eventually stop finding new defects.",
+      },
+      {
+        q: "Which level of testing is typically performed first?",
+        options: [
+          "System Testing",
+          "Acceptance Testing",
+          "Unit Testing",
+          "Integration Testing",
+        ],
+        correct: 2,
+        explain: "Unit Testing validates individual components first.",
+      },
+      {
+        q: "Black-box testing techniques design test cases based on…",
+        options: [
+          "Internal code structure",
+          "Requirements/specifications without seeing code",
+          "Compiler output",
+          "Database schema only",
+        ],
+        correct: 1,
+        explain:
+          "Black-box testing is specification-based, not implementation-based.",
+      },
+      {
+        q: 'What does the "V-Model" pair each development phase with?',
+        options: [
+          "A code review",
+          "A corresponding testing phase",
+          "A retrospective",
+          "A sprint",
+        ],
+        correct: 1,
+        explain:
+          "Each development stage in the V-Model has a matching test level.",
+      },
+    ],
+  },
+  java: {
+    icon: "☕",
+    name: "Core Java",
+    questions: [
+      {
+        q: "Which keyword prevents a class from being subclassed?",
+        options: ["static", "final", "private", "abstract"],
+        correct: 1,
+        explain: "A final class cannot be extended.",
+      },
+      {
+        q: "Which collection does NOT allow duplicate elements?",
+        options: ["List", "Set", "Map values", "Array"],
+        correct: 1,
+        explain: "Set enforces uniqueness of elements.",
+      },
+      {
+        q: "What does the JVM do with unused objects?",
+        options: [
+          "Manual free()",
+          "Garbage Collection",
+          "Nothing, memory leaks",
+          "Compiler removes them",
+        ],
+        correct: 1,
+        explain:
+          "The Garbage Collector automatically reclaims unreachable objects.",
+      },
+      {
+        q: "Which feature lets a class implement multiple contracts in Java?",
+        options: [
+          "Multiple inheritance of classes",
+          "Interfaces",
+          "Abstract classes only",
+          "Static methods",
+        ],
+        correct: 1,
+        explain:
+          "Java supports multiple interface implementation, not multiple class inheritance.",
+      },
+      {
+        q: 'What does the "static" keyword mean for a variable?',
+        options: [
+          "Belongs to the instance",
+          "Belongs to the class, shared across instances",
+          "Cannot be changed",
+          "Runs only once at compile time",
+        ],
+        correct: 1,
+        explain:
+          "Static members belong to the class rather than any single object.",
+      },
+      {
+        q: "Which Java 8 feature enables functional-style operations on collections?",
+        options: ["Stream API", "Applet API", "Reflection API", "Servlet API"],
+        correct: 0,
+        explain: "Stream API supports map/filter/reduce style pipelines.",
+      },
+    ],
+  },
+  selenium: {
+    icon: "🌐",
+    name: "Selenium WebDriver",
+    questions: [
+      {
+        q: "Which locator is generally the most stable when an element has a unique attribute?",
+        options: ["XPath using text()", "ID", "Absolute XPath", "Class Name"],
+        correct: 1,
+        explain:
+          "ID is fast and stable when unique; prefer it over fragile XPath/text.",
+      },
+      {
+        q: "Which wait keeps polling until a condition is true, up to a timeout?",
+        options: [
+          "Implicit Wait",
+          "Explicit Wait (WebDriverWait)",
+          "Thread.sleep",
+          "Page Load Timeout",
+        ],
+        correct: 1,
+        explain:
+          "Explicit waits use ExpectedConditions to poll until a state is reached.",
+      },
+      {
+        q: "Which class handles mouse hover, drag-and-drop and right-click?",
+        options: [
+          "Select class",
+          "Actions class",
+          "JavascriptExecutor",
+          "Alert interface",
+        ],
+        correct: 1,
+        explain: "The Actions class builds complex user gesture sequences.",
+      },
+      {
+        q: "Which design pattern separates page structure from test logic?",
+        options: [
+          "Singleton Pattern",
+          "Page Object Model",
+          "Factory Pattern",
+          "Observer Pattern",
+        ],
+        correct: 1,
+        explain:
+          "POM keeps locators/actions in page classes, tests stay clean.",
+      },
+      {
+        q: "Which interface is used to select options from a dropdown?",
+        options: ["Actions", "Select", "Alert", "WebElement"],
+        correct: 1,
+        explain:
+          "The Select class wraps <select> dropdowns (by value/index/visible text).",
+      },
+      {
+        q: "What handles unexpected native browser popups like alerts?",
+        options: [
+          "Alert interface",
+          "Select class",
+          "Frame switch",
+          "Cookie handling",
+        ],
+        correct: 0,
+        explain:
+          "driver.switchTo().alert() returns the Alert interface to accept/dismiss/read text.",
+      },
+    ],
+  },
+  api: {
+    icon: "🌍",
+    name: "API Testing",
+    questions: [
+      {
+        q: "Which HTTP method is used to fully replace a resource?",
+        options: ["GET", "PATCH", "PUT", "DELETE"],
+        correct: 2,
+        explain:
+          "PUT typically replaces the whole resource; PATCH updates it partially.",
+      },
+      {
+        q: "Which HTTP status code indicates a successful resource creation?",
+        options: ["200 OK", "201 Created", "301 Moved", "404 Not Found"],
+        correct: 1,
+        explain:
+          "201 Created is returned after a successful POST that creates a resource.",
+      },
+      {
+        q: "In REST Assured, which method starts building a request?",
+        options: ["given()", "when()", "then()", "assertThat()"],
+        correct: 0,
+        explain:
+          "given() sets up preconditions like headers/body before when()/then().",
+      },
+      {
+        q: "What does JSON Schema Validation check?",
+        options: [
+          "Response time only",
+          "That the JSON response matches an expected structure/types",
+          "HTTP status text",
+          "SSL certificate",
+        ],
+        correct: 1,
+        explain:
+          "It validates structure, required fields and data types of a JSON payload.",
+      },
+      {
+        q: "Which HTTP status range generally indicates a client error?",
+        options: ["1xx", "2xx", "3xx", "4xx"],
+        correct: 3,
+        explain: "4xx = client errors (e.g. 400 Bad Request, 404 Not Found).",
+      },
+    ],
+  },
+  sql: {
+    icon: "🗄️",
+    name: "SQL",
+    questions: [
+      {
+        q: "Which clause filters rows after grouping (on aggregated values)?",
+        options: ["WHERE", "HAVING", "GROUP BY", "ORDER BY"],
+        correct: 1,
+        explain:
+          "HAVING filters groups; WHERE filters rows before aggregation.",
+      },
+      {
+        q: "Which JOIN returns only matching rows from both tables?",
+        options: ["LEFT JOIN", "RIGHT JOIN", "INNER JOIN", "FULL OUTER JOIN"],
+        correct: 2,
+        explain: "INNER JOIN returns rows with matches in both tables.",
+      },
+      {
+        q: "Which SQL command removes all rows but keeps the table structure fastest?",
+        options: ["DELETE", "DROP", "TRUNCATE", "ALTER"],
+        correct: 2,
+        explain:
+          "TRUNCATE quickly removes all rows and resets identity, keeping the schema.",
+      },
+      {
+        q: "Which keyword is used to sort query results?",
+        options: ["SORT BY", "ORDER BY", "GROUP BY", "ARRANGE BY"],
+        correct: 1,
+        explain: "ORDER BY sorts the result set ascending/descending.",
+      },
+      {
+        q: "What does CRUD stand for in database operations?",
+        options: [
+          "Create, Read, Update, Delete",
+          "Control, Retrieve, Undo, Drop",
+          "Copy, Read, Use, Delete",
+          "Create, Run, Undo, Debug",
+        ],
+        correct: 0,
+        explain:
+          "CRUD = Create, Read, Update, Delete — the four basic data operations.",
+      },
+    ],
+  },
+  automation: {
+    icon: "🛠️",
+    name: "Automation Tools & CI/CD",
+    questions: [
+      {
+        q: "Which file defines dependencies and build config in a Maven project?",
+        options: [
+          "build.gradle",
+          "pom.xml",
+          "package.json",
+          "requirements.txt",
+        ],
+        correct: 1,
+        explain:
+          "pom.xml (Project Object Model) configures Maven dependencies and plugins.",
+      },
+      {
+        q: 'What does "git rebase" primarily do?',
+        options: [
+          "Deletes a branch",
+          "Replays commits on top of another base commit",
+          "Creates a pull request",
+          "Compresses the repo",
+        ],
+        correct: 1,
+        explain:
+          "Rebase re-applies commits onto a new base for a linear history.",
+      },
+      {
+        q: "Which tool is commonly used to build CI/CD pipelines from a Jenkinsfile?",
+        options: ["Jenkins", "Selenium", "TestNG", "Maven"],
+        correct: 0,
+        explain: "Jenkins pipelines are typically defined in a Jenkinsfile.",
+      },
+      {
+        q: "Which reporting library produces rich HTML test reports for Java frameworks?",
+        options: ["Extent Reports", "JDBC", "Fillo", "JQL"],
+        correct: 0,
+        explain:
+          "Extent Reports (and Allure) generate detailed HTML test execution reports.",
+      },
+      {
+        q: 'What is "git stash" used for?',
+        options: [
+          "Permanently deleting changes",
+          "Temporarily shelving uncommitted changes",
+          "Merging two branches",
+          "Tagging a release",
+        ],
+        correct: 1,
+        explain:
+          "Stash saves working-directory changes so you can switch context and reapply later.",
+      },
+    ],
+  },
+  frameworks: {
+    icon: "🏗️",
+    name: "Test Frameworks",
+    questions: [
+      {
+        q: "Which TestNG annotation runs once before all tests in a class?",
+        options: [
+          "@BeforeMethod",
+          "@BeforeClass",
+          "@BeforeTest",
+          "@BeforeSuite",
+        ],
+        correct: 1,
+        explain:
+          "@BeforeClass runs once before the first test method in that class.",
+      },
+      {
+        q: "In Cucumber, where are Given/When/Then steps written?",
+        options: [
+          "Feature file (Gherkin)",
+          "pom.xml",
+          "TestNG.xml",
+          "Step Definitions only",
+        ],
+        correct: 0,
+        explain: "Gherkin syntax (Given/When/Then) lives in .feature files.",
+      },
+      {
+        q: "Which framework style reads test data from an external source like Excel/CSV?",
+        options: [
+          "Data Driven Framework",
+          "Keyword Driven Framework",
+          "Linear Scripting",
+          "BDD only",
+        ],
+        correct: 0,
+        explain: "Data Driven Framework separates test data from test logic.",
+      },
+      {
+        q: "Which TestNG feature reruns failed tests automatically?",
+        options: ["Listener", "Retry Analyzer", "DataProvider", "Parameters"],
+        correct: 1,
+        explain:
+          "IRetryAnalyzer implementation retries failed tests a set number of times.",
+      },
+      {
+        q: "What connects Gherkin steps to executable Java code in Cucumber?",
+        options: ["Hooks", "Step Definitions", "Tags", "Scenario Outline"],
+        correct: 1,
+        explain: "Step Definitions map Gherkin text to automation code.",
+      },
+    ],
+  },
+  playwright: {
+    icon: "▶️",
+    name: "Playwright",
+    questions: [
+      {
+        q: "Which Playwright feature automatically waits for elements to be actionable?",
+        options: [
+          "Manual Thread.sleep",
+          "Auto-Waiting",
+          "Explicit polling only",
+          "JavaScript Executor",
+        ],
+        correct: 1,
+        explain:
+          "Playwright auto-waits for elements to be visible/stable/enabled before acting.",
+      },
+      {
+        q: "What does the Playwright Trace Viewer help with?",
+        options: [
+          "Writing SQL queries",
+          "Debugging test runs with timeline, DOM & network snapshots",
+          "Managing JIRA boards",
+          "Compiling Java code",
+        ],
+        correct: 1,
+        explain:
+          "Trace Viewer visualizes actions, screenshots, console and network per test.",
+      },
+      {
+        q: "Which command generates Playwright test code by recording browser actions?",
+        options: [
+          "Code Generator (codegen)",
+          "Trace Viewer",
+          "Fixtures",
+          "Locator API",
+        ],
+        correct: 0,
+        explain:
+          "`playwright codegen` records interactions and emits test code.",
+      },
+      {
+        q: "What isolates cookies/storage between tests in Playwright?",
+        options: ["Browser Context", "Page object", "Frame", "Locator"],
+        correct: 0,
+        explain:
+          "A Browser Context is an isolated session, like an incognito profile.",
+      },
+      {
+        q: "Which API is preferred for interacting with elements in modern Playwright?",
+        options: ["Locator API", "findElement", "WebElement", "Select class"],
+        correct: 0,
+        explain:
+          "Locators are lazy and auto-retrying, replacing older element-handle patterns.",
+      },
+    ],
+  },
+};
+
+let quizState = { catKey: null, order: [], idx: 0, score: 0, answered: false };
+
+const quizCatGrid = document.getElementById("quizCatGrid");
+const quizSetup = document.getElementById("quizSetup");
+const quizRunner = document.getElementById("quizRunner");
+const quizResult = document.getElementById("quizResult");
+const quizCatLabel = document.getElementById("quizCatLabel");
+const quizScoreEl = document.getElementById("quizScore");
+const quizProgressLabel = document.getElementById("quizProgressLabel");
+const quizProgressFill = document.getElementById("quizProgressFill");
+const quizQuestionEl = document.getElementById("quizQuestion");
+const quizOptionsEl = document.getElementById("quizOptions");
+const quizFeedbackEl = document.getElementById("quizFeedback");
+const quizNextBtn = document.getElementById("quizNext");
+const quizQuitBtn = document.getElementById("quizQuit");
+
+let totalMcqCount = 0;
+Object.entries(QUIZ_BANK).forEach(([key, cat]) => {
+  totalMcqCount += cat.questions.length;
+  const card = document.createElement("button");
+  card.className = "quiz-cat-card";
+  card.innerHTML = `<span class="qcc-icon">${cat.icon}</span><span class="qcc-name">${cat.name}</span><span class="qcc-count">${cat.questions.length} questions</span>`;
+  card.addEventListener("click", () => startQuiz(key));
+  quizCatGrid.appendChild(card);
+});
+pulseData[2].value = totalMcqCount;
+renderPulseNumbers();
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz(key) {
+  const cat = QUIZ_BANK[key];
+  quizState = {
+    catKey: key,
+    order: shuffle(cat.questions),
+    idx: 0,
+    score: 0,
+    answered: false,
+  };
+  quizSetup.hidden = true;
+  quizResult.hidden = true;
+  quizRunner.hidden = false;
+  quizCatLabel.textContent = `${cat.icon} ${cat.name}`;
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  const cat = QUIZ_BANK[quizState.catKey];
+  const q = quizState.order[quizState.idx];
+  quizState.answered = false;
+  quizQuestionEl.textContent = q.q;
+  quizFeedbackEl.hidden = true;
+  quizNextBtn.disabled = true;
+  quizNextBtn.textContent =
+    quizState.idx === quizState.order.length - 1
+      ? "See results →"
+      : "Next question →";
+  quizScoreEl.textContent = `Score: ${quizState.score}`;
+  quizProgressLabel.textContent = `Q ${quizState.idx + 1} / ${quizState.order.length}`;
+  quizProgressFill.style.width = `${(quizState.idx / quizState.order.length) * 100}%`;
+
+  quizOptionsEl.innerHTML = "";
+  const letters = ["A", "B", "C", "D"];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.className = "quiz-opt";
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.addEventListener("click", () => answerQuiz(i, q, btn));
+    quizOptionsEl.appendChild(btn);
+  });
+}
+
+function answerQuiz(i, q, btnEl) {
+  if (quizState.answered) return;
+  quizState.answered = true;
+  const correct = i === q.correct;
+  if (correct) quizState.score++;
+  [...quizOptionsEl.children].forEach((b, idx) => {
+    b.disabled = true;
+    if (idx === q.correct) b.classList.add("correct");
+    else if (idx === i) b.classList.add("wrong");
+  });
+  quizFeedbackEl.hidden = false;
+  quizFeedbackEl.innerHTML = `${correct ? "✅ Correct." : "❌ Not quite."} ${q.explain}`;
+  quizScoreEl.textContent = `Score: ${quizState.score}`;
+  quizNextBtn.disabled = false;
+}
+
+quizNextBtn.addEventListener("click", () => {
+  if (quizState.idx < quizState.order.length - 1) {
+    quizState.idx++;
+    renderQuizQuestion();
+  } else {
+    finishQuiz();
+  }
+});
+
+quizQuitBtn.addEventListener("click", () => {
+  quizRunner.hidden = true;
+  quizResult.hidden = true;
+  quizSetup.hidden = false;
+});
+
+function finishQuiz() {
+  quizRunner.hidden = true;
+  quizResult.hidden = false;
+  const total = quizState.order.length;
+  const pct = Math.round((quizState.score / total) * 100);
+  document.getElementById("resultRing").style.setProperty("--pct", pct);
+  document.getElementById("resultRing").innerHTML = `<span>${pct}%</span>`;
+  const cat = QUIZ_BANK[quizState.catKey];
+  document.getElementById("resultHeading").textContent =
+    pct >= 70 ? "🎉 Nicely done!" : "Keep going!";
+  document.getElementById("resultSub").textContent =
+    `You scored ${quizState.score} / ${total} on ${cat.name}.`;
+}
+
+document
+  .getElementById("quizRetry")
+  .addEventListener("click", () => startQuiz(quizState.catKey));
+document.getElementById("quizBackCats").addEventListener("click", () => {
+  quizResult.hidden = true;
+  quizSetup.hidden = false;
+});
+
+/* =====================================================================
+   ADMIN BOARDS — Manual Testing & Automation Testing (localStorage CRUD)
+   ===================================================================== */
+const modalScrim = document.getElementById("modalScrim");
+const modalTitle = document.getElementById("modalTitle");
+const modalBody = document.getElementById("modalBody");
+const modalSave = document.getElementById("modalSave");
+document.getElementById("modalClose").addEventListener("click", closeModal);
+document.getElementById("modalCancel").addEventListener("click", closeModal);
+modalScrim.addEventListener("click", (e) => {
+  if (e.target === modalScrim) closeModal();
+});
+function openModal() {
+  modalScrim.classList.add("show");
+}
+function closeModal() {
+  modalScrim.classList.remove("show");
+  modalBody.innerHTML = "";
+  modalSave.onclick = null;
+}
+
+function seedIfEmpty(key, seed) {
+  if (!localStorage.getItem(key))
+    localStorage.setItem(key, JSON.stringify(seed));
+}
+function loadRows(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+function saveRows(key, rows) {
+  localStorage.setItem(key, JSON.stringify(rows));
+}
+
+function badgeClass(val) {
+  return val.toLowerCase().replace(/\s+/g, "");
+}
+
+/* ---------- MANUAL TESTING BOARD ---------- */
+const MANUAL_KEY = "ts-manual-cases";
+seedIfEmpty(MANUAL_KEY, [
+  {
+    id: "MT-101",
+    title: "Verify login with valid credentials",
+    module: "Authentication",
+    priority: "High",
+    status: "Pass",
+    tester: "A. Rao",
+    steps:
+      "1. Open login page\n2. Enter valid username/password\n3. Click Login",
+    expected: "User is redirected to dashboard",
+  },
+  {
+    id: "MT-102",
+    title: "Verify error on invalid password",
+    module: "Authentication",
+    priority: "High",
+    status: "Fail",
+    tester: "A. Rao",
+    steps:
+      "1. Open login page\n2. Enter valid username, wrong password\n3. Click Login",
+    expected: 'Inline error: "Invalid credentials"',
+  },
+  {
+    id: "MT-103",
+    title: "Verify JIRA board drag-and-drop between columns",
+    module: "JIRA Board",
+    priority: "Medium",
+    status: "Pending",
+    tester: "S. Iyer",
+    steps: "1. Open board\n2. Drag a card from To Do to In Progress",
+    expected: "Card status updates and persists",
+  },
+  {
+    id: "MT-104",
+    title: "Verify SQL search filter returns exact matches",
+    module: "Search",
+    priority: "Low",
+    status: "Blocked",
+    tester: "M. Khan",
+    steps: "1. Enter search term\n2. Apply filter",
+    expected: "Only exact matches are displayed",
+  },
+]);
+function manualStats(rows) {
+  return {
+    total: rows.length,
+    pass: rows.filter((r) => r.status === "Pass").length,
+    fail: rows.filter((r) => r.status === "Fail").length,
+    pending: rows.filter(
+      (r) => r.status === "Pending" || r.status === "Blocked",
+    ).length,
+  };
+}
+function renderManualStats() {
+  const rows = loadRows(MANUAL_KEY);
+  const s = manualStats(rows);
+  document.getElementById("manualStats").innerHTML = `
+    <div class="stat-card"><span class="sc-num">${s.total}</span><span class="sc-sub">Total test cases</span></div>
+    <div class="stat-card"><span class="sc-num" style="color:#38c172">${s.pass}</span><span class="sc-sub">Passed</span></div>
+    <div class="stat-card"><span class="sc-num" style="color:#f0555a">${s.fail}</span><span class="sc-sub">Failed</span></div>
+    <div class="stat-card"><span class="sc-num" style="color:#e0a72d">${s.pending}</span><span class="sc-sub">Pending / Blocked</span></div>`;
+}
+function renderManualTable() {
+  const rows = loadRows(MANUAL_KEY);
+  const q = document.getElementById("manualSearch").value.trim().toLowerCase();
+  const filterStatus = document.getElementById("manualFilter").value;
+  const tbody = document.getElementById("manualTbody");
+  const filtered = rows.filter((r) => {
+    const matchesQ =
+      !q ||
+      [r.title, r.module, r.tester, r.id].join(" ").toLowerCase().includes(q);
+    const matchesF = filterStatus === "all" || r.status === filterStatus;
+    return matchesQ && matchesF;
+  });
+  tbody.innerHTML = filtered
+    .map(
+      (r) => `
+    <tr>
+      <td class="row-id">${r.id}</td>
+      <td>${r.title}</td>
+      <td>${r.module}</td>
+      <td><span class="badge ${badgeClass(r.priority)}">${r.priority}</span></td>
+      <td><span class="badge ${badgeClass(r.status)}">${r.status}</span></td>
+      <td>${r.tester}</td>
+      <td><div class="row-actions">
+        <button class="edit" title="Edit" data-id="${r.id}">✎</button>
+        <button class="del" title="Delete" data-id="${r.id}">🗑</button>
+      </div></td>
+    </tr>`,
+    )
+    .join("");
+  document.getElementById("manualEmpty").hidden = filtered.length !== 0;
+  tbody
+    .querySelectorAll(".edit")
+    .forEach((b) =>
+      b.addEventListener("click", () => openManualModal(b.dataset.id)),
+    );
+  tbody.querySelectorAll(".del").forEach((b) =>
+    b.addEventListener("click", () => {
+      if (!confirm("Delete this test case?")) return;
+      saveRows(
+        MANUAL_KEY,
+        loadRows(MANUAL_KEY).filter((r) => r.id !== b.dataset.id),
+      );
+      renderManualStats();
+      renderManualTable();
+    }),
+  );
+  renderManualStats();
+}
+function openManualModal(id) {
+  const rows = loadRows(MANUAL_KEY);
+  const row = rows.find((r) => r.id === id) || {
+    id: "MT-" + Math.floor(100 + Math.random() * 900),
+    title: "",
+    module: "",
+    priority: "Medium",
+    status: "Pending",
+    tester: "",
+    steps: "",
+    expected: "",
+  };
+  modalTitle.textContent = id ? `Edit ${id}` : "New Manual Test Case";
+  modalBody.innerHTML = `
+    <label>Test case ID<input id="f_id" value="${row.id}" ${id ? "readonly" : ""}></label>
+    <label>Title<input id="f_title" value="${row.title}" placeholder="Verify…"></label>
+    <label>Module<input id="f_module" value="${row.module}" placeholder="e.g. Authentication"></label>
+    <label>Priority
+      <select id="f_priority">
+        ${["High", "Medium", "Low"].map((p) => `<option ${row.priority === p ? "selected" : ""}>${p}</option>`).join("")}
+      </select>
+    </label>
+    <label>Status
+      <select id="f_status">
+        ${["Pass", "Fail", "Blocked", "Pending"].map((s) => `<option ${row.status === s ? "selected" : ""}>${s}</option>`).join("")}
+      </select>
+    </label>
+    <label>Tester<input id="f_tester" value="${row.tester}" placeholder="Owner name"></label>
+    <label>Steps<textarea id="f_steps" rows="3">${row.steps || ""}</textarea></label>
+    <label>Expected result<textarea id="f_expected" rows="2">${row.expected || ""}</textarea></label>`;
+  modalSave.onclick = () => {
+    const updated = {
+      id: document.getElementById("f_id").value.trim() || row.id,
+      title: document.getElementById("f_title").value.trim() || "Untitled case",
+      module: document.getElementById("f_module").value.trim() || "General",
+      priority: document.getElementById("f_priority").value,
+      status: document.getElementById("f_status").value,
+      tester: document.getElementById("f_tester").value.trim() || "Unassigned",
+      steps: document.getElementById("f_steps").value,
+      expected: document.getElementById("f_expected").value,
+    };
+    let all = loadRows(MANUAL_KEY);
+    const idx = all.findIndex((r) => r.id === id);
+    if (idx > -1) all[idx] = updated;
+    else all.push(updated);
+    saveRows(MANUAL_KEY, all);
+    closeModal();
+    renderManualTable();
+  };
+  openModal();
+}
+document
+  .getElementById("manualAddBtn")
+  .addEventListener("click", () => openManualModal(null));
+document
+  .getElementById("manualSearch")
+  .addEventListener("input", renderManualTable);
+document
+  .getElementById("manualFilter")
+  .addEventListener("change", renderManualTable);
+
+/* ---------- AUTOMATION TESTING BOARD ---------- */
+const AUTO_KEY = "ts-auto-scripts";
+seedIfEmpty(AUTO_KEY, [
+  {
+    id: "AT-201",
+    name: "Login_ValidCredentials_Test",
+    framework: "Selenium + TestNG",
+    suite: "Regression",
+    status: "Passed",
+    lastRun: "2026-07-30",
+  },
+  {
+    id: "AT-202",
+    name: "API_CreateUser_StatusCode201",
+    framework: "REST Assured",
+    suite: "API Smoke",
+    status: "Passed",
+    lastRun: "2026-07-30",
+  },
+  {
+    id: "AT-203",
+    name: "Checkout_AddToCart_E2E",
+    framework: "Playwright",
+    suite: "E2E",
+    status: "Failed",
+    lastRun: "2026-07-29",
+  },
+  {
+    id: "AT-204",
+    name: "JIRA_BoardDragDrop_Scenario",
+    framework: "Playwright + Cucumber",
+    suite: "BDD Regression",
+    status: "Not Run",
+    lastRun: "—",
+  },
+]);
+function autoStats(rows) {
+  return {
+    total: rows.length,
+    passed: rows.filter((r) => r.status === "Passed").length,
+    failed: rows.filter((r) => r.status === "Failed").length,
+    other: rows.filter((r) => r.status === "Skipped" || r.status === "Not Run")
+      .length,
+  };
+}
+function renderAutoStats() {
+  const rows = loadRows(AUTO_KEY);
+  const s = autoStats(rows);
+  document.getElementById("autoStats").innerHTML = `
+    <div class="stat-card"><span class="sc-num">${s.total}</span><span class="sc-sub">Total scripts</span></div>
+    <div class="stat-card"><span class="sc-num" style="color:#38c172">${s.passed}</span><span class="sc-sub">Passed</span></div>
+    <div class="stat-card"><span class="sc-num" style="color:#f0555a">${s.failed}</span><span class="sc-sub">Failed</span></div>
+    <div class="stat-card"><span class="sc-num" style="color:#e0a72d">${s.other}</span><span class="sc-sub">Skipped / Not run</span></div>`;
+}
+function renderAutoTable() {
+  const rows = loadRows(AUTO_KEY);
+  const q = document.getElementById("autoSearch").value.trim().toLowerCase();
+  const filterStatus = document.getElementById("autoFilter").value;
+  const tbody = document.getElementById("autoTbody");
+  const filtered = rows.filter((r) => {
+    const matchesQ =
+      !q ||
+      [r.name, r.framework, r.suite, r.id].join(" ").toLowerCase().includes(q);
+    const matchesF = filterStatus === "all" || r.status === filterStatus;
+    return matchesQ && matchesF;
+  });
+  tbody.innerHTML = filtered
+    .map(
+      (r) => `
+    <tr>
+      <td class="row-id">${r.id}</td>
+      <td>${r.name}</td>
+      <td>${r.framework}</td>
+      <td>${r.suite}</td>
+      <td><span class="badge ${badgeClass(r.status)}">${r.status}</span></td>
+      <td>${r.lastRun}</td>
+      <td><div class="row-actions">
+        <button class="edit" title="Edit" data-id="${r.id}">✎</button>
+        <button class="del" title="Delete" data-id="${r.id}">🗑</button>
+      </div></td>
+    </tr>`,
+    )
+    .join("");
+  document.getElementById("autoEmpty").hidden = filtered.length !== 0;
+  tbody
+    .querySelectorAll(".edit")
+    .forEach((b) =>
+      b.addEventListener("click", () => openAutoModal(b.dataset.id)),
+    );
+  tbody.querySelectorAll(".del").forEach((b) =>
+    b.addEventListener("click", () => {
+      if (!confirm("Delete this script?")) return;
+      saveRows(
+        AUTO_KEY,
+        loadRows(AUTO_KEY).filter((r) => r.id !== b.dataset.id),
+      );
+      renderAutoStats();
+      renderAutoTable();
+    }),
+  );
+  renderAutoStats();
+}
+function openAutoModal(id) {
+  const rows = loadRows(AUTO_KEY);
+  const row = rows.find((r) => r.id === id) || {
+    id: "AT-" + Math.floor(200 + Math.random() * 300),
+    name: "",
+    framework: "Selenium + TestNG",
+    suite: "Regression",
+    status: "Not Run",
+    lastRun: new Date().toISOString().slice(0, 10),
+  };
+  modalTitle.textContent = id ? `Edit ${id}` : "New Automation Script";
+  modalBody.innerHTML = `
+    <label>Script ID<input id="f_id" value="${row.id}" ${id ? "readonly" : ""}></label>
+    <label>Test / script name<input id="f_name" value="${row.name}" placeholder="e.g. Login_ValidCredentials_Test"></label>
+    <label>Framework
+      <select id="f_framework">
+        ${["Selenium + TestNG", "Selenium + JUnit", "Playwright", "Playwright + Cucumber", "REST Assured", "Cucumber + TestNG"].map((f) => `<option ${row.framework === f ? "selected" : ""}>${f}</option>`).join("")}
+      </select>
+    </label>
+    <label>Suite<input id="f_suite" value="${row.suite}" placeholder="e.g. Regression, Smoke"></label>
+    <label>Status
+      <select id="f_status">
+        ${["Passed", "Failed", "Skipped", "Not Run"].map((s) => `<option ${row.status === s ? "selected" : ""}>${s}</option>`).join("")}
+      </select>
+    </label>
+    <label>Last run date<input id="f_lastrun" type="date" value="${row.lastRun && row.lastRun !== "—" ? row.lastRun : ""}"></label>`;
+  modalSave.onclick = () => {
+    const updated = {
+      id: document.getElementById("f_id").value.trim() || row.id,
+      name: document.getElementById("f_name").value.trim() || "Untitled_Script",
+      framework: document.getElementById("f_framework").value,
+      suite: document.getElementById("f_suite").value.trim() || "General",
+      status: document.getElementById("f_status").value,
+      lastRun: document.getElementById("f_lastrun").value || "—",
+    };
+    let all = loadRows(AUTO_KEY);
+    const idx = all.findIndex((r) => r.id === id);
+    if (idx > -1) all[idx] = updated;
+    else all.push(updated);
+    saveRows(AUTO_KEY, all);
+    closeModal();
+    renderAutoTable();
+  };
+  openModal();
+}
+document
+  .getElementById("autoAddBtn")
+  .addEventListener("click", () => openAutoModal(null));
+document
+  .getElementById("autoSearch")
+  .addEventListener("input", renderAutoTable);
+document
+  .getElementById("autoFilter")
+  .addEventListener("change", renderAutoTable);
+
+renderManualTable();
+renderAutoTable();
+
+/* =====================================================================
+   CHAT WIDGET — quick-link launcher + simple keyword assistant
+   ===================================================================== */
+const chatFab = document.getElementById("chatFab");
+const chatPanel = document.getElementById("chatPanel");
+const chatClose = document.getElementById("chatClose");
+const chatBody = document.getElementById("chatBody");
+const chatForm = document.getElementById("chatForm");
+const chatInput = document.getElementById("chatInput");
+const chatQuicklinks = document.getElementById("chatQuicklinks");
+
+EXTERNAL_LINKS.forEach((l) => {
+  const b = document.createElement("button");
+  b.textContent = `${l.icon} ${l.name}`;
+  b.addEventListener("click", () => window.open(l.url, "_blank", "noopener"));
+  chatQuicklinks.appendChild(b);
+});
+
+function addMsg(text, who) {
+  const m = document.createElement("div");
+  m.className = `msg ${who}`;
+  m.innerHTML = text;
+  chatBody.appendChild(m);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  return m;
+}
 
 let chatOpened = false;
-
-if (chatBtnGridEl) {
-  CHAT_TOPIC_BUTTONS.forEach((t) => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "chat-topic-btn";
-    b.innerHTML = `<span class="ct-icon">${t.icon}</span><span>${t.label}</span>`;
-    b.addEventListener("click", () => {
-      document.querySelector('.tab[data-tab="chat"]').click();
-      askChat(`Tell me about ${t.label}`, t.key);
-    });
-    chatBtnGridEl.appendChild(b);
-  });
-}
-
-function nowTime() {
-  const d = new Date();
-  return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-}
-
-function addChatMessage(role, paragraphs) {
-  const wrap = document.createElement("div");
-  wrap.className = "chat-msg " + role;
-
-  const avatar = document.createElement("span");
-  avatar.className = "chat-avatar " + role;
-  avatar.textContent = role === "user" ? "YOU" : "TS";
-
-  const bubble = document.createElement("div");
-  bubble.className = "chat-bubble";
-  paragraphs.forEach((txt) => {
-    const p = document.createElement("p");
-    p.textContent = txt;
-    bubble.appendChild(p);
-  });
-  const time = document.createElement("span");
-  time.className = "cb-time";
-  time.textContent = nowTime();
-  bubble.appendChild(time);
-
-  wrap.appendChild(avatar);
-  wrap.appendChild(bubble);
-  chatMessagesEl.appendChild(wrap);
-  chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
-}
-
-function findTopicKey(text) {
-  const q = text.toLowerCase();
-  if (/(jira)/.test(q)) return "jira";
-  if (/(istqb)/.test(q)) return "istqb";
-  if (/(agile|scrum|sprint)/.test(q)) return "agile";
-  if (/(selenium|webdriver|xpath|locator)/.test(q)) return "selenium";
-  if (/(playwright)/.test(q)) return "playwright";
-  if (/(rest assured|api testing|\bapi\b)/.test(q)) return "api";
-  if (/(\bsql\b|database|query|join)/.test(q)) return "sql";
-  if (/(java\b|oop|collections)/.test(q)) return "java";
-  if (/(ci\/cd|jenkins|pipeline|github actions)/.test(q)) return "cicd";
-  if (/(framework|testng|cucumber|pom\b|page object)/.test(q))
-    return "framework";
-  if (/(interview|hr round|tell me about yourself)/.test(q)) return "interview";
-  if (/(gen ai|chatgpt|claude|copilot|gemini|prompt)/.test(q)) return "genai";
-  return null;
-}
-
-function askChat(userText, forcedKey) {
-  addChatMessage("user", [userText]);
-  chatInputEl.value = "";
-  chatTypingEl.hidden = false;
-  chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
-
-  const key = forcedKey || findTopicKey(userText);
-  const delay = 550 + Math.random() * 500;
-
-  setTimeout(() => {
-    chatTypingEl.hidden = true;
-    if (key && TOPIC_CONTENT[key]) {
-      addChatMessage("bot", TOPIC_CONTENT[key]);
-    } else {
-      addChatMessage("bot", [
-        `I don't have a canned answer for "${userText}" yet, but here is a starting point.`,
-        "Try asking about Agile, JIRA, ISTQB, Core Java, Selenium, API Testing, SQL, Playwright, CI/CD, Frameworks, Interview Tips, or Gen AI — or tap one of the topic buttons in the sidebar.",
-      ]);
-    }
-  }, delay);
-}
-
-function openChatView() {
-  homeView.hidden = true;
-  topicView.hidden = true;
-  chatViewEl.hidden = false;
-  crumbEl.innerHTML = '<span class="crumb-item">AI Chat Assistant</span>';
+function openChat() {
+  chatPanel.hidden = false;
+  chatFab.setAttribute("aria-expanded", "true");
   if (!chatOpened) {
     chatOpened = true;
-    addChatMessage("bot", [
-      "Hi, I am the Tech Source assistant. Ask me about Agile, JIRA, ISTQB, Java, Selenium, API testing, SQL, Playwright, CI/CD, frameworks, or interview prep.",
-      "Tap a topic button in the sidebar, or just type a question below.",
-    ]);
+    addMsg(
+      `Hi! I'm the <strong>Tech Source</strong> assistant — <em>Creativity at it's peak!</em> 👋<br>Ask me about a topic (Selenium, SQL, JIRA, Agile…) or tap a tool below to jump straight to it.`,
+      "bot",
+    );
   }
-  chatInputEl.focus();
+}
+function closeChat() {
+  chatPanel.hidden = true;
+  chatFab.setAttribute("aria-expanded", "false");
+}
+chatFab.addEventListener("click", () =>
+  chatPanel.hidden ? openChat() : closeChat(),
+);
+chatClose.addEventListener("click", closeChat);
+
+function findTopicMatch(query) {
+  const q = query.toLowerCase();
+  let best = null;
+  state.flatLearn.concat(state.flatPrep).forEach((path) => {
+    const label = stripEmoji(path[path.length - 1]).toLowerCase();
+    if (q.includes(label) || label.includes(q)) best = path;
+  });
+  return best;
 }
 
-if (chatFormEl) {
-  chatFormEl.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const text = chatInputEl.value.trim();
-    if (!text) return;
-    askChat(text);
-  });
+function botReply(query) {
+  const q = query.toLowerCase().trim();
+  if (!q) return "Type a topic name, or tap one of the tools below 👇";
+
+  if (/quiz|mcq|question/.test(q)) {
+    return `We've got ${totalMcqCount}+ objective questions across Agile, JIRA, ISTQB, Java, Selenium, API Testing, SQL, Frameworks &amp; Playwright. Open the <strong>📝 MCQ Quiz</strong> tab up top to practice.`;
+  }
+  if (/manual/.test(q)) {
+    return `Head to the <strong>🧪 Manual Testing Admin</strong> board to log and track manual test cases with Pass/Fail/Blocked/Pending status.`;
+  }
+  if (/automation admin|automation board|script/.test(q)) {
+    return `Check the <strong>🤖 Automation Admin</strong> board to track Selenium/Playwright/REST Assured scripts and their last run status.`;
+  }
+  if (/dark|light|theme/.test(q)) {
+    return `Use the ☀️/🌙 toggle in the top bar to switch between light and dark mode — your choice is remembered.`;
+  }
+
+  const match = findTopicMatch(q);
+  if (match) {
+    const hint = hintFor(match);
+    return `<strong>${stripEmoji(match[match.length - 1])}</strong> is on the Learning Path — ${hint.blurb}. I've got it queued in the sidebar; search "<strong>${stripEmoji(match[match.length - 1])}</strong>" there, or dig deeper on <a href="${hint.tool.url}" target="_blank" rel="noopener">${hint.tool.name} ↗</a>.`;
+  }
+
+  const hint = hintFor([q]);
+  return `I don't have that topic mapped exactly, but try the sidebar search, or explore it further on <a href="${hint.tool.url}" target="_blank" rel="noopener">${hint.tool.name} ↗</a>. You can also ask about Selenium, SQL, JIRA, Agile, Java or API Testing.`;
 }
 
-if (chatClearBtn) {
-  chatClearBtn.addEventListener("click", () => {
-    chatMessagesEl.innerHTML = "";
-    chatOpened = false;
-    openChatView();
-  });
-}
+chatForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const val = chatInput.value.trim();
+  if (!val) return;
+  addMsg(val, "user");
+  chatInput.value = "";
+  const typing = addMsg(
+    "<span></span><span></span><span></span>",
+    "bot typing",
+  );
+  setTimeout(
+    () => {
+      typing.remove();
+      addMsg(botReply(val), "bot");
+    },
+    500 + Math.random() * 400,
+  );
+});

@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tech Source | QA &amp; Automation Knowledge Hub</title>
+<meta name="description" content="Tech Source — Creativity at it's peak! A live QA &amp; automation learning hub with MCQ practice, manual &amp; automation testing admin boards and an in-page assistant.">
+<link rel="icon" href="logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -11,14 +13,20 @@
 </head>
 <body>
 
-<canvas class="particle-canvas" id="particleCanvas" aria-hidden="true"></canvas>
 <div class="circuit-bg" aria-hidden="true"></div>
+
+<!-- boot / loading splash -->
+<div class="boot-splash" id="bootSplash" aria-hidden="true">
+  <img src="Media.jpg" alt="" class="boot-logo">
+  <div class="boot-bar"><div class="boot-bar-fill"></div></div>
+  <span class="boot-text">Booting Tech Source…</span>
+</div>
 
 <div class="app">
 
   <!-- ============ SIDEBAR ============ -->
   <aside class="sidebar" id="sidebar">
-    <div class="brand">
+    <div class="brand" id="brandHome" role="button" tabindex="0" aria-label="Go to home">
       <img src="Media.jpg" alt="Tech Source logo" class="brand-logo">
       <div class="brand-text">
         <span class="brand-name">TECH <em>SOURCE</em></span>
@@ -30,10 +38,6 @@
     <div class="pill-header">
       <span class="pill-icon">📚</span>
       <span>Software Testing</span>
-      <span class="clock-widget" id="clockWidget">
-        <span class="clock-time" id="clockTime">00:00:00</span>
-        <span class="clock-date" id="clockDate">--- -- ----</span>
-      </span>
     </div>
 
     <div class="search-wrap">
@@ -45,16 +49,10 @@
     <div class="tabs" role="tablist">
       <button class="tab active" data-tab="learn" role="tab" aria-selected="true">Learning Path</button>
       <button class="tab" data-tab="prep" role="tab" aria-selected="false">Interview &amp; Scenarios</button>
-      <button class="tab" data-tab="chat" role="tab" aria-selected="false">💬 AI Chat</button>
     </div>
 
     <nav class="tree" id="treeLearn"></nav>
     <nav class="tree" id="treePrep" hidden></nav>
-
-    <div class="chat-topics" id="chatTopics" hidden>
-      <div class="chat-topics-label">Tap a topic to ask the assistant</div>
-      <div class="chat-btn-grid" id="chatBtnGrid"></div>
-    </div>
 
     <div class="progress-box">
       <div class="progress-labels">
@@ -75,22 +73,37 @@
       <div class="crumb" id="crumb">
         <span class="crumb-item">Home</span>
       </div>
-      <div class="topbar-clock" id="topbarClock">
-        <span class="topbar-clock-dot"></span>
-        <span id="topbarTime">00:00:00</span>
-      </div>
-      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+
+      <button class="icon-toggle" id="themeToggle" aria-label="Toggle light / dark mode" title="Toggle theme">
+        <span class="theme-icon sun">☀️</span><span class="theme-icon moon">🌙</span>
+      </button>
+
       <div class="topbar-links" id="topLinks"></div>
     </header>
 
+    <!-- PAGE NAV -->
+    <nav class="pagenav" id="pageNav" aria-label="Site sections">
+      <button class="pn-btn active" data-page="home">🏠 Home</button>
+      <button class="pn-btn" data-page="quiz">📝 MCQ Quiz</button>
+      <button class="pn-btn" data-page="manualAdmin">🧪 Manual Testing Admin</button>
+      <button class="pn-btn" data-page="autoAdmin">🤖 Automation Admin</button>
+      <button class="pn-btn" data-page="resources">🔗 Resources &amp; Tools</button>
+    </nav>
+
     <!-- HOME / HERO VIEW -->
-    <section class="view home-view" id="homeView">
+    <section class="view page home-view" id="homeView" data-page-view="home">
       <div class="hero">
         <div class="hero-eyebrow">
           <span class="pulse-dot"></span> QA · Automation · Interview-Ready
         </div>
         <h1 class="hero-title">Trace every path<br> from <span class="grad">manual&nbsp;testing</span> to <span class="grad">automation&nbsp;mastery</span>.</h1>
-        <p class="hero-sub">One map for Agile, JIRA, ISTQB, Core Java, Selenium, Playwright, API testing, SQL, frameworks, CI/CD and the interview rounds that follow. Pick a node in the sidebar, tap a topic button below, or ask the AI Chat assistant.</p>
+        <p class="hero-sub">One map for Agile, JIRA, ISTQB, Core Java, Selenium, Playwright, API testing, SQL, frameworks, CI/CD and the interview rounds that follow. Pick a node in the sidebar and follow the trace.</p>
+
+        <div class="hero-actions">
+          <button class="hero-btn primary" data-page="quiz">📝 Test yourself — MCQ Quiz</button>
+          <button class="hero-btn" data-page="manualAdmin">🧪 Manual Testing board</button>
+          <button class="hero-btn" data-page="autoAdmin">🤖 Automation board</button>
+        </div>
 
         <svg class="hero-circuit" viewBox="0 0 900 140" preserveAspectRatio="none" aria-hidden="true">
           <path class="circuit-path" d="M0,70 L120,70 L150,40 L260,40 L290,70 L420,70 L450,100 L560,100 L590,70 L720,70 L750,40 L900,40" />
@@ -104,11 +117,6 @@
       </div>
 
       <div class="quick-section">
-        <h2 class="section-label">Learning topic buttons</h2>
-        <div class="topic-btn-grid" id="topicBtnGrid"></div>
-      </div>
-
-      <div class="quick-section">
         <h2 class="section-label">Practice &amp; reference decks</h2>
         <div class="quick-grid" id="quickGrid"></div>
       </div>
@@ -117,10 +125,15 @@
         <h2 class="section-label">Jump back in</h2>
         <div class="stat-row" id="statRow"></div>
       </div>
+
+      <div class="quick-section">
+        <h2 class="section-label">Live hub pulse</h2>
+        <div class="pulse-row" id="pulseRow"></div>
+      </div>
     </section>
 
     <!-- TOPIC DETAIL VIEW -->
-    <section class="view topic-view" id="topicView" hidden>
+    <section class="view page topic-view" id="topicView" hidden data-page-view="topic">
       <div class="topic-head">
         <span class="topic-icon" id="topicIcon">📄</span>
         <div>
@@ -143,33 +156,173 @@
       </div>
     </section>
 
-    <!-- CHAT VIEW -->
-    <section class="view chat-view" id="chatView" hidden>
-      <div class="chat-shell">
-        <div class="chat-head">
-          <span class="chat-head-icon">💬</span>
-          <div>
-            <div class="topic-path">AI Chat Assistant</div>
-            <h1 class="topic-title">Ask about QA &amp; Automation</h1>
-          </div>
-          <button class="mark-btn" id="chatClearBtn">Clear chat</button>
+    <!-- MCQ QUIZ VIEW -->
+    <section class="view page quiz-view" id="quizView" hidden data-page-view="quiz">
+      <h2 class="page-title">📝 Objective Questions &amp; Answers</h2>
+      <p class="page-sub">Multiple-choice practice pulled straight from the learning map — Agile, JIRA, ISTQB, Java, Selenium, API Testing, SQL, Frameworks, Playwright &amp; more.</p>
+
+      <div class="quiz-setup" id="quizSetup">
+        <div class="quiz-cat-grid" id="quizCatGrid"></div>
+      </div>
+
+      <div class="quiz-runner" id="quizRunner" hidden>
+        <div class="quiz-hud">
+          <span class="quiz-cat-label" id="quizCatLabel">Category</span>
+          <span class="quiz-score" id="quizScore">Score: 0</span>
+          <span class="quiz-progress-label" id="quizProgressLabel">Q 1 / 10</span>
+        </div>
+        <div class="progress-track quiz-track"><div class="progress-fill" id="quizProgressFill"></div></div>
+
+        <div class="quiz-card" id="quizCard">
+          <div class="quiz-question" id="quizQuestion">Question text</div>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div class="quiz-feedback" id="quizFeedback" hidden></div>
         </div>
 
-        <div class="chat-messages" id="chatMessages"></div>
-
-        <div class="chat-typing" id="chatTyping" hidden>
-          <span class="chat-avatar bot">TS</span>
-          <div class="typing-dots"><span></span><span></span><span></span></div>
+        <div class="quiz-controls">
+          <button class="nav-arrow" id="quizQuit">✕ Exit quiz</button>
+          <button class="hero-btn primary" id="quizNext" disabled>Next question →</button>
         </div>
+      </div>
 
-        <form class="chat-input-row" id="chatForm">
-          <input type="text" id="chatInput" placeholder="Ask about Selenium, Agile, SQL, Playwright..." autocomplete="off">
-          <button type="submit" class="chat-send-btn" id="chatSendBtn">Send ➤</button>
-        </form>
+      <div class="quiz-result" id="quizResult" hidden>
+        <div class="result-ring" id="resultRing">0%</div>
+        <h3 id="resultHeading">Quiz complete!</h3>
+        <p id="resultSub"></p>
+        <div class="quiz-controls center">
+          <button class="hero-btn" id="quizRetry">↻ Retry</button>
+          <button class="hero-btn primary" id="quizBackCats">📚 Choose another topic</button>
+        </div>
       </div>
     </section>
 
+    <!-- MANUAL TESTING ADMIN VIEW -->
+    <section class="view page admin-view" id="manualAdminView" hidden data-page-view="manualAdmin">
+      <div class="admin-header">
+        <div>
+          <h2 class="page-title">🧪 Manual Testing — Admin Board</h2>
+          <p class="page-sub">Track test cases across Pass / Fail / Blocked / Pending, live from your browser.</p>
+        </div>
+        <button class="hero-btn primary" id="manualAddBtn">＋ New Test Case</button>
+      </div>
+
+      <div class="stat-row admin-stats" id="manualStats"></div>
+
+      <div class="admin-toolbar">
+        <div class="search-wrap flat">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="manualSearch" placeholder="Search test case, module, tester…" autocomplete="off">
+        </div>
+        <select id="manualFilter" class="admin-select">
+          <option value="all">All statuses</option>
+          <option value="Pass">Pass</option>
+          <option value="Fail">Fail</option>
+          <option value="Blocked">Blocked</option>
+          <option value="Pending">Pending</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table class="admin-table" id="manualTable">
+          <thead>
+            <tr>
+              <th>ID</th><th>Test Case</th><th>Module</th><th>Priority</th><th>Status</th><th>Tester</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="manualTbody"></tbody>
+        </table>
+        <p class="table-empty" id="manualEmpty" hidden>No test cases yet — add your first one above.</p>
+      </div>
+    </section>
+
+    <!-- AUTOMATION TESTING ADMIN VIEW -->
+    <section class="view page admin-view" id="autoAdminView" hidden data-page-view="autoAdmin">
+      <div class="admin-header">
+        <div>
+          <h2 class="page-title">🤖 Automation Testing — Admin Board</h2>
+          <p class="page-sub">Track automated scripts, frameworks and last run results.</p>
+        </div>
+        <button class="hero-btn primary" id="autoAddBtn">＋ New Script</button>
+      </div>
+
+      <div class="stat-row admin-stats" id="autoStats"></div>
+
+      <div class="admin-toolbar">
+        <div class="search-wrap flat">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="autoSearch" placeholder="Search script, framework, suite…" autocomplete="off">
+        </div>
+        <select id="autoFilter" class="admin-select">
+          <option value="all">All statuses</option>
+          <option value="Passed">Passed</option>
+          <option value="Failed">Failed</option>
+          <option value="Skipped">Skipped</option>
+          <option value="Not Run">Not Run</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table class="admin-table" id="autoTable">
+          <thead>
+            <tr>
+              <th>ID</th><th>Script / Test</th><th>Framework</th><th>Suite</th><th>Status</th><th>Last Run</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="autoTbody"></tbody>
+        </table>
+        <p class="table-empty" id="autoEmpty" hidden>No scripts logged yet — add your first one above.</p>
+      </div>
+    </section>
+
+    <!-- RESOURCES VIEW -->
+    <section class="view page resources-view" id="resourcesView" hidden data-page-view="resources">
+      <h2 class="page-title">🔗 Reference Links &amp; Learning Tools</h2>
+      <p class="page-sub">Open-in-new-tab tools this hub is built around.</p>
+      <div class="quick-grid" id="resourceGrid"></div>
+    </section>
+
   </main>
+</div>
+
+<!-- ============ ADMIN RECORD MODAL ============ -->
+<div class="modal-scrim" id="modalScrim">
+  <div class="modal" id="modalBox" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <h3 id="modalTitle">New Test Case</h3>
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot">
+      <button class="nav-arrow" id="modalCancel">Cancel</button>
+      <button class="hero-btn primary" id="modalSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CHAT WIDGET ============ -->
+<button class="chat-fab" id="chatFab" aria-label="Open Tech Source assistant">
+  <span class="chat-fab-icon">💬</span>
+  <span class="chat-fab-dot"></span>
+</button>
+
+<div class="chat-panel" id="chatPanel" hidden>
+  <div class="chat-head">
+    <img src="logo.jpg" alt="" class="chat-logo">
+    <div class="chat-head-text">
+      <span class="chat-name">Tech Source Assistant</span>
+      <span class="chat-status"><span class="status-dot"></span> Online · Creativity at it's peak!</span>
+    </div>
+    <button class="chat-close" id="chatClose" aria-label="Close chat">✕</button>
+  </div>
+
+  <div class="chat-body" id="chatBody"></div>
+
+  <div class="chat-quicklinks" id="chatQuicklinks"></div>
+
+  <form class="chat-input-row" id="chatForm">
+    <input type="text" id="chatInput" placeholder="Ask about Selenium, SQL, JIRA…" autocomplete="off">
+    <button type="submit" class="chat-send" aria-label="Send">➤</button>
+  </form>
 </div>
 
 <script src="main.js"></script>
