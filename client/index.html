@@ -11,6 +11,7 @@
 </head>
 <body>
 
+<canvas class="particle-canvas" id="particleCanvas" aria-hidden="true"></canvas>
 <div class="circuit-bg" aria-hidden="true"></div>
 
 <div class="app">
@@ -21,7 +22,7 @@
       <img src="logo.jpg" alt="Tech Source logo" class="brand-logo">
       <div class="brand-text">
         <span class="brand-name">TECH <em>SOURCE</em></span>
-        <span class="brand-tagline">Creativity at it's peak!</span>
+        <span class="brand-tagline">Creativity it's peak!</span>
       </div>
       <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
     </div>
@@ -29,6 +30,10 @@
     <div class="pill-header">
       <span class="pill-icon">📚</span>
       <span>Software Testing</span>
+      <span class="clock-widget" id="clockWidget">
+        <span class="clock-time" id="clockTime">00:00:00</span>
+        <span class="clock-date" id="clockDate">--- -- ----</span>
+      </span>
     </div>
 
     <div class="search-wrap">
@@ -40,10 +45,16 @@
     <div class="tabs" role="tablist">
       <button class="tab active" data-tab="learn" role="tab" aria-selected="true">Learning Path</button>
       <button class="tab" data-tab="prep" role="tab" aria-selected="false">Interview &amp; Scenarios</button>
+      <button class="tab" data-tab="chat" role="tab" aria-selected="false">💬 AI Chat</button>
     </div>
 
     <nav class="tree" id="treeLearn"></nav>
     <nav class="tree" id="treePrep" hidden></nav>
+
+    <div class="chat-topics" id="chatTopics" hidden>
+      <div class="chat-topics-label">Tap a topic to ask the assistant</div>
+      <div class="chat-btn-grid" id="chatBtnGrid"></div>
+    </div>
 
     <div class="progress-box">
       <div class="progress-labels">
@@ -64,6 +75,11 @@
       <div class="crumb" id="crumb">
         <span class="crumb-item">Home</span>
       </div>
+      <div class="topbar-clock" id="topbarClock">
+        <span class="topbar-clock-dot"></span>
+        <span id="topbarTime">00:00:00</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
       <div class="topbar-links" id="topLinks"></div>
     </header>
 
@@ -74,7 +90,7 @@
           <span class="pulse-dot"></span> QA · Automation · Interview-Ready
         </div>
         <h1 class="hero-title">Trace every path<br> from <span class="grad">manual&nbsp;testing</span> to <span class="grad">automation&nbsp;mastery</span>.</h1>
-        <p class="hero-sub">One map for Agile, JIRA, ISTQB, Core Java, Selenium, Playwright, API testing, SQL, frameworks, CI/CD and the interview rounds that follow. Pick a node in the sidebar and follow the trace.</p>
+        <p class="hero-sub">One map for Agile, JIRA, ISTQB, Core Java, Selenium, Playwright, API testing, SQL, frameworks, CI/CD and the interview rounds that follow. Pick a node in the sidebar, tap a topic button below, or ask the AI Chat assistant.</p>
 
         <svg class="hero-circuit" viewBox="0 0 900 140" preserveAspectRatio="none" aria-hidden="true">
           <path class="circuit-path" d="M0,70 L120,70 L150,40 L260,40 L290,70 L420,70 L450,100 L560,100 L590,70 L720,70 L750,40 L900,40" />
@@ -85,6 +101,11 @@
           <circle class="circuit-node" cx="750" cy="40" r="4"></circle>
           <circle class="circuit-pulse" r="5"><animateMotion dur="4.5s" repeatCount="indefinite" path="M0,70 L120,70 L150,40 L260,40 L290,70 L420,70 L450,100 L560,100 L590,70 L720,70 L750,40 L900,40"/></circle>
         </svg>
+      </div>
+
+      <div class="quick-section">
+        <h2 class="section-label">Learning topic buttons</h2>
+        <div class="topic-btn-grid" id="topicBtnGrid"></div>
       </div>
 
       <div class="quick-section">
@@ -119,6 +140,32 @@
       <div class="topic-nav">
         <button class="nav-arrow" id="prevBtn">← Previous</button>
         <button class="nav-arrow" id="nextBtn">Next →</button>
+      </div>
+    </section>
+
+    <!-- CHAT VIEW -->
+    <section class="view chat-view" id="chatView" hidden>
+      <div class="chat-shell">
+        <div class="chat-head">
+          <span class="chat-head-icon">💬</span>
+          <div>
+            <div class="topic-path">AI Chat Assistant</div>
+            <h1 class="topic-title">Ask about QA &amp; Automation</h1>
+          </div>
+          <button class="mark-btn" id="chatClearBtn">Clear chat</button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages"></div>
+
+        <div class="chat-typing" id="chatTyping" hidden>
+          <span class="chat-avatar bot">TS</span>
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+
+        <form class="chat-input-row" id="chatForm">
+          <input type="text" id="chatInput" placeholder="Ask about Selenium, Agile, SQL, Playwright..." autocomplete="off">
+          <button type="submit" class="chat-send-btn" id="chatSendBtn">Send ➤</button>
+        </form>
       </div>
     </section>
 

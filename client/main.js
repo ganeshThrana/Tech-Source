@@ -475,6 +475,33 @@ EXTERNAL_LINKS.forEach((l) => {
   topLinksEl.appendChild(a);
 });
 
+const themeToggle = document.getElementById("themeToggle");
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  if (themeToggle) {
+    themeToggle.setAttribute(
+      "aria-label",
+      theme === "light" ? "Switch to dark mode" : "Switch to light mode",
+    );
+    themeToggle.title =
+      theme === "light" ? "Switch to dark mode" : "Switch to light mode";
+    themeToggle.textContent = theme === "light" ? "☀️" : "🌙";
+  }
+}
+
+const savedTheme = localStorage.getItem("techsource-theme");
+const initialTheme = savedTheme === "light" ? "light" : "dark";
+applyTheme(initialTheme);
+
+themeToggle?.addEventListener("click", () => {
+  const nextTheme =
+    document.documentElement.getAttribute("data-theme") === "light"
+      ? "dark"
+      : "light";
+  localStorage.setItem("techsource-theme", nextTheme);
+  applyTheme(nextTheme);
+});
+
 const quickGridEl = document.getElementById("quickGrid");
 EXTERNAL_LINKS.forEach((l) => {
   const a = document.createElement("a");
@@ -711,6 +738,8 @@ function selectLeaf(path, treeKey) {
 
   homeView.hidden = true;
   topicView.hidden = false;
+  const chatViewElx = document.getElementById("chatView");
+  if (chatViewElx) chatViewElx.hidden = true;
   window.scrollTo({ top: 0, behavior: "smooth" });
 
   highlightActiveInTree(key);
@@ -791,6 +820,9 @@ document.querySelectorAll(".tab").forEach((btn) => {
     state.tab = btn.dataset.tab;
     treeLearnEl.hidden = state.tab !== "learn";
     treePrepEl.hidden = state.tab !== "prep";
+    const chatTopicsEl = document.getElementById("chatTopics");
+    if (chatTopicsEl) chatTopicsEl.hidden = state.tab !== "chat";
+    if (state.tab === "chat") openChatView();
   });
 });
 
@@ -894,6 +926,354 @@ function closeMobileSidebar() {
 document.querySelector(".brand").addEventListener("click", () => {
   topicView.hidden = true;
   homeView.hidden = false;
+  const chatViewEl = document.getElementById("chatView");
+  if (chatViewEl) chatViewEl.hidden = true;
   crumbEl.innerHTML = '<span class="crumb-item">Home</span>';
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
+
+/* =====================================================================
+   LIVE CLOCK — sidebar pill + topbar
+   ===================================================================== */
+const clockTimeEl = document.getElementById("clockTime");
+const clockDateEl = document.getElementById("clockDate");
+const topbarTimeEl = document.getElementById("topbarTime");
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+function pad2(n) {
+  return n < 10 ? "0" + n : "" + n;
+}
+
+function tickClock() {
+  const now = new Date();
+  const hh = pad2(now.getHours());
+  const mm = pad2(now.getMinutes());
+  const ss = pad2(now.getSeconds());
+  const timeStr = `${hh}:${mm}:${ss}`;
+  const dateStr = `${WEEKDAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+  if (clockTimeEl) clockTimeEl.textContent = timeStr;
+  if (clockDateEl) clockDateEl.textContent = dateStr;
+  if (topbarTimeEl) topbarTimeEl.textContent = timeStr;
+}
+tickClock();
+setInterval(tickClock, 1000);
+
+/* =====================================================================
+   PARTICLE CANVAS — animated ambient circuit-dust background
+   ===================================================================== */
+(function initParticles() {
+  const canvas = document.getElementById("particleCanvas");
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext("2d");
+  let W,
+    H,
+    particles = [];
+  const COUNT = window.innerWidth < 720 ? 34 : 70;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  function Particle() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.vx = (Math.random() - 0.5) * 0.22;
+    this.vy = (Math.random() - 0.5) * 0.22;
+    this.r = Math.random() * 1.6 + 0.6;
+  }
+  for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+
+  function step() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "rgba(41,182,246,0.55)";
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = W;
+      if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H;
+      if (p.y > H) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.strokeStyle = "rgba(41,182,246,0.10)";
+    ctx.lineWidth = 1;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 130) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(step);
+  }
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    requestAnimationFrame(step);
+  }
+})();
+
+/* =====================================================================
+   HOME — "many buttons with learning topics"
+   Build a button grid from the top-level LEARN_TREE categories.
+   ===================================================================== */
+function countLeaves(node) {
+  if (!node.children || !node.children.length) return 1;
+  return node.children.reduce((sum, c) => sum + countLeaves(c), 0);
+}
+function firstLeafPath(node, trail) {
+  const path = [...trail, node.title];
+  if (!node.children || !node.children.length) return path;
+  return firstLeafPath(node.children[0], path);
+}
+
+const topicBtnGridEl = document.getElementById("topicBtnGrid");
+if (topicBtnGridEl) {
+  LEARN_TREE.forEach((node) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "topic-btn";
+    const total = countLeaves(node);
+    btn.innerHTML = `
+      <span class="tb-icon">${node.icon || "📄"}</span>
+      <span class="tb-name">${stripEmoji(node.title)}</span>
+      <span class="tb-count">${total} topic${total === 1 ? "" : "s"}</span>`;
+    btn.addEventListener("click", () => {
+      const path = firstLeafPath(node, []);
+      selectLeaf(path, "learn");
+    });
+    topicBtnGridEl.appendChild(btn);
+  });
+}
+
+/* =====================================================================
+   AI CHAT ASSISTANT
+   ===================================================================== */
+const TOPIC_CONTENT = {
+  agile: [
+    "Agile is an iterative approach to software delivery that breaks work into short cycles called sprints, usually one to four weeks long, so teams can inspect progress and adapt quickly.",
+    "Instead of trying to plan an entire release upfront, an agile team plans just enough to start the next sprint, then re-plans as real feedback comes in from stakeholders and users.",
+    "Core ceremonies — sprint planning, daily standup, sprint review and retrospective — keep the team aligned on what is being built, what is done, and what should change next time.",
+  ],
+  jira: [
+    "JIRA is a work-tracking tool most agile teams use to manage backlogs, sprints, and issues such as stories, bugs, and tasks.",
+    "Boards give a visual view of work moving through a workflow (To Do → In Progress → Done), while JQL (JIRA Query Language) lets you filter and report on issues precisely.",
+    "For QA, JIRA is usually where bugs are logged, linked to the story that introduced them, and tracked through triage to resolution.",
+  ],
+  istqb: [
+    "ISTQB (International Software Testing Qualifications Board) defines a syllabus of core testing theory: test levels, test types, static vs dynamic testing, and test design techniques.",
+    "The Foundation Level certification is the most common entry point and covers fundamentals like the test process, defect lifecycle, and black-box/white-box techniques such as equivalence partitioning and boundary value analysis.",
+    "Many interviewers use ISTQB terminology as a shared vocabulary, so it is worth being fluent in it even outside the exam.",
+  ],
+  java: [
+    "Java is the most common language for building Selenium and REST Assured based automation frameworks because of its strong typing, mature ecosystem, and huge community support.",
+    "Foundational concepts to be solid on include OOP (inheritance, polymorphism, encapsulation, abstraction), collections, exception handling, and Java 8 features like lambdas and streams.",
+    "A framework typically leans on interfaces and the Page Object Model to keep test code readable and maintainable as the suite grows.",
+  ],
+  selenium: [
+    "Selenium WebDriver automates real browser interactions — clicking, typing, navigating — by sending commands to a browser driver that mimics a human user.",
+    "Locator strategy matters a lot: ID and CSS selectors tend to be fastest and most stable, while XPath is more flexible for complex, dynamic pages.",
+    "Waits (implicit, explicit, fluent) are essential for reliability, since modern web apps render content asynchronously and a script that runs too fast will fail against elements that are not ready yet.",
+  ],
+  api: [
+    "API testing validates a service directly at the HTTP layer — checking status codes, response bodies, headers, and timing — without needing a UI.",
+    "REST Assured is a popular Java library for this: you build a request, send it, and assert on the response using a fluent given/when/then syntax.",
+    "Good API tests also check negative cases (bad input, missing auth, rate limits) and validate response structure with JSON schema validation.",
+  ],
+  sql: [
+    "SQL is essential for testers who need to verify what actually landed in the database after an action in the UI or API.",
+    "CRUD operations (Create, Read, Update, Delete), JOINs across tables, and GROUP BY/HAVING for aggregation are the bread-and-butter queries used in backend validation.",
+    "Stored procedures are also common in enterprise systems, and testers are often asked to validate their output against expected business rules.",
+  ],
+  playwright: [
+    "Playwright is a modern browser automation library (from Microsoft) that supports Chromium, Firefox and WebKit from a single API, with built-in auto-waiting.",
+    "It ships with strong tooling out of the box: a trace viewer for debugging failed runs, a codegen tool that records actions into a script, and first-class support for API testing.",
+    "Because it auto-waits for elements to be actionable, Playwright scripts tend to be less flaky than traditional Selenium scripts that rely on manual wait strategies.",
+  ],
+  cicd: [
+    "CI/CD (Continuous Integration / Continuous Delivery) automatically builds, tests, and often deploys code every time it changes, catching regressions early.",
+    "Jenkins, GitHub Actions, GitLab CI and Azure DevOps are common pipeline tools that can trigger your automated test suite on every pull request or merge.",
+    "A healthy pipeline fails fast, reports clearly (often via Extent or Allure reports), and keeps the feedback loop short enough that developers actually act on it.",
+  ],
+  framework: [
+    "A test automation framework is the set of conventions, libraries, and structure that make automated tests reliable, reusable, and easy to maintain.",
+    "Common styles include data-driven (tests driven by external data sets), keyword-driven (tests built from reusable action keywords), and hybrid frameworks that combine both.",
+    "TestNG or JUnit typically provide the test runner, annotations, and assertions, while Page Object Model keeps locators and page logic out of the test methods themselves.",
+  ],
+  interview: [
+    'QA interviews usually mix theory (testing types, SDLC/STLC, defect lifecycle) with practical coding (write a locator, debug a flaky test) and scenario questions ("how would you test X").',
+    "Be ready to walk through a project you actually worked on: the framework, the tools, the CI setup, and a hard bug you found.",
+    "For behavioral rounds, structure answers with a brief situation, the action you took, and the measurable result — it keeps answers tight and easy to follow.",
+  ],
+  genai: [
+    "Generative AI tools like ChatGPT, Claude, Copilot and Gemini are increasingly used in QA to draft test cases, explain unfamiliar code, and speed up boilerplate automation scripting.",
+    "Prompt engineering — being specific about the framework, language, and constraints — makes a big difference in how usable the generated output is.",
+    "These tools are best treated as a fast first draft: still review generated test logic and assertions carefully before trusting them in a suite.",
+  ],
+};
+
+const CHAT_TOPIC_BUTTONS = [
+  { key: "agile", icon: "🧠", label: "Agile" },
+  { key: "jira", icon: "🎟️", label: "JIRA" },
+  { key: "istqb", icon: "👨‍🎓", label: "ISTQB" },
+  { key: "java", icon: "☕", label: "Core Java" },
+  { key: "selenium", icon: "🌐", label: "Selenium" },
+  { key: "api", icon: "🌍", label: "API Testing" },
+  { key: "sql", icon: "🗄️", label: "SQL" },
+  { key: "playwright", icon: "▶️", label: "Playwright" },
+  { key: "cicd", icon: "🚀", label: "CI/CD" },
+  { key: "framework", icon: "🏗️", label: "Frameworks" },
+  { key: "interview", icon: "💼", label: "Interview Tips" },
+  { key: "genai", icon: "🤖", label: "Gen AI for QA" },
+];
+
+const chatMessagesEl = document.getElementById("chatMessages");
+const chatFormEl = document.getElementById("chatForm");
+const chatInputEl = document.getElementById("chatInput");
+const chatTypingEl = document.getElementById("chatTyping");
+const chatClearBtn = document.getElementById("chatClearBtn");
+const chatBtnGridEl = document.getElementById("chatBtnGrid");
+const chatViewEl = document.getElementById("chatView");
+
+let chatOpened = false;
+
+if (chatBtnGridEl) {
+  CHAT_TOPIC_BUTTONS.forEach((t) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chat-topic-btn";
+    b.innerHTML = `<span class="ct-icon">${t.icon}</span><span>${t.label}</span>`;
+    b.addEventListener("click", () => {
+      document.querySelector('.tab[data-tab="chat"]').click();
+      askChat(`Tell me about ${t.label}`, t.key);
+    });
+    chatBtnGridEl.appendChild(b);
+  });
+}
+
+function nowTime() {
+  const d = new Date();
+  return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+}
+
+function addChatMessage(role, paragraphs) {
+  const wrap = document.createElement("div");
+  wrap.className = "chat-msg " + role;
+
+  const avatar = document.createElement("span");
+  avatar.className = "chat-avatar " + role;
+  avatar.textContent = role === "user" ? "YOU" : "TS";
+
+  const bubble = document.createElement("div");
+  bubble.className = "chat-bubble";
+  paragraphs.forEach((txt) => {
+    const p = document.createElement("p");
+    p.textContent = txt;
+    bubble.appendChild(p);
+  });
+  const time = document.createElement("span");
+  time.className = "cb-time";
+  time.textContent = nowTime();
+  bubble.appendChild(time);
+
+  wrap.appendChild(avatar);
+  wrap.appendChild(bubble);
+  chatMessagesEl.appendChild(wrap);
+  chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+}
+
+function findTopicKey(text) {
+  const q = text.toLowerCase();
+  if (/(jira)/.test(q)) return "jira";
+  if (/(istqb)/.test(q)) return "istqb";
+  if (/(agile|scrum|sprint)/.test(q)) return "agile";
+  if (/(selenium|webdriver|xpath|locator)/.test(q)) return "selenium";
+  if (/(playwright)/.test(q)) return "playwright";
+  if (/(rest assured|api testing|\bapi\b)/.test(q)) return "api";
+  if (/(\bsql\b|database|query|join)/.test(q)) return "sql";
+  if (/(java\b|oop|collections)/.test(q)) return "java";
+  if (/(ci\/cd|jenkins|pipeline|github actions)/.test(q)) return "cicd";
+  if (/(framework|testng|cucumber|pom\b|page object)/.test(q))
+    return "framework";
+  if (/(interview|hr round|tell me about yourself)/.test(q)) return "interview";
+  if (/(gen ai|chatgpt|claude|copilot|gemini|prompt)/.test(q)) return "genai";
+  return null;
+}
+
+function askChat(userText, forcedKey) {
+  addChatMessage("user", [userText]);
+  chatInputEl.value = "";
+  chatTypingEl.hidden = false;
+  chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+
+  const key = forcedKey || findTopicKey(userText);
+  const delay = 550 + Math.random() * 500;
+
+  setTimeout(() => {
+    chatTypingEl.hidden = true;
+    if (key && TOPIC_CONTENT[key]) {
+      addChatMessage("bot", TOPIC_CONTENT[key]);
+    } else {
+      addChatMessage("bot", [
+        `I don't have a canned answer for "${userText}" yet, but here is a starting point.`,
+        "Try asking about Agile, JIRA, ISTQB, Core Java, Selenium, API Testing, SQL, Playwright, CI/CD, Frameworks, Interview Tips, or Gen AI — or tap one of the topic buttons in the sidebar.",
+      ]);
+    }
+  }, delay);
+}
+
+function openChatView() {
+  homeView.hidden = true;
+  topicView.hidden = true;
+  chatViewEl.hidden = false;
+  crumbEl.innerHTML = '<span class="crumb-item">AI Chat Assistant</span>';
+  if (!chatOpened) {
+    chatOpened = true;
+    addChatMessage("bot", [
+      "Hi, I am the Tech Source assistant. Ask me about Agile, JIRA, ISTQB, Java, Selenium, API testing, SQL, Playwright, CI/CD, frameworks, or interview prep.",
+      "Tap a topic button in the sidebar, or just type a question below.",
+    ]);
+  }
+  chatInputEl.focus();
+}
+
+if (chatFormEl) {
+  chatFormEl.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = chatInputEl.value.trim();
+    if (!text) return;
+    askChat(text);
+  });
+}
+
+if (chatClearBtn) {
+  chatClearBtn.addEventListener("click", () => {
+    chatMessagesEl.innerHTML = "";
+    chatOpened = false;
+    openChatView();
+  });
+}
