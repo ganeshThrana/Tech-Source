@@ -1,2191 +1,932 @@
-/* =====================================================================
-   TECH SOURCE — data + app logic
-   ===================================================================== */
+/* ============================================================
+   QA Forge — script.js
+   Navigation, theme, chat assistant, MCQ engine, animations
+   ============================================================ */
 
-/* ---------- helpers to build tree nodes quickly ---------- */
-function leaf(title) {
-  return { title };
-}
-function group(icon, title, children) {
-  return { icon, title, children };
-}
-function leafGroup(icon, title, items) {
-  return { icon, title, children: items.map(leaf) };
-}
+document.addEventListener("DOMContentLoaded", () => {
+  /* ---------- YEAR ---------- */
+  document.getElementById("year").textContent = new Date().getFullYear();
 
-/* ---------- LEARNING PATH TREE ---------- */
-const LEARN_TREE = [
-  leafGroup("🧠", "Agile", [
-    "Scrum",
-    "Sprint Planning",
-    "Daily Standup",
-    "Sprint Review",
-    "Sprint Retrospective",
-    "User Stories",
-    "Story Points",
-    "Estimation Techniques",
-    "Definition of Done",
-    "Definition of Ready",
-    "Product Backlog",
-    "Sprint Backlog",
-    "Burn Down Chart",
-  ]),
-  leafGroup("🎟️", "JIRA", [
-    "Dashboard",
-    "Boards",
-    "Issue Types",
-    "Workflow",
-    "Sprint Management",
-    "Reports",
-    "Filters",
-    "JQL",
-    "Components",
-    "Versions",
-    "Automation Rules",
-  ]),
-  leafGroup("👨‍🎓", "ISTQB", [
-    "Chapter 1",
-    "Chapter 2",
-    "Chapter 3",
-    "Brushing Up",
-    "Agile Testing",
-    "Mock Tests",
-    "Interview Questions",
-  ]),
-  group("☕", "JAVA — Updated", [
-    leafGroup("📄", "Core Java", [
-      "OOPS Basics",
-      "Data Types",
-      "Scanner",
-      "Variables",
-      "Operators",
-      "Static Keyword",
-      "Memory Allocation",
-      "String",
-      "Wrapper Classes",
-      "Access Modifiers",
-      "Inheritance",
-      "Polymorphism",
-      "Abstraction",
-      "Encapsulation",
-      "Interfaces",
-      "Exception Handling",
-      "Collections Framework",
-      "Generics",
-      "Enums",
-      "File Handling",
-      "Java 8 Features",
-      "Lambda Expressions",
-      "Stream API",
-      "Functional Interface",
-      "Date & Time API",
-      "Multithreading",
-      "Synchronization",
-      "Executor Framework",
-    ]),
-    leafGroup("📄", "Programming", [
-      "Conditional Statements",
-      "Looping Statements",
-      "Arrays",
-      "Methods",
-      "Constructors",
-      "Recursion",
-      "Searching Algorithms",
-      "Sorting Algorithms",
-    ]),
-    leafGroup("💼", "Interview Programs", [
-      "Java Interview Programs – Level 1",
-      "Java Interview Programs – Level 2",
-      "Java Interview Programs – Advanced",
-    ]),
-    leafGroup("📦", "POJO", [
-      "POJO Class",
-      "Builder Pattern",
-      "Immutable Objects",
-    ]),
-    leafGroup("📖", "Java Theory", [
-      "JVM",
-      "JDK vs JRE",
-      "Garbage Collection",
-      "Memory Management",
-      "Class Loader",
-    ]),
-  ]),
-  group("🌐", "Selenium", [
-    leafGroup("📄", "Basics", [
-      "Selenium Architecture",
-      "Selenium Components",
-      "Browser Drivers",
-    ]),
-    leafGroup("🎯", "WebDriver Methods", [
-      "Browser Commands",
-      "Navigation Commands",
-      "Wait Commands",
-      "Switch Commands",
-    ]),
-    leafGroup("🔶", "WebElement Methods", [
-      "Click",
-      "SendKeys",
-      "Clear",
-      "Submit",
-      "Attribute Methods",
-    ]),
-    leafGroup("📍", "Locators", [
-      "ID",
-      "Name",
-      "Class Name",
-      "Tag Name",
-      "Link Text",
-      "Partial Link Text",
-    ]),
-    leafGroup("❌", "XPath", [
-      "Absolute XPath",
-      "Relative XPath",
-      "Axes",
-      "Functions",
-    ]),
-    leafGroup("🎨", "CSS Selector", ["Basic CSS", "Advanced CSS"]),
-    leaf("☑️ CheckBox & Radio Button"),
-    leafGroup("📋", "Select Class", [
-      "Select By Visible Text",
-      "Select By Value",
-      "Select By Index",
-    ]),
-    leafGroup("💪", "Actions Class", [
-      "Drag & Drop",
-      "Hover",
-      "Right Click",
-      "Double Click",
-    ]),
-    leaf("🚨 Alerts"),
-    leaf("🖼️ Frames"),
-    leaf("🪟 Window Handling"),
-    leafGroup("⏰", "Waits", ["Implicit Wait", "Explicit Wait", "Fluent Wait"]),
-    leafGroup("📜", "JavaScript Executor", [
-      "Scroll",
-      "Click",
-      "Highlight Element",
-    ]),
-    leaf("📊 Web Tables"),
-    leaf("📸 Screenshots"),
-    leaf("📂 File Upload & Download"),
-    leaf("🧩 Selectable & Sortable"),
-    leaf("⚠️ Selenium Exceptions"),
-    leaf("📄 Page Object Model"),
-    leaf("🌑 Shadow DOM"),
-    leaf("🍪 Cookies"),
-    leaf("📱 Mobile Emulation"),
-    leaf("🔍 Browser Logs"),
-  ]),
-  group("🌍", "API Testing", [
-    leafGroup("🔥", "REST Assured", [
-      "GET",
-      "POST",
-      "PUT",
-      "PATCH",
-      "DELETE",
-      "Authentication",
-      "Serialization",
-      "Deserialization",
-      "JSON Schema Validation",
-    ]),
-  ]),
-  leafGroup("🗄️", "SQL", [
-    "CRUD",
-    "Joins",
-    "Group By",
-    "Having",
-    "Stored Procedures",
-  ]),
-  leaf("📄 JDBC"),
-  leaf("❌ Fillo"),
-  leafGroup("🤖", "Gen AI", [
-    "ChatGPT",
-    "Copilot",
-    "Gemini",
-    "Claude",
-    "AI for Test Automation",
-    "Prompt Engineering",
-  ]),
-  group("🛠️", "Automation Tools", [
-    leafGroup("📦", "Maven", [
-      "POM.xml",
-      "Dependencies",
-      "Plugins",
-      "Profiles",
-    ]),
-    leafGroup("🌿", "Git", [
-      "Repository",
-      "Branch",
-      "Merge",
-      "Rebase",
-      "Cherry Pick",
-      "Stash",
-      "GitHub Flow",
-    ]),
-    leafGroup("🚀", "CI/CD", [
-      "Jenkins",
-      "GitHub Actions",
-      "Azure DevOps",
-      "GitLab CI",
-    ]),
-    leafGroup("📈", "Reporting", [
-      "Extent Reports",
-      "Allure Reports",
-      "HTML Reports",
-    ]),
-  ]),
-  group("🏗️", "Frameworks", [
-    leafGroup("🧪", "TestNG", [
-      "Annotations",
-      "Assertions",
-      "Groups",
-      "Listeners",
-      "Retry Analyzer",
-      "Parallel Execution",
-      "DataProvider",
-      "Parameters",
-    ]),
-    leafGroup("🥒", "Cucumber", [
-      "Gherkin",
-      "Feature Files",
-      "Step Definitions",
-      "Hooks",
-      "Tags",
-      "Scenario Outline",
-    ]),
-    leaf("📊 Data Driven Framework"),
-    leaf("🔥 Hybrid Framework"),
-    leaf("🧩 Keyword Driven Framework"),
-    leaf("🧪 JUnit"),
-  ]),
-  leafGroup("▶️", "Playwright", [
-    "Page Methods",
-    "Locator Methods",
-    "Advanced Locators",
-    "Dropdown",
-    "Actions",
-    "Alerts",
-    "Frames",
-    "Window Handling",
-    "File Upload & Download",
-    "Assertions",
-    "Keyboard Actions",
-    "Mouse Actions",
-    "Browser Context",
-    "Trace Viewer",
-    "Screenshots",
-    "Auto Waiting",
-    "Code Generator",
-    "Cookies",
-    "Mobile Testing",
-    "Shadow DOM",
-    "API Testing with Playwright",
-  ]),
-  leaf("📋 Scenario-Based Interview"),
-  leaf("💬 Tell Me About Yourself"),
-];
+  /* ---------- LOADER ---------- */
+  const loader = document.getElementById("loader");
+  window.addEventListener("load", () => {
+    setTimeout(() => loader.classList.add("hide"), 500);
+  });
+  // fallback in case load already fired
+  setTimeout(() => loader.classList.add("hide"), 2500);
 
-/* ---------- INTERVIEW & SCENARIOS LIST ---------- */
-const PREP_TREE = [
-  leaf("📁 Project"),
-  leaf("🧪 Testing Concepts"),
-  leaf("🏗️ Framework"),
-  leaf("🤖 Automation"),
-  leaf("📈 Agile Sprint"),
-  leaf("🌿 GitHub"),
-  leaf("🚀 CI/CD"),
-  leaf("📊 Data Driven Framework"),
-  leaf("🐞 Defect Management"),
-  leaf("🌐 API Testing"),
-  leaf("☁️ Cloud Testing"),
-  leaf("📱 Mobile Testing"),
-  leaf("⚡ Performance Testing"),
-  leaf("🔐 Security Testing"),
-  leaf("🤝 Team Collaboration"),
-  leaf("🎯 Client Communication"),
-  leaf("🧠 Debugging Scenarios"),
-  leaf("🔥 Real-Time Selenium Scenarios"),
-  leaf("🎭 Playwright Scenarios"),
-  leaf("📦 API Scenarios"),
-  leaf("💼 HR Interview"),
-];
+  /* ============================================================
+     THEME TOGGLE (Dark / Light) — persisted in localStorage
+     ============================================================ */
+  const root = document.documentElement;
+  const themeToggle = document.getElementById("themeToggle");
+  const settingsThemeBtn = document.getElementById("settingsThemeBtn");
 
-/* ---------- EXTERNAL RESOURCE LINKS ---------- */
-const EXTERNAL_LINKS = [
-  {
-    icon: "✨",
-    name: "Claude",
-    desc: "Draft, debug and reason through tricky test scenarios.",
-    url: "https://claude.ai/new",
-  },
-  {
-    icon: "💬",
-    name: "ChatGPT",
-    desc: "A second opinion on test cases, code or concepts.",
-    url: "https://chatgpt.com/",
-  },
-  {
-    icon: "📘",
-    name: "W3Schools",
-    desc: "Quick syntax reference for Java, SQL, HTML & more.",
-    url: "https://www.w3schools.com/",
-  },
-  {
-    icon: "⚙️",
-    name: "OneCompiler",
-    desc: "Run Java snippets straight from the browser.",
-    url: "https://onecompiler.com/java",
-  },
-  {
-    icon: "🥷",
-    name: "Selfmade Ninja",
-    desc: "Structured QA & automation coursework.",
-    url: "https://academy.selfmade.ninja/login",
-  },
-  {
-    icon: "🎓",
-    name: "Udemy",
-    desc: "Deep-dive video courses on Selenium, Java & Playwright.",
-    url: "https://www.udemy.com/",
-  },
-];
+  function applyTheme(theme) {
+    root.setAttribute("data-theme", theme);
+    localStorage.setItem("qaforge-theme", theme);
+    const icon = themeToggle.querySelector("i");
+    icon.className = theme === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon";
+  }
+  function toggleTheme() {
+    const current =
+      root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(current);
+  }
+  const savedTheme =
+    localStorage.getItem("qaforge-theme") ||
+    (window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light");
+  applyTheme(savedTheme);
+  themeToggle.addEventListener("click", toggleTheme);
+  settingsThemeBtn.addEventListener("click", toggleTheme);
 
-/* =====================================================================
-   State
-   ===================================================================== */
-const state = {
-  tab: "learn",
-  flatLearn: [],
-  flatPrep: [],
-  activePath: null, // array of node titles from root to current leaf
-  activeFlatIndex: -1,
-  activeTree: "learn",
-  done: new Set(), // in-memory "reviewed" tracker (session only)
-};
-
-/* =====================================================================
-   Flatten trees (for prev/next + search + progress denominators)
-   ===================================================================== */
-function flatten(nodes, trail, out) {
-  nodes.forEach((node) => {
-    const path = [...trail, node];
-    if (node.children && node.children.length) {
-      flatten(node.children, path, out);
+  /* ============================================================
+     SIDEBAR TOGGLE
+     ============================================================ */
+  const sidebar = document.getElementById("sidebar");
+  const sidebarToggle = document.getElementById("sidebarToggle");
+  sidebarToggle.addEventListener("click", () => {
+    if (window.innerWidth <= 820) {
+      sidebar.classList.toggle("open");
     } else {
-      out.push(path);
+      sidebar.classList.toggle("collapsed");
     }
   });
-}
-flatten(LEARN_TREE, [], state.flatLearn);
-flatten(PREP_TREE, [], state.flatPrep);
 
-/* =====================================================================
-   Render sidebar tree
-   ===================================================================== */
-const treeLearnEl = document.getElementById("treeLearn");
-const treePrepEl = document.getElementById("treePrep");
+  /* ============================================================
+     NOTIFICATION PANEL
+     ============================================================ */
+  const notifBtn = document.getElementById("notifBtn");
+  const notifPanel = document.getElementById("notifPanel");
+  notifBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    notifPanel.classList.toggle("open");
+  });
+  document.addEventListener("click", (e) => {
+    if (!notifPanel.contains(e.target) && e.target !== notifBtn) {
+      notifPanel.classList.remove("open");
+    }
+  });
 
-function buildAllTrees() {
-  const fragL = document.createDocumentFragment();
-  renderInto(fragL, LEARN_TREE, [], 1);
-  treeLearnEl.innerHTML = "";
-  treeLearnEl.appendChild(fragL);
+  /* ============================================================
+     PAGE NAVIGATION (SPA-style, all sections live in index.html)
+     ============================================================ */
+  const navBtns = document.querySelectorAll(".nav-btn");
+  const pages = document.querySelectorAll(".page");
 
-  const fragP = document.createDocumentFragment();
-  renderInto(fragP, PREP_TREE, [], 1);
-  treePrepEl.innerHTML = "";
-  treePrepEl.appendChild(fragP);
-}
+  function goToPage(target) {
+    pages.forEach((p) => p.classList.toggle("active", p.id === target));
+    navBtns.forEach((b) =>
+      b.classList.toggle("active", b.dataset.target === target),
+    );
+    document.getElementById("content").scrollTo({ top: 0, behavior: "smooth" });
+    if (window.innerWidth <= 820) sidebar.classList.remove("open");
+    runScrollReveal();
+  }
 
-/* simpler recursive builder that appends directly into a fragment/container */
-function renderInto(container, nodes, trail, depth) {
-  nodes.forEach((node) => {
-    const isBranch = !!(node.children && node.children.length);
-    const wrap = document.createElement("div");
-    wrap.className = "node";
-    wrap.dataset.depth = depth;
-    wrap.dataset.path = JSON.stringify([...trail, node.title]);
+  navBtns.forEach((btn) => {
+    btn.addEventListener("click", () => goToPage(btn.dataset.target));
+  });
 
-    const row = document.createElement("div");
-    row.className = "node-row" + (isBranch ? "" : " leaf");
-    row.tabIndex = 0;
+  // any element with data-target (hero buttons etc.) also navigates
+  document.querySelectorAll("[data-target]:not(.nav-btn)").forEach((el) => {
+    el.addEventListener("click", () => goToPage(el.dataset.target));
+  });
 
-    const icon = document.createElement("span");
-    icon.className = "n-icon";
-    icon.textContent = node.icon || (isBranch ? "📁" : "▫️");
-    row.appendChild(icon);
+  /* ============================================================
+     RIPPLE EFFECT
+     ============================================================ */
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".ripple");
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+    const circle = document.createElement("span");
+    const size = Math.max(rect.width, rect.height);
+    circle.className = "ripple-effect";
+    circle.style.width = circle.style.height = size + "px";
+    circle.style.left = e.clientX - rect.left - size / 2 + "px";
+    circle.style.top = e.clientY - rect.top - size / 2 + "px";
+    btn.appendChild(circle);
+    setTimeout(() => circle.remove(), 650);
+  });
 
-    const label = document.createElement("span");
-    label.className = "n-label";
-    label.textContent = node.title;
-    row.appendChild(label);
-
-    if (isBranch) {
-      const caret = document.createElement("span");
-      caret.className = "n-caret";
-      caret.textContent = "▸";
-      row.appendChild(caret);
-      row.addEventListener("click", () => wrap.classList.toggle("open"));
-      row.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          wrap.classList.toggle("open");
-        }
-      });
-      wrap.appendChild(row);
-
-      const childBox = document.createElement("div");
-      childBox.className = "children";
-      renderInto(childBox, node.children, [...trail, node.title], depth + 1);
-      wrap.appendChild(childBox);
+  /* ============================================================
+     TYPING ANIMATION — hero terminal
+     ============================================================ */
+  const typingCodeEl = document.getElementById("typingCode");
+  const codeSample = `@Test
+public void loginWithValidUser() {
+  driver.get(baseUrl);
+  loginPage.login("admin", "pass123");
+  Assert.assertTrue(dashboard.isLoaded());
+}`;
+  let ti = 0;
+  function typeCode() {
+    if (ti <= codeSample.length) {
+      typingCodeEl.textContent = codeSample.slice(0, ti);
+      ti++;
+      setTimeout(typeCode, 18);
     } else {
-      const fullPath = [...trail, node.title];
-      row.addEventListener("click", () =>
-        selectLeaf(fullPath, container.closest("#treePrep") ? "prep" : "learn"),
-      );
-      row.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          selectLeaf(
-            fullPath,
-            container.closest("#treePrep") ? "prep" : "learn",
-          );
+      setTimeout(() => {
+        ti = 0;
+        typeCode();
+      }, 4000);
+    }
+  }
+  typeCode();
+
+  /* ============================================================
+     ANIMATED STAT COUNTERS
+     ============================================================ */
+  function animateCounters() {
+    document.querySelectorAll("[data-count]").forEach((el) => {
+      const target = parseInt(el.dataset.count, 10);
+      if (el.dataset.done) return;
+      el.dataset.done = "1";
+      let cur = 0;
+      const step = Math.max(1, Math.ceil(target / 40));
+      const t = setInterval(() => {
+        cur += step;
+        if (cur >= target) {
+          cur = target;
+          clearInterval(t);
         }
+        el.textContent = cur;
+      }, 30);
+    });
+  }
+  animateCounters();
+
+  /* ============================================================
+     SCROLL REVEAL (fade-in)
+     ============================================================ */
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add("visible");
       });
-      wrap.appendChild(row);
-    }
-    container.appendChild(wrap);
-  });
-}
-
-buildAllTrees();
-
-/* =====================================================================
-   Topbar quick links
-   ===================================================================== */
-const topLinksEl = document.getElementById("topLinks");
-EXTERNAL_LINKS.forEach((l) => {
-  const a = document.createElement("a");
-  a.href = l.url;
-  a.target = "_blank";
-  a.rel = "noopener noreferrer";
-  a.title = l.name;
-  a.textContent = l.icon;
-  topLinksEl.appendChild(a);
-});
-
-const quickGridEl = document.getElementById("quickGrid");
-EXTERNAL_LINKS.forEach((l) => {
-  const a = document.createElement("a");
-  a.className = "quick-card";
-  a.href = l.url;
-  a.target = "_blank";
-  a.rel = "noopener noreferrer";
-  a.innerHTML = `
-    <span class="qc-icon">${l.icon}</span>
-    <span class="qc-name">${l.name}</span>
-    <span class="qc-desc">${l.desc}</span>
-    <span class="qc-go">Open ↗</span>`;
-  quickGridEl.appendChild(a);
-});
-
-/* "Jump back in" stat cards */
-const statRowEl = document.getElementById("statRow");
-const STAT_ENTRIES = [
-  {
-    icon: "🌐",
-    title: "Selenium Locators",
-    sub: "ID · XPath · CSS Selector",
-    path: ["🌐 Selenium", "📍 Locators", "ID"],
-  },
-  {
-    icon: "☕",
-    title: "Core Java",
-    sub: "OOPS to Multithreading",
-    path: ["☕ JAVA — Updated", "📄 Core Java", "OOPS Basics"],
-  },
-  {
-    icon: "🔥",
-    title: "REST Assured",
-    sub: "GET · POST · Auth",
-    path: ["🌍 API Testing", "🔥 REST Assured", "GET"],
-  },
-  {
-    icon: "💼",
-    title: "HR Interview",
-    sub: "Tell Me About Yourself",
-    path: ["💬 Tell Me About Yourself"],
-  },
-];
-STAT_ENTRIES.forEach((s) => {
-  const card = document.createElement("div");
-  card.className = "stat-card";
-  card.innerHTML = `<span class="sc-icon">${s.icon}</span><div class="sc-title">${s.title}</div><div class="sc-sub">${s.sub}</div>`;
-  card.addEventListener("click", () => selectLeaf(s.path, "learn"));
-  statRowEl.appendChild(card);
-});
-
-/* =====================================================================
-   Views / selection logic
-   ===================================================================== */
-const homeView = document.getElementById("homeView");
-const topicView = document.getElementById("topicView");
-const crumbEl = document.getElementById("crumb");
-const topicIcon = document.getElementById("topicIcon");
-const topicPath = document.getElementById("topicPath");
-const topicTitle = document.getElementById("topicTitle");
-const topicBody = document.getElementById("topicBody");
-const markBtn = document.getElementById("markBtn");
-const prevBtn = document.getElementById("prevBtn");
-const nextBtn = document.getElementById("nextBtn");
-
-const CATEGORY_HINTS = {
-  agile: {
-    blurb:
-      "the working rhythm agile teams use to plan, size and ship in short cycles",
-    tool: EXTERNAL_LINKS[0],
-  },
-  jira: {
-    blurb: "how work items are tracked, filtered and reported on inside JIRA",
-    tool: EXTERNAL_LINKS[0],
-  },
-  istqb: {
-    blurb: "core testing theory as examined by the ISTQB syllabus",
-    tool: EXTERNAL_LINKS[2],
-  },
-  java: {
-    blurb: "a foundational Java concept used throughout automation code",
-    tool: EXTERNAL_LINKS[3],
-  },
-  programming: {
-    blurb: "a core programming building block used across languages",
-    tool: EXTERNAL_LINKS[3],
-  },
-  pojo: {
-    blurb: "a plain-object design pattern used in Java automation frameworks",
-    tool: EXTERNAL_LINKS[2],
-  },
-  selenium: {
-    blurb: "a piece of browser automation with Selenium WebDriver",
-    tool: EXTERNAL_LINKS[2],
-  },
-  api: {
-    blurb: "a request/response concept for testing services and APIs",
-    tool: EXTERNAL_LINKS[2],
-  },
-  sql: {
-    blurb: "a database concept testers rely on for backend validation",
-    tool: EXTERNAL_LINKS[2],
-  },
-  "gen ai": {
-    blurb: "how generative AI tools plug into a modern QA workflow",
-    tool: EXTERNAL_LINKS[1],
-  },
-  automation: {
-    blurb: "tooling that keeps automated test suites reliable and repeatable",
-    tool: EXTERNAL_LINKS[4],
-  },
-  framework: {
-    blurb: "a structural piece of a test automation framework",
-    tool: EXTERNAL_LINKS[4],
-  },
-  playwright: {
-    blurb: "a modern end-to-end testing capability in Playwright",
-    tool: EXTERNAL_LINKS[2],
-  },
-  interview: {
-    blurb: "a scenario commonly raised in QA interview rounds",
-    tool: EXTERNAL_LINKS[0],
-  },
-  jdbc: {
-    blurb: "how Java code talks directly to a database",
-    tool: EXTERNAL_LINKS[2],
-  },
-  fillo: {
-    blurb: "a lightweight way to drive tests from Excel data",
-    tool: EXTERNAL_LINKS[2],
-  },
-};
-
-function hintFor(path) {
-  const joined = path.join(" ").toLowerCase();
-  for (const k of Object.keys(CATEGORY_HINTS)) {
-    if (joined.includes(k)) return CATEGORY_HINTS[k];
-  }
-  return {
-    blurb: "a topic on your QA and automation learning map",
-    tool: EXTERNAL_LINKS[5],
-  };
-}
-
-function stripEmoji(s) {
-  return s.replace(/^[^\w(]+\s*/u, "").trim() || s;
-}
-
-function findSiblings(path, tree) {
-  // walk tree to locate the node's parent children list
-  let nodes = tree,
-    parentTitle = null;
-  for (let i = 0; i < path.length - 1; i++) {
-    const found = nodes.find((n) => n.title === path[i]);
-    if (!found) return { siblings: [], parentTitle: null };
-    parentTitle = found.title;
-    nodes = found.children || [];
-  }
-  return {
-    siblings: nodes
-      .map((n) => n.title)
-      .filter((t) => t !== path[path.length - 1]),
-    parentTitle,
-  };
-}
-
-function renderTopicBody(path, treeKey) {
-  const title = path[path.length - 1];
-  const clean = stripEmoji(title);
-  const hint = hintFor(path);
-  const tree = treeKey === "prep" ? PREP_TREE : LEARN_TREE;
-  const { siblings, parentTitle } = findSiblings(path, tree);
-
-  let html = `<span class="tb-tag">${treeKey === "prep" ? "Interview & Scenarios" : "Learning Path"}</span>`;
-  html += `<p>This node covers <strong>${clean}</strong> — ${hint.blurb}. Use it as a placeholder outline: attach your own notes, code samples or a worked example here, and this hub carries the structure for you.</p>`;
-
-  if (siblings.length) {
-    html += `<p>Other topics alongside it under <strong>${stripEmoji(parentTitle || "")}</strong>:</p>`;
-    html += `<ul>${siblings
-      .slice(0, 10)
-      .map((s) => `<li>${stripEmoji(s)}</li>`)
-      .join("")}</ul>`;
-  }
-
-  html += `<p>Need a hand fleshing this out? <a href="${hint.tool.url}" target="_blank" rel="noopener noreferrer" style="color:var(--blue-2)">${hint.tool.name} ↗</a> is a solid place to start.</p>`;
-
-  topicBody.innerHTML = html;
-}
-
-function selectLeaf(path, treeKey) {
-  state.activePath = path;
-  state.activeTree = treeKey;
-
-  const flat = treeKey === "prep" ? state.flatPrep : state.flatLearn;
-  state.activeFlatIndex = flat.findIndex((p) => p.join("›") === path.join("›"));
-
-  // breadcrumb
-  crumbEl.innerHTML = "";
-  const homeCrumb = document.createElement("span");
-  homeCrumb.className = "crumb-item";
-  homeCrumb.textContent =
-    treeKey === "prep" ? "Interview & Scenarios" : "Learning Path";
-  crumbEl.appendChild(homeCrumb);
-  path.forEach((p) => {
-    const sep = document.createElement("span");
-    sep.className = "sep";
-    sep.textContent = "/";
-    crumbEl.appendChild(sep);
-    const item = document.createElement("span");
-    item.className = "crumb-item current";
-    item.textContent = stripEmoji(p);
-    crumbEl.appendChild(item);
-  });
-
-  const title = path[path.length - 1];
-  const iconMatch = title.match(
-    /^\p{Emoji_Presentation}|\p{Extended_Pictographic}/u,
-  );
-  topicIcon.textContent = iconMatch ? iconMatch[0] : "📄";
-  topicPath.textContent =
-    path.slice(0, -1).map(stripEmoji).join("  ›  ") ||
-    (treeKey === "prep" ? "Interview & Scenarios" : "Learning Path");
-  topicTitle.textContent = stripEmoji(title);
-
-  renderTopicBody(path, treeKey);
-
-  const key = path.join("›");
-  markBtn.classList.toggle("done", state.done.has(key));
-  markBtn.textContent = state.done.has(key) ? "✓ Reviewed" : "Mark as reviewed";
-
-  prevBtn.disabled = state.activeFlatIndex <= 0;
-  nextBtn.disabled =
-    state.activeFlatIndex === -1 || state.activeFlatIndex >= flat.length - 1;
-
-  showPage("topic");
-
-  highlightActiveInTree(key);
-  closeMobileSidebar();
-}
-
-function highlightActiveInTree(key) {
-  document
-    .querySelectorAll(".node-row.leaf.active")
-    .forEach((el) => el.classList.remove("active"));
-  document.querySelectorAll(".node").forEach((nodeEl) => {
-    try {
-      const p = JSON.parse(nodeEl.dataset.path || "[]");
-      if (p.join("›") === key) {
-        const row = nodeEl.querySelector(":scope > .node-row");
-        row.classList.add("active");
-        row.classList.toggle("done", state.done.has(key));
-        // expand ancestors
-        let ancestor = nodeEl.parentElement;
-        while (ancestor && ancestor !== document.body) {
-          if (ancestor.classList && ancestor.classList.contains("node"))
-            ancestor.classList.add("open");
-          ancestor = ancestor.parentElement;
-        }
-      }
-    } catch (e) {
-      /* not a leaf-path node */
-    }
-  });
-}
-
-/* mark as reviewed */
-markBtn.addEventListener("click", () => {
-  if (!state.activePath) return;
-  const key = state.activePath.join("›");
-  if (state.done.has(key)) state.done.delete(key);
-  else state.done.add(key);
-  markBtn.classList.toggle("done", state.done.has(key));
-  markBtn.textContent = state.done.has(key) ? "✓ Reviewed" : "Mark as reviewed";
-  highlightActiveInTree(key);
-  updateProgress();
-});
-
-/* prev / next */
-prevBtn.addEventListener("click", () => {
-  const flat = state.activeTree === "prep" ? state.flatPrep : state.flatLearn;
-  if (state.activeFlatIndex > 0)
-    selectLeaf(flat[state.activeFlatIndex - 1], state.activeTree);
-});
-nextBtn.addEventListener("click", () => {
-  const flat = state.activeTree === "prep" ? state.flatPrep : state.flatLearn;
-  if (state.activeFlatIndex < flat.length - 1)
-    selectLeaf(flat[state.activeFlatIndex + 1], state.activeTree);
-});
-
-/* progress */
-function updateProgress() {
-  const total = state.flatLearn.length + state.flatPrep.length;
-  const done = state.done.size;
-  document.getElementById("progressCount").textContent = `${done} / ${total}`;
-  document.getElementById("progressFill").style.width = total
-    ? `${(done / total) * 100}%`
-    : "0%";
-}
-updateProgress();
-
-/* =====================================================================
-   Tabs
-   ===================================================================== */
-document.querySelectorAll(".tab").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach((b) => {
-      b.classList.remove("active");
-      b.setAttribute("aria-selected", "false");
-    });
-    btn.classList.add("active");
-    btn.setAttribute("aria-selected", "true");
-    state.tab = btn.dataset.tab;
-    treeLearnEl.hidden = state.tab !== "learn";
-    treePrepEl.hidden = state.tab !== "prep";
-  });
-});
-
-/* =====================================================================
-   Search
-   ===================================================================== */
-const searchInput = document.getElementById("searchInput");
-const searchClear = document.getElementById("searchClear");
-
-function escapeReg(s) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function applySearch(q) {
-  searchClear.classList.toggle("show", !!q);
-  const query = q.trim().toLowerCase();
-  const activeTreeEl = state.tab === "prep" ? treePrepEl : treeLearnEl;
-  const otherTreeEl = state.tab === "prep" ? treeLearnEl : treePrepEl;
-  [activeTreeEl, otherTreeEl].forEach((root) => {
-    const nodes = root.querySelectorAll(".node");
-    if (!query) {
-      nodes.forEach((n) => {
-        n.style.display = "";
-        n.classList.remove("open");
-        const l = n.querySelector(":scope>.node-row .n-label");
-        if (l) l.innerHTML = l.textContent;
-      });
-      const existingMsg = root.querySelector(".no-results");
-      if (existingMsg) existingMsg.remove();
-      return;
-    }
-    let anyMatch = false;
-    nodes.forEach((n) => {
-      const labelEl = n.querySelector(":scope > .node-row .n-label");
-      if (!labelEl) return;
-      const text = labelEl.textContent;
-      const match = text.toLowerCase().includes(query);
-      if (match) {
-        anyMatch = true;
-        labelEl.innerHTML = text.replace(
-          new RegExp("(" + escapeReg(q) + ")", "ig"),
-          "<mark>$1</mark>",
-        );
-      } else {
-        labelEl.innerHTML = text;
-      }
-    });
-    nodes.forEach((n) => {
-      const label = n
-        .querySelector(":scope > .node-row .n-label")
-        .textContent.toLowerCase();
-      const selfMatch = label.includes(query);
-      const descMatch =
-        n.querySelector(".n-label") &&
-        Array.from(n.querySelectorAll(".n-label")).some((l) =>
-          l.textContent.toLowerCase().includes(query),
-        );
-      const show = selfMatch || descMatch;
-      n.style.display = show ? "" : "none";
-      if (show && descMatch) n.classList.add("open");
-    });
-    const existingMsg = root.querySelector(".no-results");
-    if (existingMsg) existingMsg.remove();
-    if (!anyMatch) {
-      const msg = document.createElement("div");
-      msg.className = "no-results";
-      msg.textContent = `No topics match "${q}"`;
-      root.appendChild(msg);
-    }
-  });
-}
-
-searchInput.addEventListener("input", (e) => applySearch(e.target.value));
-searchClear.addEventListener("click", () => {
-  searchInput.value = "";
-  applySearch("");
-  searchInput.focus();
-});
-
-/* =====================================================================
-   Mobile sidebar toggle
-   ===================================================================== */
-const sidebar = document.getElementById("sidebar");
-const scrim = document.getElementById("sidebarScrim");
-document.getElementById("menuBtn").addEventListener("click", () => {
-  sidebar.classList.add("open");
-  scrim.classList.add("show");
-});
-document
-  .getElementById("sidebarClose")
-  .addEventListener("click", closeMobileSidebar);
-scrim.addEventListener("click", closeMobileSidebar);
-function closeMobileSidebar() {
-  sidebar.classList.remove("open");
-  scrim.classList.remove("show");
-}
-
-/* =====================================================================
-   Home link (breadcrumb "Home"/logo click returns to hero)
-   ===================================================================== */
-document.getElementById("brandHome").addEventListener("click", () => {
-  showPage("home");
-  crumbEl.innerHTML = '<span class="crumb-item">Home</span>';
-});
-document.getElementById("brandHome").addEventListener("keydown", (e) => {
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    document.getElementById("brandHome").click();
-  }
-});
-
-/* =====================================================================
-   PAGE ROUTER (Home / Topic / Quiz / Manual Admin / Auto Admin / Resources)
-   ===================================================================== */
-const pageEls = {
-  home: document.getElementById("homeView"),
-  topic: document.getElementById("topicView"),
-  quiz: document.getElementById("quizView"),
-  manualAdmin: document.getElementById("manualAdminView"),
-  autoAdmin: document.getElementById("autoAdminView"),
-  resources: document.getElementById("resourcesView"),
-};
-
-function showPage(name) {
-  Object.entries(pageEls).forEach(([k, el]) => {
-    if (el) el.hidden = k !== name;
-  });
-  const navKey = name === "topic" ? "home" : name;
-  document
-    .querySelectorAll(".pn-btn")
-    .forEach((b) => b.classList.toggle("active", b.dataset.page === navKey));
-  window.scrollTo({ top: 0, behavior: "smooth" });
-  closeMobileSidebar();
-}
-
-document.querySelectorAll("[data-page]").forEach((btn) => {
-  btn.addEventListener("click", () => showPage(btn.dataset.page));
-});
-
-/* =====================================================================
-   THEME TOGGLE (persisted)
-   ===================================================================== */
-const htmlEl = document.documentElement;
-const themeToggle = document.getElementById("themeToggle");
-const savedTheme = localStorage.getItem("ts-theme");
-if (savedTheme) htmlEl.setAttribute("data-theme", savedTheme);
-else if (
-  window.matchMedia &&
-  window.matchMedia("(prefers-color-scheme: light)").matches
-)
-  htmlEl.setAttribute("data-theme", "light");
-
-themeToggle.addEventListener("click", () => {
-  const next = htmlEl.getAttribute("data-theme") === "light" ? "dark" : "light";
-  htmlEl.setAttribute("data-theme", next);
-  localStorage.setItem("ts-theme", next);
-});
-
-/* =====================================================================
-   Live hub pulse (animated counters on Home)
-   ===================================================================== */
-function animateCount(el, target, suffix) {
-  let cur = 0;
-  const step = Math.max(1, Math.round(target / 40));
-  const id = setInterval(() => {
-    cur += step;
-    if (cur >= target) {
-      cur = target;
-      clearInterval(id);
-    }
-    el.textContent = cur + (suffix || "");
-  }, 18);
-}
-const pulseRowEl = document.getElementById("pulseRow");
-const pulseData = [
-  {
-    label: "Learning topics mapped",
-    value: state.flatLearn.length,
-    suffix: "",
-  },
-  {
-    label: "Interview & scenario prompts",
-    value: state.flatPrep.length,
-    suffix: "",
-  },
-  { label: "MCQs to practice", value: 0, suffix: "", id: "pulseMcq" },
-  {
-    label: "External learning tools",
-    value: EXTERNAL_LINKS.length,
-    suffix: "",
-  },
-];
-pulseData.forEach((p) => {
-  const card = document.createElement("div");
-  card.className = "pulse-card";
-  card.innerHTML = `<span class="pulse-num" ${p.id ? `id="${p.id}"` : ""}>0</span><span class="pulse-label">${p.label}</span>`;
-  pulseRowEl.appendChild(card);
-});
-function renderPulseNumbers() {
-  document
-    .querySelectorAll(".pulse-num")
-    .forEach((el, i) =>
-      animateCount(el, pulseData[i].value, pulseData[i].suffix),
-    );
-}
-
-/* =====================================================================
-   Resources page grid (mirrors quick-grid)
-   ===================================================================== */
-const resourceGridEl = document.getElementById("resourceGrid");
-EXTERNAL_LINKS.forEach((l) => {
-  const a = document.createElement("a");
-  a.className = "quick-card";
-  a.href = l.url;
-  a.target = "_blank";
-  a.rel = "noopener noreferrer";
-  a.innerHTML = `
-    <span class="qc-icon">${l.icon}</span>
-    <span class="qc-name">${l.name}</span>
-    <span class="qc-desc">${l.desc}</span>
-    <span class="qc-go">Open ↗</span>`;
-  resourceGridEl.appendChild(a);
-});
-
-/* =====================================================================
-   MCQ QUIZ — objective questions & answers built from the content map
-   ===================================================================== */
-const QUIZ_BANK = {
-  agile: {
-    icon: "🧠",
-    name: "Agile & Scrum",
-    questions: [
-      {
-        q: "Who is responsible for maximizing the value of the product in Scrum?",
-        options: [
-          "Scrum Master",
-          "Product Owner",
-          "Development Team",
-          "Project Manager",
-        ],
-        correct: 1,
-        explain:
-          "The Product Owner owns and prioritizes the Product Backlog to maximize value.",
-      },
-      {
-        q: "What is the recommended maximum length of a Sprint?",
-        options: ["1 week", "2 weeks", "1 month", "2 months"],
-        correct: 2,
-        explain: "The Scrum Guide caps a Sprint at one calendar month.",
-      },
-      {
-        q: "Which artifact represents the work planned for a Sprint?",
-        options: [
-          "Product Backlog",
-          "Sprint Backlog",
-          "Burn Down Chart",
-          "Definition of Done",
-        ],
-        correct: 1,
-        explain:
-          "The Sprint Backlog is the Sprint Goal plus the items selected for that Sprint.",
-      },
-      {
-        q: "What is the purpose of the Daily Standup?",
-        options: [
-          "Assign blame for missed tasks",
-          "Sync the team and surface blockers in ~15 minutes",
-          "Report status to management",
-          "Estimate story points",
-        ],
-        correct: 1,
-        explain:
-          "It is a short inspect-and-adapt event for the Development Team.",
-      },
-      {
-        q: "Which technique commonly estimates relative story size?",
-        options: [
-          "Gantt chart",
-          "Planning Poker",
-          "Critical path method",
-          "PERT chart",
-        ],
-        correct: 1,
-        explain:
-          "Planning Poker uses relative sizing (often Fibonacci-like numbers) for story points.",
-      },
-      {
-        q: "The Sprint Retrospective is held to…",
-        options: [
-          "Demo the increment to stakeholders",
-          "Inspect how the last Sprint went and plan process improvements",
-          "Refine the backlog",
-          "Sign off releases",
-        ],
-        correct: 1,
-        explain:
-          "Retrospective = team reflects on people, process and tools to improve next Sprint.",
-      },
-    ],
-  },
-  jira: {
-    icon: "🎟️",
-    name: "JIRA",
-    questions: [
-      {
-        q: "What does JQL stand for?",
-        options: [
-          "JIRA Quick Language",
-          "JIRA Query Language",
-          "Java Query Logic",
-          "JIRA Queue List",
-        ],
-        correct: 1,
-        explain:
-          "JQL (JIRA Query Language) is used to search and filter issues.",
-      },
-      {
-        q: "Which JIRA feature lets you visualize a team\u2019s workflow as columns?",
-        options: ["Board", "Component", "Version", "Filter"],
-        correct: 0,
-        explain:
-          "Scrum/Kanban Boards visualize issues moving through workflow statuses.",
-      },
-      {
-        q: 'A "Bug" in JIRA is an example of an…',
-        options: ["Issue Type", "Sprint", "Epic Link", "Workflow Scheme"],
-        correct: 0,
-        explain: "Story, Task, Bug and Epic are common default Issue Types.",
-      },
-      {
-        q: "What is used to group related issues released together?",
-        options: ["Component", "Version/Release", "Label", "Filter"],
-        correct: 1,
-        explain:
-          "Versions represent a release; issues can be tagged as Fix Version.",
-      },
-      {
-        q: "Which JIRA feature auto-transitions issues based on triggers/conditions?",
-        options: ["Automation Rules", "Dashboards", "Reports", "Backlog"],
-        correct: 0,
-        explain:
-          "Automation Rules run trigger → condition → action logic on issues.",
-      },
-    ],
-  },
-  istqb: {
-    icon: "👨‍🎓",
-    name: "ISTQB Foundations",
-    questions: [
-      {
-        q: 'Which testing principle states "testing shows presence of defects, not their absence"?',
-        options: [
-          "Pesticide Paradox",
-          "Exhaustive testing is impossible",
-          "Defect Clustering",
-          "Testing shows presence of defects",
-        ],
-        correct: 3,
-        explain: "One of the seven ISTQB testing principles.",
-      },
-      {
-        q: "Repeating the same tests until they stop finding new bugs is known as…",
-        options: [
-          "Regression Testing",
-          "Pesticide Paradox",
-          "Early Testing",
-          "Defect Clustering",
-        ],
-        correct: 1,
-        explain:
-          "The Pesticide Paradox: the same tests eventually stop finding new defects.",
-      },
-      {
-        q: "Which level of testing is typically performed first?",
-        options: [
-          "System Testing",
-          "Acceptance Testing",
-          "Unit Testing",
-          "Integration Testing",
-        ],
-        correct: 2,
-        explain: "Unit Testing validates individual components first.",
-      },
-      {
-        q: "Black-box testing techniques design test cases based on…",
-        options: [
-          "Internal code structure",
-          "Requirements/specifications without seeing code",
-          "Compiler output",
-          "Database schema only",
-        ],
-        correct: 1,
-        explain:
-          "Black-box testing is specification-based, not implementation-based.",
-      },
-      {
-        q: 'What does the "V-Model" pair each development phase with?',
-        options: [
-          "A code review",
-          "A corresponding testing phase",
-          "A retrospective",
-          "A sprint",
-        ],
-        correct: 1,
-        explain:
-          "Each development stage in the V-Model has a matching test level.",
-      },
-    ],
-  },
-  java: {
-    icon: "☕",
-    name: "Core Java",
-    questions: [
-      {
-        q: "Which keyword prevents a class from being subclassed?",
-        options: ["static", "final", "private", "abstract"],
-        correct: 1,
-        explain: "A final class cannot be extended.",
-      },
-      {
-        q: "Which collection does NOT allow duplicate elements?",
-        options: ["List", "Set", "Map values", "Array"],
-        correct: 1,
-        explain: "Set enforces uniqueness of elements.",
-      },
-      {
-        q: "What does the JVM do with unused objects?",
-        options: [
-          "Manual free()",
-          "Garbage Collection",
-          "Nothing, memory leaks",
-          "Compiler removes them",
-        ],
-        correct: 1,
-        explain:
-          "The Garbage Collector automatically reclaims unreachable objects.",
-      },
-      {
-        q: "Which feature lets a class implement multiple contracts in Java?",
-        options: [
-          "Multiple inheritance of classes",
-          "Interfaces",
-          "Abstract classes only",
-          "Static methods",
-        ],
-        correct: 1,
-        explain:
-          "Java supports multiple interface implementation, not multiple class inheritance.",
-      },
-      {
-        q: 'What does the "static" keyword mean for a variable?',
-        options: [
-          "Belongs to the instance",
-          "Belongs to the class, shared across instances",
-          "Cannot be changed",
-          "Runs only once at compile time",
-        ],
-        correct: 1,
-        explain:
-          "Static members belong to the class rather than any single object.",
-      },
-      {
-        q: "Which Java 8 feature enables functional-style operations on collections?",
-        options: ["Stream API", "Applet API", "Reflection API", "Servlet API"],
-        correct: 0,
-        explain: "Stream API supports map/filter/reduce style pipelines.",
-      },
-    ],
-  },
-  selenium: {
-    icon: "🌐",
-    name: "Selenium WebDriver",
-    questions: [
-      {
-        q: "Which locator is generally the most stable when an element has a unique attribute?",
-        options: ["XPath using text()", "ID", "Absolute XPath", "Class Name"],
-        correct: 1,
-        explain:
-          "ID is fast and stable when unique; prefer it over fragile XPath/text.",
-      },
-      {
-        q: "Which wait keeps polling until a condition is true, up to a timeout?",
-        options: [
-          "Implicit Wait",
-          "Explicit Wait (WebDriverWait)",
-          "Thread.sleep",
-          "Page Load Timeout",
-        ],
-        correct: 1,
-        explain:
-          "Explicit waits use ExpectedConditions to poll until a state is reached.",
-      },
-      {
-        q: "Which class handles mouse hover, drag-and-drop and right-click?",
-        options: [
-          "Select class",
-          "Actions class",
-          "JavascriptExecutor",
-          "Alert interface",
-        ],
-        correct: 1,
-        explain: "The Actions class builds complex user gesture sequences.",
-      },
-      {
-        q: "Which design pattern separates page structure from test logic?",
-        options: [
-          "Singleton Pattern",
-          "Page Object Model",
-          "Factory Pattern",
-          "Observer Pattern",
-        ],
-        correct: 1,
-        explain:
-          "POM keeps locators/actions in page classes, tests stay clean.",
-      },
-      {
-        q: "Which interface is used to select options from a dropdown?",
-        options: ["Actions", "Select", "Alert", "WebElement"],
-        correct: 1,
-        explain:
-          "The Select class wraps <select> dropdowns (by value/index/visible text).",
-      },
-      {
-        q: "What handles unexpected native browser popups like alerts?",
-        options: [
-          "Alert interface",
-          "Select class",
-          "Frame switch",
-          "Cookie handling",
-        ],
-        correct: 0,
-        explain:
-          "driver.switchTo().alert() returns the Alert interface to accept/dismiss/read text.",
-      },
-    ],
-  },
-  api: {
-    icon: "🌍",
-    name: "API Testing",
-    questions: [
-      {
-        q: "Which HTTP method is used to fully replace a resource?",
-        options: ["GET", "PATCH", "PUT", "DELETE"],
-        correct: 2,
-        explain:
-          "PUT typically replaces the whole resource; PATCH updates it partially.",
-      },
-      {
-        q: "Which HTTP status code indicates a successful resource creation?",
-        options: ["200 OK", "201 Created", "301 Moved", "404 Not Found"],
-        correct: 1,
-        explain:
-          "201 Created is returned after a successful POST that creates a resource.",
-      },
-      {
-        q: "In REST Assured, which method starts building a request?",
-        options: ["given()", "when()", "then()", "assertThat()"],
-        correct: 0,
-        explain:
-          "given() sets up preconditions like headers/body before when()/then().",
-      },
-      {
-        q: "What does JSON Schema Validation check?",
-        options: [
-          "Response time only",
-          "That the JSON response matches an expected structure/types",
-          "HTTP status text",
-          "SSL certificate",
-        ],
-        correct: 1,
-        explain:
-          "It validates structure, required fields and data types of a JSON payload.",
-      },
-      {
-        q: "Which HTTP status range generally indicates a client error?",
-        options: ["1xx", "2xx", "3xx", "4xx"],
-        correct: 3,
-        explain: "4xx = client errors (e.g. 400 Bad Request, 404 Not Found).",
-      },
-    ],
-  },
-  sql: {
-    icon: "🗄️",
-    name: "SQL",
-    questions: [
-      {
-        q: "Which clause filters rows after grouping (on aggregated values)?",
-        options: ["WHERE", "HAVING", "GROUP BY", "ORDER BY"],
-        correct: 1,
-        explain:
-          "HAVING filters groups; WHERE filters rows before aggregation.",
-      },
-      {
-        q: "Which JOIN returns only matching rows from both tables?",
-        options: ["LEFT JOIN", "RIGHT JOIN", "INNER JOIN", "FULL OUTER JOIN"],
-        correct: 2,
-        explain: "INNER JOIN returns rows with matches in both tables.",
-      },
-      {
-        q: "Which SQL command removes all rows but keeps the table structure fastest?",
-        options: ["DELETE", "DROP", "TRUNCATE", "ALTER"],
-        correct: 2,
-        explain:
-          "TRUNCATE quickly removes all rows and resets identity, keeping the schema.",
-      },
-      {
-        q: "Which keyword is used to sort query results?",
-        options: ["SORT BY", "ORDER BY", "GROUP BY", "ARRANGE BY"],
-        correct: 1,
-        explain: "ORDER BY sorts the result set ascending/descending.",
-      },
-      {
-        q: "What does CRUD stand for in database operations?",
-        options: [
-          "Create, Read, Update, Delete",
-          "Control, Retrieve, Undo, Drop",
-          "Copy, Read, Use, Delete",
-          "Create, Run, Undo, Debug",
-        ],
-        correct: 0,
-        explain:
-          "CRUD = Create, Read, Update, Delete — the four basic data operations.",
-      },
-    ],
-  },
-  automation: {
-    icon: "🛠️",
-    name: "Automation Tools & CI/CD",
-    questions: [
-      {
-        q: "Which file defines dependencies and build config in a Maven project?",
-        options: [
-          "build.gradle",
-          "pom.xml",
-          "package.json",
-          "requirements.txt",
-        ],
-        correct: 1,
-        explain:
-          "pom.xml (Project Object Model) configures Maven dependencies and plugins.",
-      },
-      {
-        q: 'What does "git rebase" primarily do?',
-        options: [
-          "Deletes a branch",
-          "Replays commits on top of another base commit",
-          "Creates a pull request",
-          "Compresses the repo",
-        ],
-        correct: 1,
-        explain:
-          "Rebase re-applies commits onto a new base for a linear history.",
-      },
-      {
-        q: "Which tool is commonly used to build CI/CD pipelines from a Jenkinsfile?",
-        options: ["Jenkins", "Selenium", "TestNG", "Maven"],
-        correct: 0,
-        explain: "Jenkins pipelines are typically defined in a Jenkinsfile.",
-      },
-      {
-        q: "Which reporting library produces rich HTML test reports for Java frameworks?",
-        options: ["Extent Reports", "JDBC", "Fillo", "JQL"],
-        correct: 0,
-        explain:
-          "Extent Reports (and Allure) generate detailed HTML test execution reports.",
-      },
-      {
-        q: 'What is "git stash" used for?',
-        options: [
-          "Permanently deleting changes",
-          "Temporarily shelving uncommitted changes",
-          "Merging two branches",
-          "Tagging a release",
-        ],
-        correct: 1,
-        explain:
-          "Stash saves working-directory changes so you can switch context and reapply later.",
-      },
-    ],
-  },
-  frameworks: {
-    icon: "🏗️",
-    name: "Test Frameworks",
-    questions: [
-      {
-        q: "Which TestNG annotation runs once before all tests in a class?",
-        options: [
-          "@BeforeMethod",
-          "@BeforeClass",
-          "@BeforeTest",
-          "@BeforeSuite",
-        ],
-        correct: 1,
-        explain:
-          "@BeforeClass runs once before the first test method in that class.",
-      },
-      {
-        q: "In Cucumber, where are Given/When/Then steps written?",
-        options: [
-          "Feature file (Gherkin)",
-          "pom.xml",
-          "TestNG.xml",
-          "Step Definitions only",
-        ],
-        correct: 0,
-        explain: "Gherkin syntax (Given/When/Then) lives in .feature files.",
-      },
-      {
-        q: "Which framework style reads test data from an external source like Excel/CSV?",
-        options: [
-          "Data Driven Framework",
-          "Keyword Driven Framework",
-          "Linear Scripting",
-          "BDD only",
-        ],
-        correct: 0,
-        explain: "Data Driven Framework separates test data from test logic.",
-      },
-      {
-        q: "Which TestNG feature reruns failed tests automatically?",
-        options: ["Listener", "Retry Analyzer", "DataProvider", "Parameters"],
-        correct: 1,
-        explain:
-          "IRetryAnalyzer implementation retries failed tests a set number of times.",
-      },
-      {
-        q: "What connects Gherkin steps to executable Java code in Cucumber?",
-        options: ["Hooks", "Step Definitions", "Tags", "Scenario Outline"],
-        correct: 1,
-        explain: "Step Definitions map Gherkin text to automation code.",
-      },
-    ],
-  },
-  playwright: {
-    icon: "▶️",
-    name: "Playwright",
-    questions: [
-      {
-        q: "Which Playwright feature automatically waits for elements to be actionable?",
-        options: [
-          "Manual Thread.sleep",
-          "Auto-Waiting",
-          "Explicit polling only",
-          "JavaScript Executor",
-        ],
-        correct: 1,
-        explain:
-          "Playwright auto-waits for elements to be visible/stable/enabled before acting.",
-      },
-      {
-        q: "What does the Playwright Trace Viewer help with?",
-        options: [
-          "Writing SQL queries",
-          "Debugging test runs with timeline, DOM & network snapshots",
-          "Managing JIRA boards",
-          "Compiling Java code",
-        ],
-        correct: 1,
-        explain:
-          "Trace Viewer visualizes actions, screenshots, console and network per test.",
-      },
-      {
-        q: "Which command generates Playwright test code by recording browser actions?",
-        options: [
-          "Code Generator (codegen)",
-          "Trace Viewer",
-          "Fixtures",
-          "Locator API",
-        ],
-        correct: 0,
-        explain:
-          "`playwright codegen` records interactions and emits test code.",
-      },
-      {
-        q: "What isolates cookies/storage between tests in Playwright?",
-        options: ["Browser Context", "Page object", "Frame", "Locator"],
-        correct: 0,
-        explain:
-          "A Browser Context is an isolated session, like an incognito profile.",
-      },
-      {
-        q: "Which API is preferred for interacting with elements in modern Playwright?",
-        options: ["Locator API", "findElement", "WebElement", "Select class"],
-        correct: 0,
-        explain:
-          "Locators are lazy and auto-retrying, replacing older element-handle patterns.",
-      },
-    ],
-  },
-};
-
-let quizState = { catKey: null, order: [], idx: 0, score: 0, answered: false };
-
-const quizCatGrid = document.getElementById("quizCatGrid");
-const quizSetup = document.getElementById("quizSetup");
-const quizRunner = document.getElementById("quizRunner");
-const quizResult = document.getElementById("quizResult");
-const quizCatLabel = document.getElementById("quizCatLabel");
-const quizScoreEl = document.getElementById("quizScore");
-const quizProgressLabel = document.getElementById("quizProgressLabel");
-const quizProgressFill = document.getElementById("quizProgressFill");
-const quizQuestionEl = document.getElementById("quizQuestion");
-const quizOptionsEl = document.getElementById("quizOptions");
-const quizFeedbackEl = document.getElementById("quizFeedback");
-const quizNextBtn = document.getElementById("quizNext");
-const quizQuitBtn = document.getElementById("quizQuit");
-
-let totalMcqCount = 0;
-Object.entries(QUIZ_BANK).forEach(([key, cat]) => {
-  totalMcqCount += cat.questions.length;
-  const card = document.createElement("button");
-  card.className = "quiz-cat-card";
-  card.innerHTML = `<span class="qcc-icon">${cat.icon}</span><span class="qcc-name">${cat.name}</span><span class="qcc-count">${cat.questions.length} questions</span>`;
-  card.addEventListener("click", () => startQuiz(key));
-  quizCatGrid.appendChild(card);
-});
-pulseData[2].value = totalMcqCount;
-renderPulseNumbers();
-
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function startQuiz(key) {
-  const cat = QUIZ_BANK[key];
-  quizState = {
-    catKey: key,
-    order: shuffle(cat.questions),
-    idx: 0,
-    score: 0,
-    answered: false,
-  };
-  quizSetup.hidden = true;
-  quizResult.hidden = true;
-  quizRunner.hidden = false;
-  quizCatLabel.textContent = `${cat.icon} ${cat.name}`;
-  renderQuizQuestion();
-}
-
-function renderQuizQuestion() {
-  const cat = QUIZ_BANK[quizState.catKey];
-  const q = quizState.order[quizState.idx];
-  quizState.answered = false;
-  quizQuestionEl.textContent = q.q;
-  quizFeedbackEl.hidden = true;
-  quizNextBtn.disabled = true;
-  quizNextBtn.textContent =
-    quizState.idx === quizState.order.length - 1
-      ? "See results →"
-      : "Next question →";
-  quizScoreEl.textContent = `Score: ${quizState.score}`;
-  quizProgressLabel.textContent = `Q ${quizState.idx + 1} / ${quizState.order.length}`;
-  quizProgressFill.style.width = `${(quizState.idx / quizState.order.length) * 100}%`;
-
-  quizOptionsEl.innerHTML = "";
-  const letters = ["A", "B", "C", "D"];
-  q.options.forEach((opt, i) => {
-    const btn = document.createElement("button");
-    btn.className = "quiz-opt";
-    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
-    btn.addEventListener("click", () => answerQuiz(i, q, btn));
-    quizOptionsEl.appendChild(btn);
-  });
-}
-
-function answerQuiz(i, q, btnEl) {
-  if (quizState.answered) return;
-  quizState.answered = true;
-  const correct = i === q.correct;
-  if (correct) quizState.score++;
-  [...quizOptionsEl.children].forEach((b, idx) => {
-    b.disabled = true;
-    if (idx === q.correct) b.classList.add("correct");
-    else if (idx === i) b.classList.add("wrong");
-  });
-  quizFeedbackEl.hidden = false;
-  quizFeedbackEl.innerHTML = `${correct ? "✅ Correct." : "❌ Not quite."} ${q.explain}`;
-  quizScoreEl.textContent = `Score: ${quizState.score}`;
-  quizNextBtn.disabled = false;
-}
-
-quizNextBtn.addEventListener("click", () => {
-  if (quizState.idx < quizState.order.length - 1) {
-    quizState.idx++;
-    renderQuizQuestion();
-  } else {
-    finishQuiz();
-  }
-});
-
-quizQuitBtn.addEventListener("click", () => {
-  quizRunner.hidden = true;
-  quizResult.hidden = true;
-  quizSetup.hidden = false;
-});
-
-function finishQuiz() {
-  quizRunner.hidden = true;
-  quizResult.hidden = false;
-  const total = quizState.order.length;
-  const pct = Math.round((quizState.score / total) * 100);
-  document.getElementById("resultRing").style.setProperty("--pct", pct);
-  document.getElementById("resultRing").innerHTML = `<span>${pct}%</span>`;
-  const cat = QUIZ_BANK[quizState.catKey];
-  document.getElementById("resultHeading").textContent =
-    pct >= 70 ? "🎉 Nicely done!" : "Keep going!";
-  document.getElementById("resultSub").textContent =
-    `You scored ${quizState.score} / ${total} on ${cat.name}.`;
-}
-
-document
-  .getElementById("quizRetry")
-  .addEventListener("click", () => startQuiz(quizState.catKey));
-document.getElementById("quizBackCats").addEventListener("click", () => {
-  quizResult.hidden = true;
-  quizSetup.hidden = false;
-});
-
-/* =====================================================================
-   ADMIN BOARDS — Manual Testing & Automation Testing (localStorage CRUD)
-   ===================================================================== */
-const modalScrim = document.getElementById("modalScrim");
-const modalTitle = document.getElementById("modalTitle");
-const modalBody = document.getElementById("modalBody");
-const modalSave = document.getElementById("modalSave");
-document.getElementById("modalClose").addEventListener("click", closeModal);
-document.getElementById("modalCancel").addEventListener("click", closeModal);
-modalScrim.addEventListener("click", (e) => {
-  if (e.target === modalScrim) closeModal();
-});
-function openModal() {
-  modalScrim.classList.add("show");
-}
-function closeModal() {
-  modalScrim.classList.remove("show");
-  modalBody.innerHTML = "";
-  modalSave.onclick = null;
-}
-
-function seedIfEmpty(key, seed) {
-  if (!localStorage.getItem(key))
-    localStorage.setItem(key, JSON.stringify(seed));
-}
-function loadRows(key) {
-  try {
-    return JSON.parse(localStorage.getItem(key)) || [];
-  } catch (e) {
-    return [];
-  }
-}
-function saveRows(key, rows) {
-  localStorage.setItem(key, JSON.stringify(rows));
-}
-
-function badgeClass(val) {
-  return val.toLowerCase().replace(/\s+/g, "");
-}
-
-/* ---------- MANUAL TESTING BOARD ---------- */
-const MANUAL_KEY = "ts-manual-cases";
-seedIfEmpty(MANUAL_KEY, [
-  {
-    id: "MT-101",
-    title: "Verify login with valid credentials",
-    module: "Authentication",
-    priority: "High",
-    status: "Pass",
-    tester: "A. Rao",
-    steps:
-      "1. Open login page\n2. Enter valid username/password\n3. Click Login",
-    expected: "User is redirected to dashboard",
-  },
-  {
-    id: "MT-102",
-    title: "Verify error on invalid password",
-    module: "Authentication",
-    priority: "High",
-    status: "Fail",
-    tester: "A. Rao",
-    steps:
-      "1. Open login page\n2. Enter valid username, wrong password\n3. Click Login",
-    expected: 'Inline error: "Invalid credentials"',
-  },
-  {
-    id: "MT-103",
-    title: "Verify JIRA board drag-and-drop between columns",
-    module: "JIRA Board",
-    priority: "Medium",
-    status: "Pending",
-    tester: "S. Iyer",
-    steps: "1. Open board\n2. Drag a card from To Do to In Progress",
-    expected: "Card status updates and persists",
-  },
-  {
-    id: "MT-104",
-    title: "Verify SQL search filter returns exact matches",
-    module: "Search",
-    priority: "Low",
-    status: "Blocked",
-    tester: "M. Khan",
-    steps: "1. Enter search term\n2. Apply filter",
-    expected: "Only exact matches are displayed",
-  },
-]);
-function manualStats(rows) {
-  return {
-    total: rows.length,
-    pass: rows.filter((r) => r.status === "Pass").length,
-    fail: rows.filter((r) => r.status === "Fail").length,
-    pending: rows.filter(
-      (r) => r.status === "Pending" || r.status === "Blocked",
-    ).length,
-  };
-}
-function renderManualStats() {
-  const rows = loadRows(MANUAL_KEY);
-  const s = manualStats(rows);
-  document.getElementById("manualStats").innerHTML = `
-    <div class="stat-card"><span class="sc-num">${s.total}</span><span class="sc-sub">Total test cases</span></div>
-    <div class="stat-card"><span class="sc-num" style="color:#38c172">${s.pass}</span><span class="sc-sub">Passed</span></div>
-    <div class="stat-card"><span class="sc-num" style="color:#f0555a">${s.fail}</span><span class="sc-sub">Failed</span></div>
-    <div class="stat-card"><span class="sc-num" style="color:#e0a72d">${s.pending}</span><span class="sc-sub">Pending / Blocked</span></div>`;
-}
-function renderManualTable() {
-  const rows = loadRows(MANUAL_KEY);
-  const q = document.getElementById("manualSearch").value.trim().toLowerCase();
-  const filterStatus = document.getElementById("manualFilter").value;
-  const tbody = document.getElementById("manualTbody");
-  const filtered = rows.filter((r) => {
-    const matchesQ =
-      !q ||
-      [r.title, r.module, r.tester, r.id].join(" ").toLowerCase().includes(q);
-    const matchesF = filterStatus === "all" || r.status === filterStatus;
-    return matchesQ && matchesF;
-  });
-  tbody.innerHTML = filtered
-    .map(
-      (r) => `
-    <tr>
-      <td class="row-id">${r.id}</td>
-      <td>${r.title}</td>
-      <td>${r.module}</td>
-      <td><span class="badge ${badgeClass(r.priority)}">${r.priority}</span></td>
-      <td><span class="badge ${badgeClass(r.status)}">${r.status}</span></td>
-      <td>${r.tester}</td>
-      <td><div class="row-actions">
-        <button class="edit" title="Edit" data-id="${r.id}">✎</button>
-        <button class="del" title="Delete" data-id="${r.id}">🗑</button>
-      </div></td>
-    </tr>`,
-    )
-    .join("");
-  document.getElementById("manualEmpty").hidden = filtered.length !== 0;
-  tbody
-    .querySelectorAll(".edit")
-    .forEach((b) =>
-      b.addEventListener("click", () => openManualModal(b.dataset.id)),
-    );
-  tbody.querySelectorAll(".del").forEach((b) =>
-    b.addEventListener("click", () => {
-      if (!confirm("Delete this test case?")) return;
-      saveRows(
-        MANUAL_KEY,
-        loadRows(MANUAL_KEY).filter((r) => r.id !== b.dataset.id),
-      );
-      renderManualStats();
-      renderManualTable();
-    }),
-  );
-  renderManualStats();
-}
-function openManualModal(id) {
-  const rows = loadRows(MANUAL_KEY);
-  const row = rows.find((r) => r.id === id) || {
-    id: "MT-" + Math.floor(100 + Math.random() * 900),
-    title: "",
-    module: "",
-    priority: "Medium",
-    status: "Pending",
-    tester: "",
-    steps: "",
-    expected: "",
-  };
-  modalTitle.textContent = id ? `Edit ${id}` : "New Manual Test Case";
-  modalBody.innerHTML = `
-    <label>Test case ID<input id="f_id" value="${row.id}" ${id ? "readonly" : ""}></label>
-    <label>Title<input id="f_title" value="${row.title}" placeholder="Verify…"></label>
-    <label>Module<input id="f_module" value="${row.module}" placeholder="e.g. Authentication"></label>
-    <label>Priority
-      <select id="f_priority">
-        ${["High", "Medium", "Low"].map((p) => `<option ${row.priority === p ? "selected" : ""}>${p}</option>`).join("")}
-      </select>
-    </label>
-    <label>Status
-      <select id="f_status">
-        ${["Pass", "Fail", "Blocked", "Pending"].map((s) => `<option ${row.status === s ? "selected" : ""}>${s}</option>`).join("")}
-      </select>
-    </label>
-    <label>Tester<input id="f_tester" value="${row.tester}" placeholder="Owner name"></label>
-    <label>Steps<textarea id="f_steps" rows="3">${row.steps || ""}</textarea></label>
-    <label>Expected result<textarea id="f_expected" rows="2">${row.expected || ""}</textarea></label>`;
-  modalSave.onclick = () => {
-    const updated = {
-      id: document.getElementById("f_id").value.trim() || row.id,
-      title: document.getElementById("f_title").value.trim() || "Untitled case",
-      module: document.getElementById("f_module").value.trim() || "General",
-      priority: document.getElementById("f_priority").value,
-      status: document.getElementById("f_status").value,
-      tester: document.getElementById("f_tester").value.trim() || "Unassigned",
-      steps: document.getElementById("f_steps").value,
-      expected: document.getElementById("f_expected").value,
-    };
-    let all = loadRows(MANUAL_KEY);
-    const idx = all.findIndex((r) => r.id === id);
-    if (idx > -1) all[idx] = updated;
-    else all.push(updated);
-    saveRows(MANUAL_KEY, all);
-    closeModal();
-    renderManualTable();
-  };
-  openModal();
-}
-document
-  .getElementById("manualAddBtn")
-  .addEventListener("click", () => openManualModal(null));
-document
-  .getElementById("manualSearch")
-  .addEventListener("input", renderManualTable);
-document
-  .getElementById("manualFilter")
-  .addEventListener("change", renderManualTable);
-
-/* ---------- AUTOMATION TESTING BOARD ---------- */
-const AUTO_KEY = "ts-auto-scripts";
-seedIfEmpty(AUTO_KEY, [
-  {
-    id: "AT-201",
-    name: "Login_ValidCredentials_Test",
-    framework: "Selenium + TestNG",
-    suite: "Regression",
-    status: "Passed",
-    lastRun: "2026-07-30",
-  },
-  {
-    id: "AT-202",
-    name: "API_CreateUser_StatusCode201",
-    framework: "REST Assured",
-    suite: "API Smoke",
-    status: "Passed",
-    lastRun: "2026-07-30",
-  },
-  {
-    id: "AT-203",
-    name: "Checkout_AddToCart_E2E",
-    framework: "Playwright",
-    suite: "E2E",
-    status: "Failed",
-    lastRun: "2026-07-29",
-  },
-  {
-    id: "AT-204",
-    name: "JIRA_BoardDragDrop_Scenario",
-    framework: "Playwright + Cucumber",
-    suite: "BDD Regression",
-    status: "Not Run",
-    lastRun: "—",
-  },
-]);
-function autoStats(rows) {
-  return {
-    total: rows.length,
-    passed: rows.filter((r) => r.status === "Passed").length,
-    failed: rows.filter((r) => r.status === "Failed").length,
-    other: rows.filter((r) => r.status === "Skipped" || r.status === "Not Run")
-      .length,
-  };
-}
-function renderAutoStats() {
-  const rows = loadRows(AUTO_KEY);
-  const s = autoStats(rows);
-  document.getElementById("autoStats").innerHTML = `
-    <div class="stat-card"><span class="sc-num">${s.total}</span><span class="sc-sub">Total scripts</span></div>
-    <div class="stat-card"><span class="sc-num" style="color:#38c172">${s.passed}</span><span class="sc-sub">Passed</span></div>
-    <div class="stat-card"><span class="sc-num" style="color:#f0555a">${s.failed}</span><span class="sc-sub">Failed</span></div>
-    <div class="stat-card"><span class="sc-num" style="color:#e0a72d">${s.other}</span><span class="sc-sub">Skipped / Not run</span></div>`;
-}
-function renderAutoTable() {
-  const rows = loadRows(AUTO_KEY);
-  const q = document.getElementById("autoSearch").value.trim().toLowerCase();
-  const filterStatus = document.getElementById("autoFilter").value;
-  const tbody = document.getElementById("autoTbody");
-  const filtered = rows.filter((r) => {
-    const matchesQ =
-      !q ||
-      [r.name, r.framework, r.suite, r.id].join(" ").toLowerCase().includes(q);
-    const matchesF = filterStatus === "all" || r.status === filterStatus;
-    return matchesQ && matchesF;
-  });
-  tbody.innerHTML = filtered
-    .map(
-      (r) => `
-    <tr>
-      <td class="row-id">${r.id}</td>
-      <td>${r.name}</td>
-      <td>${r.framework}</td>
-      <td>${r.suite}</td>
-      <td><span class="badge ${badgeClass(r.status)}">${r.status}</span></td>
-      <td>${r.lastRun}</td>
-      <td><div class="row-actions">
-        <button class="edit" title="Edit" data-id="${r.id}">✎</button>
-        <button class="del" title="Delete" data-id="${r.id}">🗑</button>
-      </div></td>
-    </tr>`,
-    )
-    .join("");
-  document.getElementById("autoEmpty").hidden = filtered.length !== 0;
-  tbody
-    .querySelectorAll(".edit")
-    .forEach((b) =>
-      b.addEventListener("click", () => openAutoModal(b.dataset.id)),
-    );
-  tbody.querySelectorAll(".del").forEach((b) =>
-    b.addEventListener("click", () => {
-      if (!confirm("Delete this script?")) return;
-      saveRows(
-        AUTO_KEY,
-        loadRows(AUTO_KEY).filter((r) => r.id !== b.dataset.id),
-      );
-      renderAutoStats();
-      renderAutoTable();
-    }),
-  );
-  renderAutoStats();
-}
-function openAutoModal(id) {
-  const rows = loadRows(AUTO_KEY);
-  const row = rows.find((r) => r.id === id) || {
-    id: "AT-" + Math.floor(200 + Math.random() * 300),
-    name: "",
-    framework: "Selenium + TestNG",
-    suite: "Regression",
-    status: "Not Run",
-    lastRun: new Date().toISOString().slice(0, 10),
-  };
-  modalTitle.textContent = id ? `Edit ${id}` : "New Automation Script";
-  modalBody.innerHTML = `
-    <label>Script ID<input id="f_id" value="${row.id}" ${id ? "readonly" : ""}></label>
-    <label>Test / script name<input id="f_name" value="${row.name}" placeholder="e.g. Login_ValidCredentials_Test"></label>
-    <label>Framework
-      <select id="f_framework">
-        ${["Selenium + TestNG", "Selenium + JUnit", "Playwright", "Playwright + Cucumber", "REST Assured", "Cucumber + TestNG"].map((f) => `<option ${row.framework === f ? "selected" : ""}>${f}</option>`).join("")}
-      </select>
-    </label>
-    <label>Suite<input id="f_suite" value="${row.suite}" placeholder="e.g. Regression, Smoke"></label>
-    <label>Status
-      <select id="f_status">
-        ${["Passed", "Failed", "Skipped", "Not Run"].map((s) => `<option ${row.status === s ? "selected" : ""}>${s}</option>`).join("")}
-      </select>
-    </label>
-    <label>Last run date<input id="f_lastrun" type="date" value="${row.lastRun && row.lastRun !== "—" ? row.lastRun : ""}"></label>`;
-  modalSave.onclick = () => {
-    const updated = {
-      id: document.getElementById("f_id").value.trim() || row.id,
-      name: document.getElementById("f_name").value.trim() || "Untitled_Script",
-      framework: document.getElementById("f_framework").value,
-      suite: document.getElementById("f_suite").value.trim() || "General",
-      status: document.getElementById("f_status").value,
-      lastRun: document.getElementById("f_lastrun").value || "—",
-    };
-    let all = loadRows(AUTO_KEY);
-    const idx = all.findIndex((r) => r.id === id);
-    if (idx > -1) all[idx] = updated;
-    else all.push(updated);
-    saveRows(AUTO_KEY, all);
-    closeModal();
-    renderAutoTable();
-  };
-  openModal();
-}
-document
-  .getElementById("autoAddBtn")
-  .addEventListener("click", () => openAutoModal(null));
-document
-  .getElementById("autoSearch")
-  .addEventListener("input", renderAutoTable);
-document
-  .getElementById("autoFilter")
-  .addEventListener("change", renderAutoTable);
-
-renderManualTable();
-renderAutoTable();
-
-/* =====================================================================
-   CHAT WIDGET — quick-link launcher + simple keyword assistant
-   ===================================================================== */
-const chatFab = document.getElementById("chatFab");
-const chatPanel = document.getElementById("chatPanel");
-const chatClose = document.getElementById("chatClose");
-const chatBody = document.getElementById("chatBody");
-const chatForm = document.getElementById("chatForm");
-const chatInput = document.getElementById("chatInput");
-const chatQuicklinks = document.getElementById("chatQuicklinks");
-
-EXTERNAL_LINKS.forEach((l) => {
-  const b = document.createElement("button");
-  b.textContent = `${l.icon} ${l.name}`;
-  b.addEventListener("click", () => window.open(l.url, "_blank", "noopener"));
-  chatQuicklinks.appendChild(b);
-});
-
-function addMsg(text, who) {
-  const m = document.createElement("div");
-  m.className = `msg ${who}`;
-  m.innerHTML = text;
-  chatBody.appendChild(m);
-  chatBody.scrollTop = chatBody.scrollHeight;
-  return m;
-}
-
-let chatOpened = false;
-function openChat() {
-  chatPanel.hidden = false;
-  chatFab.setAttribute("aria-expanded", "true");
-  if (!chatOpened) {
-    chatOpened = true;
-    addMsg(
-      `Hi! I'm the <strong>Tech Source</strong> assistant — <em>Creativity at it's peak!</em> 👋<br>Ask me about a topic (Selenium, SQL, JIRA, Agile…) or tap a tool below to jump straight to it.`,
-      "bot",
-    );
-  }
-}
-function closeChat() {
-  chatPanel.hidden = true;
-  chatFab.setAttribute("aria-expanded", "false");
-}
-chatFab.addEventListener("click", () =>
-  chatPanel.hidden ? openChat() : closeChat(),
-);
-chatClose.addEventListener("click", closeChat);
-
-function findTopicMatch(query) {
-  const q = query.toLowerCase();
-  let best = null;
-  state.flatLearn.concat(state.flatPrep).forEach((path) => {
-    const label = stripEmoji(path[path.length - 1]).toLowerCase();
-    if (q.includes(label) || label.includes(q)) best = path;
-  });
-  return best;
-}
-
-function botReply(query) {
-  const q = query.toLowerCase().trim();
-  if (!q) return "Type a topic name, or tap one of the tools below 👇";
-
-  if (/quiz|mcq|question/.test(q)) {
-    return `We've got ${totalMcqCount}+ objective questions across Agile, JIRA, ISTQB, Java, Selenium, API Testing, SQL, Frameworks &amp; Playwright. Open the <strong>📝 MCQ Quiz</strong> tab up top to practice.`;
-  }
-  if (/manual/.test(q)) {
-    return `Head to the <strong>🧪 Manual Testing Admin</strong> board to log and track manual test cases with Pass/Fail/Blocked/Pending status.`;
-  }
-  if (/automation admin|automation board|script/.test(q)) {
-    return `Check the <strong>🤖 Automation Admin</strong> board to track Selenium/Playwright/REST Assured scripts and their last run status.`;
-  }
-  if (/dark|light|theme/.test(q)) {
-    return `Use the ☀️/🌙 toggle in the top bar to switch between light and dark mode — your choice is remembered.`;
-  }
-
-  const match = findTopicMatch(q);
-  if (match) {
-    const hint = hintFor(match);
-    return `<strong>${stripEmoji(match[match.length - 1])}</strong> is on the Learning Path — ${hint.blurb}. I've got it queued in the sidebar; search "<strong>${stripEmoji(match[match.length - 1])}</strong>" there, or dig deeper on <a href="${hint.tool.url}" target="_blank" rel="noopener">${hint.tool.name} ↗</a>.`;
-  }
-
-  const hint = hintFor([q]);
-  return `I don't have that topic mapped exactly, but try the sidebar search, or explore it further on <a href="${hint.tool.url}" target="_blank" rel="noopener">${hint.tool.name} ↗</a>. You can also ask about Selenium, SQL, JIRA, Agile, Java or API Testing.`;
-}
-
-chatForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const val = chatInput.value.trim();
-  if (!val) return;
-  addMsg(val, "user");
-  chatInput.value = "";
-  const typing = addMsg(
-    "<span></span><span></span><span></span>",
-    "bot typing",
-  );
-  setTimeout(
-    () => {
-      typing.remove();
-      addMsg(botReply(val), "bot");
     },
-    500 + Math.random() * 400,
+    { threshold: 0.15 },
   );
-});
+  function runScrollReveal() {
+    document
+      .querySelectorAll(".fade-in")
+      .forEach((el) => revealObserver.observe(el));
+  }
+  runScrollReveal();
+
+  /* ============================================================
+     BACK-TO-TOP FAB
+     ============================================================ */
+  const fabTop = document.getElementById("fabTop");
+  const contentEl = document.getElementById("content");
+  contentEl.addEventListener("scroll", () => {
+    fabTop.classList.toggle("show", contentEl.scrollTop > 400);
+  });
+  fabTop.addEventListener("click", () =>
+    contentEl.scrollTo({ top: 0, behavior: "smooth" }),
+  );
+
+  /* ============================================================
+     COURSE CARDS (Dashboard)
+     ============================================================ */
+  const courseData = [
+    {
+      icon: "fa-clipboard-check",
+      title: "Manual Testing",
+      desc: "Foundations, SDLC/STLC, bug reports",
+      target: "manual-testing",
+    },
+    {
+      icon: "fa-robot",
+      title: "Automation Testing",
+      desc: "Frameworks, page objects, strategy",
+      target: "automation-testing",
+    },
+    {
+      icon: "fa-brands fa-java",
+      title: "Java",
+      desc: "OOP, collections, streams",
+      target: "java",
+    },
+    {
+      icon: "fa-circle-nodes",
+      title: "Selenium",
+      desc: "WebDriver, locators, waits",
+      target: "selenium",
+    },
+    {
+      icon: "fa-masks-theater",
+      title: "Playwright",
+      desc: "Auto-wait, trace viewer",
+      target: "playwright",
+    },
+    {
+      icon: "fa-tree",
+      title: "Cypress",
+      desc: "In-browser E2E testing",
+      target: "cypress",
+    },
+    {
+      icon: "fa-plug",
+      title: "API Testing",
+      desc: "REST, status codes, RestAssured",
+      target: "api-testing",
+    },
+    {
+      icon: "fa-database",
+      title: "SQL",
+      desc: "Joins, aggregates, data checks",
+      target: "sql",
+    },
+    {
+      icon: "fa-brands fa-git-alt",
+      title: "Git",
+      desc: "Branching, PRs, conflicts",
+      target: "git",
+    },
+    {
+      icon: "fa-brands fa-jenkins",
+      title: "Jenkins",
+      desc: "Pipelines, triggers, reports",
+      target: "jenkins",
+    },
+    {
+      icon: "fa-infinity",
+      title: "CI/CD",
+      desc: "Build, test, deploy pipeline",
+      target: "cicd",
+    },
+    {
+      icon: "fa-people-arrows",
+      title: "Agile",
+      desc: "Scrum roles &amp; ceremonies",
+      target: "agile",
+    },
+    {
+      icon: "fa-brands fa-jira",
+      title: "Jira",
+      desc: "Issues, workflow, JQL",
+      target: "jira",
+    },
+    {
+      icon: "fa-comments",
+      title: "Interview Prep",
+      desc: "40+ Q&amp;A, manual + automation",
+      target: "interview-questions",
+    },
+  ];
+  const courseCards = document.getElementById("courseCards");
+  courseData.forEach((c) => {
+    const card = document.createElement("div");
+    card.className = "course-card fade-in";
+    card.dataset.target = c.target;
+    const iconClass = c.icon.startsWith("fa-brands")
+      ? c.icon
+      : `fa-solid ${c.icon}`;
+    card.innerHTML = `<i class="${iconClass}"></i><h4>${c.title}</h4><p>${c.desc}</p>`;
+    card.addEventListener("click", () => goToPage(c.target));
+    courseCards.appendChild(card);
+  });
+  runScrollReveal();
+
+  /* ============================================================
+     FAQ / INTERVIEW QUESTIONS (Accordion)
+     ============================================================ */
+  const faqData = [
+    {
+      q: "What is the difference between Verification and Validation?",
+      a: 'Verification checks "are we building the product right?" through reviews, walkthroughs and inspections without executing code. Validation checks "are we building the right product?" by actually executing the software against requirements.',
+    },
+    {
+      q: "What is the difference between Smoke and Sanity testing?",
+      a: "Smoke testing is a broad, shallow check that the build is stable enough to test further. Sanity testing is a narrow, focused check that a specific bug fix or feature works after a small change.",
+    },
+    {
+      q: "What is Regression Testing?",
+      a: "Re-running existing test cases to confirm that recent code changes have not broken previously working functionality.",
+    },
+    {
+      q: "Explain the Automation Testing Pyramid.",
+      a: "A strategy that recommends many fast unit tests at the base, a moderate number of API/service tests in the middle, and a small number of slow, expensive UI/end-to-end tests at the top.",
+    },
+    {
+      q: "What is the difference between Selenium and Playwright?",
+      a: "Selenium is a mature, widely-supported WebDriver-based tool needing explicit waits and separate drivers per browser. Playwright is newer, has built-in auto-waiting, a bundled test runner, trace viewer, and controls Chromium, Firefox and WebKit from a single API.",
+    },
+    {
+      q: "What is the difference between Cypress and Playwright?",
+      a: "Cypress runs inside the browser with great debugging/time-travel but limited multi-tab and cross-origin support. Playwright runs outside the browser via CDP/WebSocket, supports multiple tabs, origins and browsers natively.",
+    },
+    {
+      q: "What is an explicit wait vs implicit wait in Selenium?",
+      a: "Implicit wait applies a default polling timeout to every findElement call for the whole driver session. Explicit wait (WebDriverWait) waits for a specific condition on a specific element and is the recommended approach.",
+    },
+    {
+      q: "What is a Page Object Model (POM)?",
+      a: "A design pattern that represents each page (or component) as a class containing its locators and actions, keeping test code separate from UI interaction code for easier maintenance.",
+    },
+    {
+      q: "What is the difference between GET and POST in API testing?",
+      a: "GET retrieves a resource and should have no side effects (idempotent, cacheable). POST creates/submits a resource and typically changes server state.",
+    },
+    {
+      q: "What does a 404 vs 500 status code mean?",
+      a: "404 means the requested resource was not found on the server (client error). 500 means an unexpected error occurred on the server while processing a valid request (server error).",
+    },
+    {
+      q: "What is the difference between INNER JOIN and LEFT JOIN?",
+      a: "INNER JOIN returns only matching rows from both tables. LEFT JOIN returns all rows from the left table plus matching rows from the right table (NULLs where there is no match).",
+    },
+    {
+      q: "What is a Test Plan?",
+      a: 'A document describing scope, approach, resources, schedule and risks for a testing effort — the "what and how" of testing a release.',
+    },
+    {
+      q: "What is Boundary Value Analysis?",
+      a: "A test design technique that focuses on values at the edges of valid/invalid input ranges, since bugs commonly occur at boundaries.",
+    },
+    {
+      q: "What is the difference between Severity and Priority?",
+      a: "Severity measures the impact of a bug on the system (how bad it is). Priority measures how urgently it needs to be fixed (business order of work).",
+    },
+    {
+      q: "What is Continuous Integration?",
+      a: "A practice where developers merge code changes frequently into a shared repository, with automated builds and tests run on every change to catch issues early.",
+    },
+    {
+      q: "What is the purpose of a Jenkinsfile?",
+      a: "It defines a Jenkins pipeline as code, checked into source control, describing build/test/deploy stages so pipelines are versioned and repeatable.",
+    },
+    {
+      q: "What are Agile ceremonies?",
+      a: "Sprint Planning, Daily Standup, Sprint Review and Sprint Retrospective — the recurring meetings that structure work inside a Scrum sprint.",
+    },
+    {
+      q: "What is the difference between a Story and a Bug in Jira?",
+      a: "A Story represents new functionality or a user requirement to be built. A Bug represents a defect in existing functionality that needs fixing.",
+    },
+    {
+      q: "What is Exploratory Testing?",
+      a: "Simultaneous learning, test design and test execution — testers explore the application without predefined scripts to find unexpected issues.",
+    },
+    {
+      q: "What is a Traceability Matrix?",
+      a: "A document mapping requirements to their corresponding test cases, used to ensure full test coverage and track testing progress against requirements.",
+    },
+  ];
+  const faqAccordion = document.getElementById("faqAccordion");
+  faqData.forEach((item, i) => {
+    const div = document.createElement("div");
+    div.className = "accordion-item";
+    div.innerHTML = `
+      <button class="accordion-q">${item.q} <i class="fa-solid fa-chevron-down"></i></button>
+      <div class="accordion-a"><div class="accordion-a-inner">${item.a}</div></div>
+    `;
+    const qBtn = div.querySelector(".accordion-q");
+    const aDiv = div.querySelector(".accordion-a");
+    qBtn.addEventListener("click", () => {
+      const isOpen = div.classList.contains("open");
+      document.querySelectorAll(".accordion-item.open").forEach((o) => {
+        o.classList.remove("open");
+        o.querySelector(".accordion-a").style.maxHeight = null;
+      });
+      if (!isOpen) {
+        div.classList.add("open");
+        aDiv.style.maxHeight = aDiv.scrollHeight + 40 + "px";
+      }
+    });
+    faqAccordion.appendChild(div);
+  });
+
+  /* ============================================================
+     MCQ PRACTICE ENGINE
+     ============================================================ */
+  const mcqData = [
+    {
+      q: "Which testing verifies individual methods?",
+      options: [
+        "System Testing",
+        "Unit Testing",
+        "Acceptance Testing",
+        "Smoke Testing",
+      ],
+      correct: 1,
+    },
+    {
+      q: "Selenium supports automation of?",
+      options: ["Desktop Apps", "Web Applications", "Mobile Only", "Games"],
+      correct: 1,
+    },
+    {
+      q: "Which browser automation tool is developed by Microsoft?",
+      options: ["Cypress", "Selenium", "Playwright", "Appium"],
+      correct: 2,
+    },
+    {
+      q: "Smoke Testing means?",
+      options: [
+        "Complete Testing",
+        "Initial Build Verification",
+        "Performance Testing",
+        "Regression Testing",
+      ],
+      correct: 1,
+    },
+    {
+      q: 'Which HTTP status code means "Not Found"?',
+      options: ["200", "301", "404", "500"],
+      correct: 2,
+    },
+    {
+      q: "In Java, which keyword is used to inherit a class?",
+      options: ["implements", "extends", "inherits", "super"],
+      correct: 1,
+    },
+    {
+      q: "Which SQL clause filters grouped rows?",
+      options: ["WHERE", "GROUP BY", "HAVING", "ORDER BY"],
+      correct: 2,
+    },
+    {
+      q: "Which Git command uploads local commits to a remote?",
+      options: ["git pull", "git fetch", "git push", "git clone"],
+      correct: 2,
+    },
+    {
+      q: "What does STLC stand for?",
+      options: [
+        "Software Test Life Cycle",
+        "System Testing Life Cycle",
+        "Software Type Life Cycle",
+        "Structured Test Life Cycle",
+      ],
+      correct: 0,
+    },
+    {
+      q: "Which wait type is recommended in Selenium best practice?",
+      options: [
+        "Thread.sleep",
+        "Implicit Wait only",
+        "Explicit Wait (WebDriverWait)",
+        "No wait needed",
+      ],
+      correct: 2,
+    },
+    {
+      q: "In Agile, who owns the product backlog?",
+      options: ["Scrum Master", "Product Owner", "QA Lead", "Developer"],
+      correct: 1,
+    },
+    {
+      q: "Which HTTP method is idempotent and used to fetch data?",
+      options: ["POST", "GET", "PATCH", "DELETE"],
+      correct: 1,
+    },
+    {
+      q: "Cypress tests are primarily written in?",
+      options: ["Java", "Python", "JavaScript/TypeScript", "C#"],
+      correct: 2,
+    },
+    {
+      q: "Which Jira issue type represents a large body of work broken into stories?",
+      options: ["Bug", "Epic", "Sub-task", "Task"],
+      correct: 1,
+    },
+    {
+      q: "What does CI/CD stand for?",
+      options: [
+        "Code Integration / Code Delivery",
+        "Continuous Integration / Continuous Delivery",
+        "Continuous Inspection / Continuous Debugging",
+        "Central Integration / Central Deployment",
+      ],
+      correct: 1,
+    },
+    {
+      q: "Which SQL join returns all rows from the left table regardless of a match?",
+      options: ["INNER JOIN", "RIGHT JOIN", "LEFT JOIN", "CROSS JOIN"],
+      correct: 2,
+    },
+    {
+      q: "What is the main purpose of a Page Object Model?",
+      options: [
+        "Speed up the network",
+        "Separate UI locators from test logic",
+        "Replace the test runner",
+        "Generate test data",
+      ],
+      correct: 1,
+    },
+    {
+      q: "Playwright locators like get_by_role are preferred because they are?",
+      options: [
+        "Faster to type",
+        "Semantic and resilient to UI changes",
+        "The only option available",
+        "Only for mobile apps",
+      ],
+      correct: 1,
+    },
+    {
+      q: "Which testing type is performed by end users before release?",
+      options: [
+        "Unit Testing",
+        "UAT (User Acceptance Testing)",
+        "Integration Testing",
+        "Static Testing",
+      ],
+      correct: 1,
+    },
+    {
+      q: "In a Jenkins pipeline, where should the pipeline definition ideally live?",
+      options: [
+        "Only in the Jenkins UI",
+        "A Jenkinsfile in source control",
+        "An email attachment",
+        "A spreadsheet",
+      ],
+      correct: 1,
+    },
+  ];
+  const mcqList = document.getElementById("mcqList");
+  const mcqScoreLabel = document.getElementById("mcqScoreLabel");
+  let mcqScore = 0,
+    mcqAnswered = 0;
+
+  function updateScore() {
+    mcqScoreLabel.textContent = `Score: ${mcqScore} / ${mcqAnswered}`;
+    localStorage.setItem(
+      "qaforge-mcq-score",
+      JSON.stringify({ score: mcqScore, answered: mcqAnswered }),
+    );
+    document.getElementById("practiceCompleted").textContent = mcqAnswered;
+  }
+
+  function renderMcq() {
+    mcqList.innerHTML = "";
+    mcqData.forEach((item, qi) => {
+      const card = document.createElement("div");
+      card.className = "mcq-card glass";
+      card.innerHTML = `<p class="mcq-question">Q${qi + 1}. ${item.q}</p><div class="mcq-options"></div>`;
+      const optWrap = card.querySelector(".mcq-options");
+      item.options.forEach((opt, oi) => {
+        const optBtn = document.createElement("button");
+        optBtn.className = "mcq-option";
+        optBtn.textContent = `${String.fromCharCode(65 + oi)}. ${opt}`;
+        optBtn.addEventListener("click", () => {
+          if (optWrap.dataset.locked) return;
+          optWrap.dataset.locked = "1";
+          const opts = optWrap.querySelectorAll(".mcq-option");
+          opts.forEach((o) => o.classList.add("disabled"));
+          if (oi === item.correct) {
+            optBtn.classList.add("correct");
+            mcqScore++;
+          } else {
+            optBtn.classList.add("wrong");
+            opts[item.correct].classList.add("correct");
+          }
+          mcqAnswered++;
+          updateScore();
+        });
+        optWrap.appendChild(optBtn);
+      });
+      mcqList.appendChild(card);
+    });
+  }
+  renderMcq();
+
+  const saved = localStorage.getItem("qaforge-mcq-score");
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    mcqScore = parsed.score;
+    mcqAnswered = parsed.answered;
+    updateScore();
+  }
+
+  document.getElementById("resetMcqBtn").addEventListener("click", () => {
+    mcqScore = 0;
+    mcqAnswered = 0;
+    updateScore();
+    renderMcq();
+  });
+
+  /* ============================================================
+     PDF LIBRARY GRID (from Automation Testing zip contents)
+     ============================================================ */
+  const pdfTopics = [
+    "Playwright Guide",
+    "Automation Hints",
+    "Prompt Engineering",
+    "ISTQB CTFL Syllabus v4.0.1",
+    "Java Fundamentals",
+    "Jira Guide",
+    "Agile Guide",
+    "Software Testing Basics",
+    "Java Collections & OOP",
+    "Selenium WebDriver",
+    "Selenium Locators & Waits",
+    "API Testing (RestAssured)",
+    "SQL & JDBC",
+    "Git & Version Control",
+    "Jenkins & CI/CD",
+    "TestNG Framework",
+    "Cucumber (BDD)",
+    "Data-Driven Framework",
+    "JUnit Framework",
+    "GenAI for Testing",
+  ];
+  const pdfGrid = document.getElementById("pdfGrid");
+  pdfTopics.forEach((name) => {
+    const card = document.createElement("div");
+    card.className = "pdf-card";
+    card.innerHTML = `<i class="fa-solid fa-file-pdf"></i><div><h4>${name}</h4><p>Add file path in script.js → pdfTopics</p></div>`;
+    pdfGrid.appendChild(card);
+  });
+
+  /* ============================================================
+     DAILY NOTES
+     ============================================================ */
+  const notesArea = document.getElementById("notesArea");
+  notesArea.value = localStorage.getItem("qaforge-notes") || "";
+  document.getElementById("saveNoteBtn").addEventListener("click", () => {
+    localStorage.setItem("qaforge-notes", notesArea.value);
+    const btn = document.getElementById("saveNoteBtn");
+    const original = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Saved';
+    setTimeout(() => (btn.innerHTML = original), 1500);
+  });
+  document.getElementById("downloadNoteBtn").addEventListener("click", () => {
+    const blob = new Blob([notesArea.value || ""], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "qaforge-notes.txt";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  /* ============================================================
+     SETTINGS — clear local data
+     ============================================================ */
+  document.getElementById("clearDataBtn").addEventListener("click", () => {
+    if (confirm("Clear saved notes and MCQ progress from this browser?")) {
+      localStorage.removeItem("qaforge-notes");
+      localStorage.removeItem("qaforge-mcq-score");
+      notesArea.value = "";
+      mcqScore = 0;
+      mcqAnswered = 0;
+      updateScore();
+      renderMcq();
+    }
+  });
+
+  /* ============================================================
+     GLOBAL SEARCH — filters nav buttons + course cards
+     ============================================================ */
+  const globalSearch = document.getElementById("globalSearch");
+  globalSearch.addEventListener("input", () => {
+    const term = globalSearch.value.trim().toLowerCase();
+    navBtns.forEach((btn) => {
+      const label = btn.textContent.toLowerCase();
+      btn.style.display = !term || label.includes(term) ? "" : "none";
+    });
+    document.querySelectorAll(".course-card").forEach((card) => {
+      const label = card.textContent.toLowerCase();
+      card.style.display = !term || label.includes(term) ? "" : "none";
+    });
+  });
+
+  /* ============================================================
+     AI CHAT ASSISTANT (keyword-matched knowledge base)
+     ============================================================ */
+  const chatPanel = document.getElementById("chatPanel");
+  const chatBody = document.getElementById("chatBody");
+  const chatInput = document.getElementById("chatInput");
+
+  function openChat() {
+    chatPanel.classList.add("open");
+    if (!chatBody.dataset.greeted) {
+      chatBody.dataset.greeted = "1";
+      addBotMessage(
+        "Hi! I'm your QA study assistant. Ask me about manual testing, Selenium, Playwright, Cypress, API testing, SQL, Git, Jenkins, Agile or Jira. Try one of the suggestions below.",
+      );
+    }
+  }
+  function closeChat() {
+    chatPanel.classList.remove("open");
+  }
+
+  document.getElementById("fabChat").addEventListener("click", () => {
+    chatPanel.classList.contains("open") ? closeChat() : openChat();
+  });
+  document.getElementById("chatToggleTop").addEventListener("click", openChat);
+  document.getElementById("closeChatBtn").addEventListener("click", closeChat);
+  document
+    .getElementById("openChatFromPage")
+    .addEventListener("click", openChat);
+  document.getElementById("clearChatBtn").addEventListener("click", () => {
+    chatBody.innerHTML = "";
+    chatBody.dataset.greeted = "";
+    openChat();
+  });
+
+  function timestamp() {
+    const d = new Date();
+    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+  function addUserMessage(text) {
+    const div = document.createElement("div");
+    div.className = "msg msg-user";
+    div.innerHTML = `${escapeHtml(text)}<span class="msg-time">${timestamp()}</span>`;
+    chatBody.appendChild(div);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+  function addBotMessage(text) {
+    const div = document.createElement("div");
+    div.className = "msg msg-bot";
+    div.innerHTML = `${text}<span class="msg-time">${timestamp()}</span>
+      <button class="copy-btn" style="margin-top:6px;font-size:10px;color:var(--blue-500);background:none;border:none;cursor:pointer;display:block;">
+        <i class="fa-regular fa-copy"></i> Copy
+      </button>`;
+    div.querySelector(".copy-btn").addEventListener("click", () => {
+      navigator.clipboard?.writeText(text);
+    });
+    chatBody.appendChild(div);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+  function escapeHtml(str) {
+    return str.replace(
+      /[&<>"']/g,
+      (m) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[m],
+    );
+  }
+
+  // Knowledge base — reuses FAQ + MCQ content, plus extra keyword rules
+  const knowledgeBase = [
+    {
+      keywords: ["selenium"],
+      answer:
+        "Selenium is an open-source browser automation framework using the WebDriver protocol. It supports Java, Python, C#, JS and works across Chrome, Firefox, Edge and Safari. Explore the Selenium section in the sidebar for locators, waits and code samples.",
+    },
+    {
+      keywords: ["playwright"],
+      answer:
+        "Playwright is a modern automation tool from Microsoft with built-in auto-waiting, a bundled test runner, trace viewer, and support for Chromium, Firefox and WebKit from a single API. See the Playwright section for a sample test.",
+    },
+    {
+      keywords: ["cypress"],
+      answer:
+        "Cypress runs directly inside the browser, giving real-time reload and time-travel debugging with automatic retry-ability on assertions. It's great for fast feedback on modern JS apps. Check the Cypress section for a sample test.",
+    },
+    {
+      keywords: ["cypress", "playwright", "difference", "vs"],
+      answer:
+        "Cypress runs inside the browser (great debugging, limited multi-tab/cross-origin). Playwright runs outside the browser via CDP (multi-tab, multi-origin, multi-browser support built in).",
+    },
+    {
+      keywords: ["smoke"],
+      answer:
+        "Smoke testing is a quick, broad check that a new build is stable enough for further testing — it verifies the critical paths work, not every detail.",
+    },
+    {
+      keywords: ["sanity"],
+      answer:
+        "Sanity testing is a narrow, focused test to confirm a specific bug fix or small change works as expected, without running the full regression suite.",
+    },
+    {
+      keywords: ["regression"],
+      answer:
+        "Regression testing re-runs existing test cases after a code change to make sure previously working functionality hasn't broken.",
+    },
+    {
+      keywords: ["explicit", "implicit", "wait"],
+      answer:
+        "Implicit wait sets a default polling timeout for every element lookup on the driver. Explicit wait (WebDriverWait) waits for a specific condition on a specific element and is the recommended, more reliable approach.",
+    },
+    {
+      keywords: ["api", "testing"],
+      answer:
+        "API testing verifies your service layer directly over HTTP — checking status codes, response bodies, headers and auth — without needing the UI. It's faster and more stable than UI tests. See the API Testing section for a RestAssured example.",
+    },
+    {
+      keywords: ["sql", "join"],
+      answer:
+        "INNER JOIN returns only matching rows from both tables. LEFT JOIN returns all rows from the left table plus matches from the right (NULL where there's no match). See the SQL section for a sample query.",
+    },
+    {
+      keywords: ["git"],
+      answer:
+        'Git is a distributed version control system. Common flow: git checkout -b feature/x, git add ., git commit -m "message", git push origin feature/x, then open a pull request.',
+    },
+    {
+      keywords: ["jenkins"],
+      answer:
+        "Jenkins is an automation server that runs your build and test pipeline on every commit. Modern pipelines are defined as code in a Jenkinsfile checked into source control.",
+    },
+    {
+      keywords: ["agile", "scrum"],
+      answer:
+        "Agile/Scrum organizes work into sprints with ceremonies: Sprint Planning, Daily Standup, Sprint Review and Retrospective, led by a Product Owner and Scrum Master.",
+    },
+    {
+      keywords: ["jira"],
+      answer:
+        "Jira tracks Epics, Stories, Tasks and Bugs through a workflow (To Do → In Progress → In Review → Done). Use JQL to build custom bug/story filters.",
+    },
+    {
+      keywords: ["java"],
+      answer:
+        "Java is the most common language for Selenium/TestNG frameworks — key topics are OOP, collections, exception handling and Java 8 streams. Try the embedded OneCompiler link in the Java section to run code live.",
+    },
+    {
+      keywords: ["pom", "page object"],
+      answer:
+        "The Page Object Model separates locators and page actions into their own classes, keeping test logic clean and making UI changes easier to maintain in one place.",
+    },
+    {
+      keywords: ["severity", "priority"],
+      answer:
+        "Severity measures how badly a bug impacts the system. Priority measures how urgently it should be fixed. A low-severity bug can still be high priority if it blocks a demo, for example.",
+    },
+    {
+      keywords: ["verification", "validation"],
+      answer:
+        "Verification asks 'are we building the product right?' (reviews, static checks). Validation asks 'are we building the right product?' (executing the software against requirements).",
+    },
+    {
+      keywords: ["ci", "cd", "continuous"],
+      answer:
+        "CI (Continuous Integration) merges and tests code frequently. CD (Continuous Delivery/Deployment) automatically prepares or ships a release-ready build once tests pass.",
+    },
+    {
+      keywords: ["hello", "hi", "hey"],
+      answer:
+        "Hello! Ask me about manual testing, Selenium, Playwright, Cypress, API testing, SQL, Git, Jenkins, Agile or Jira — or open the MCQ Practice page to test yourself.",
+    },
+  ];
+
+  function findAnswer(question) {
+    const q = question.toLowerCase();
+    let best = null,
+      bestScore = 0;
+    knowledgeBase.forEach((entry) => {
+      const score = entry.keywords.filter((k) => q.includes(k)).length;
+      if (score > bestScore) {
+        bestScore = score;
+        best = entry;
+      }
+    });
+    if (best) return best.answer;
+    return "I don't have a specific answer for that yet — try the Interview Questions or MCQ Practice pages, or open ChatGPT / Claude from the sidebar's Learning Tools for a deeper answer.";
+  }
+
+  function showTyping() {
+    const div = document.createElement("div");
+    div.className = "typing-indicator";
+    div.id = "typingIndicator";
+    div.innerHTML = "<span></span><span></span><span></span>";
+    chatBody.appendChild(div);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+  function hideTyping() {
+    document.getElementById("typingIndicator")?.remove();
+  }
+
+  function askQuestion(text) {
+    if (!text.trim()) return;
+    addUserMessage(text);
+    chatInput.value = "";
+    showTyping();
+    setTimeout(
+      () => {
+        hideTyping();
+        addBotMessage(findAnswer(text));
+      },
+      700 + Math.random() * 500,
+    );
+  }
+
+  document
+    .getElementById("sendChatBtn")
+    .addEventListener("click", () => askQuestion(chatInput.value));
+  chatInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") askQuestion(chatInput.value);
+  });
+  document.querySelectorAll(".suggestion-chip").forEach((chip) => {
+    chip.addEventListener("click", () => askQuestion(chip.textContent));
+  });
+
+  /* ============================================================
+     ROTATING LOGO subtle interaction (pause on hover handled by CSS)
+     ============================================================ */
+}); // DOMContentLoaded
