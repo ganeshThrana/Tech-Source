@@ -1,777 +1,899 @@
-/* ============================================================
-   TECH SOURCE — Learning Hub
-   Single-page app: router + theme + search + reveal + toasts
-   Modern vanilla JS: classes, modules-style organisation,
-   IntersectionObserver, matchMedia, debounced input, History API.
-   ============================================================ */
-"use strict";
+/* =====================================================================
+   TECH SOURCE — data + app logic
+   ===================================================================== */
 
-/* ============================================================
-   1. ICON SET (inline SVG, stroke = currentColor)
-   ============================================================ */
-const ICONS = {
-  java: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13c-3 1.2-3 3.6 0 4.8 3.3 1.4 8.7 1.4 12 0 3-1.2 3-3.6 0-4.8"/><path d="M9 3c-1.6 2-1.6 4 0 6-1.6 2-1.6 4 0 6"/><path d="M14 3c1.4 1.8 1.4 3.6 0 5.4"/><path d="M6 20.5c3.6 1 8.4 1 12 0"/></svg>`,
-  selenium: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 9l3 2-3 2M13 13h4"/></svg>`,
-  playwright: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/></svg>`,
-  api: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v4M15 3v4M9 21v-4M15 21v-4"/><rect x="6" y="7" width="12" height="10" rx="2"/></svg>`,
-  database: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5V12c0 1.7 3.6 3 8 3s8-1.3 8-3V5.5"/><path d="M4 12v6.5c0 1.7 3.6 3 8 3s8-1.3 8-3V12"/></svg>`,
-  frameworks: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 4.5-9 4.5-9-4.5z"/><path d="M3 12l9 4.5 9-4.5M3 16.5l9 4.5 9-4.5"/></svg>`,
-  tools: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 005.4-5.4l-2.6 2.6-2-2z"/></svg>`,
-  git: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="17" cy="12" r="2.2"/><path d="M6 8.2V15.8M8.2 12H14.8M6 8.2c0 3 3 3.8 8 3.8"/></svg>`,
-  book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5z"/><path d="M20 5.5C20 4.7 19.3 4 18.5 4H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"/></svg>`,
-  agile: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-3.5-7.1"/><path d="M21 3v5h-5"/></svg>`,
-  ai: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3a3 3 0 00-3 3 3 3 0 00-1.5 5.6A3 3 0 007 17a3 3 0 003 2.9V3z"/><path d="M15 3a3 3 0 013 3 3 3 0 011.5 5.6A3 3 0 0117 17a3 3 0 01-3 2.9V3z"/></svg>`,
-  chart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>`,
-  bulb: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0012 3z"/></svg>`,
-  pdf: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M14 3v5h5"/></svg>`,
-  bolt: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3L4 14h6l-1 7 9-11h-6z"/></svg>`,
-  clock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>`,
-};
+/* ---------- helpers to build tree nodes quickly ---------- */
+function leaf(title) {
+  return { title };
+}
+function group(icon, title, children) {
+  return { icon, title, children };
+}
+function leafGroup(icon, title, items) {
+  return { icon, title, children: items.map(leaf) };
+}
 
-/* ============================================================
-   2. RESOURCE CATALOGUE
-   ============================================================ */
-const CATEGORIES = [
-  {
-    id: "java",
-    title: "Java Programming",
-    icon: "java",
-    desc: "Core language fundamentals through OOP, collections and advanced topics — the full 22-part series.",
-    folder: "pdfs/",
-    files: [
-      "Java0.pdf",
-      "Java1.pdf",
-      "Java2.pdf",
-      "Java3.pdf",
-      "Java4.pdf",
-      "java5.pdf",
-      "java6.pdf",
-      "java7.pdf",
-      "Java8.pdf",
-      "Java9.pdf",
-      "Java10.pdf",
-      "Java11.pdf",
-      "Java12.pdf",
-      "Java13.pdf",
-      "Java14.pdf",
-      "Java15.pdf",
-      "Java16.pdf",
-      "Java17.pdf",
-      "Java18.pdf",
-      "Java19.pdf",
-      "Java20.pdf",
-      "Java21.pdf",
-      "Pojo.pdf",
-    ],
-  },
-  {
-    id: "selenium",
-    title: "Selenium WebDriver",
-    icon: "selenium",
-    desc: "Browser automation from locators to advanced waits, actions and design patterns.",
-    folder: "client/",
-    files: [
-      "Selenium.pdf",
-      "Selenium1.pdf",
-      "Selenium2.pdf",
-      "Selenium03.pdf",
-      "Selenium4.pdf",
-      "Selenium5.pdf",
-      "Selenium6.pdf",
-      "Selenium7.pdf",
-      "Selenium9.pdf",
-      "Selenium10.pdf",
-      "Selenium11.pdf",
-      "Selenium12.pdf",
-      "Selenium13.pdf",
-      "Selenium14.pdf",
-      "Selenium15.pdf",
-      "Selenium16.pdf",
-      "Selenium17.pdf",
-      "Selenium18.pdf",
-      "Selenium19.pdf",
-      "Selenium20.pdf",
-      "Selenium21.pdf",
-    ],
-  },
-  {
-    id: "playwright",
-    title: "Playwright",
-    icon: "playwright",
-    desc: "Modern end-to-end testing: setup, selectors, network mocking and CI-ready patterns.",
-    folder: "pdfs/",
-    files: [
-      "Playwright.pdf",
-      "Playwright01.pdf",
-      "Playwright02.pdf",
-      "Playwright03.pdf",
-      "04.pdf",
-      "Playwright05.pdf",
-      "Playwright06.pdf",
-      "Playwright07.pdf",
-      "Playwright08.pdf",
-      "Playwright09.pdf",
-      "Playwright10.pdf",
-      "Playwright11.pdf",
-      "Playwright12.pdf",
-      "Playwright13.pdf",
-      "Playwright14.pdf",
-      "Playwright15.pdf",
-      "Playwright16.pdf",
-      "Playwright17.pdf",
-    ],
-  },
-  {
-    id: "api",
-    title: "API Testing",
-    icon: "api",
-    desc: "REST fundamentals and hands-on request/response validation for test automation.",
-    folder: "pdfs/",
-    files: ["API.pdf", "API1.pdf"],
-  },
-  {
-    id: "database",
-    title: "SQL & JDBC",
-    icon: "database",
-    desc: "Query writing and connecting Java code to databases for data-driven testing.",
-    folder: "pdfs/",
-    files: ["SQL.pdf", "JDBC.pdf"],
-  },
-  {
-    id: "frameworks",
-    title: "Test Frameworks",
-    icon: "frameworks",
-    desc: "TestNG, JUnit, Cucumber BDD and data-driven design, side by side.",
-    folder: "pdfs/",
-    files: [
-      "Frameworks.pdf",
-      "Frameworks Test NG.pdf",
-      "Frameworks Cucumber.pdf",
-      "Frameworks Data driven.pdf",
-      "Frameworks Junit.pdf",
-    ],
-  },
-  {
-    id: "tools",
-    title: "Automation Tooling",
-    icon: "tools",
-    desc: "Build tooling and dependency management for real automation projects.",
-    folder: "pdfs/",
-    files: ["Automation Tool.pdf", "Automation Tool Maven.pdf"],
-  },
-  {
-    id: "git",
-    title: "Git & CI/CD",
-    icon: "git",
-    desc: "Version control workflows and shipping automated test runs through a pipeline.",
-    folder: "pdfs/",
-    files: ["GIT.pdf", "CICD.pdf"],
-  },
-  {
-    id: "fundamentals",
-    title: "Testing Fundamentals",
-    icon: "book",
-    desc: "ISTQB syllabus, core software-testing theory and the FILO reference sheet.",
-    folder: "pdfs/",
-    files: [
-      "software testing.pdf",
-      "ISTQB_CTFL_Syllabus_v4.0.1.pdf",
-      "FILO.pdf",
-    ],
-  },
-  {
-    id: "agile",
-    title: "Agile & Jira",
-    icon: "agile",
-    desc: "Sprint ceremonies, agile theory and day-to-day issue tracking in Jira.",
-    folder: "pdfs/",
-    files: ["Agile.pdf", "Jira.pdf"],
-  },
-  {
-    id: "genai",
-    title: "GenAI & Prompting",
-    icon: "ai",
-    desc: "Using generative AI and prompt design to speed up the testing workflow.",
-    folder: "pdfs/",
-    files: ["GenAI.pdf", "Prompt.pdf"],
-  },
-  {
-    id: "reports",
-    title: "Reporting",
-    icon: "chart",
-    desc: "Building clear, shareable automation test reports.",
-    folder: "pdfs/",
-    files: ["Reports.pdf"],
-  },
-  {
-    id: "hints",
-    title: "Interview Hints",
-    icon: "bulb",
-    desc: "A quick-reference sheet of the most important interview pointers.",
-    folder: "pdfs/",
-    files: ["Very important hints.pdf"],
-  },
+/* ---------- LEARNING PATH TREE ---------- */
+const LEARN_TREE = [
+  leafGroup("🧠", "Agile", [
+    "Scrum",
+    "Sprint Planning",
+    "Daily Standup",
+    "Sprint Review",
+    "Sprint Retrospective",
+    "User Stories",
+    "Story Points",
+    "Estimation Techniques",
+    "Definition of Done",
+    "Definition of Ready",
+    "Product Backlog",
+    "Sprint Backlog",
+    "Burn Down Chart",
+  ]),
+  leafGroup("🎟️", "JIRA", [
+    "Dashboard",
+    "Boards",
+    "Issue Types",
+    "Workflow",
+    "Sprint Management",
+    "Reports",
+    "Filters",
+    "JQL",
+    "Components",
+    "Versions",
+    "Automation Rules",
+  ]),
+  leafGroup("👨‍🎓", "ISTQB", [
+    "Chapter 1",
+    "Chapter 2",
+    "Chapter 3",
+    "Brushing Up",
+    "Agile Testing",
+    "Mock Tests",
+    "Interview Questions",
+  ]),
+  group("☕", "JAVA — Updated", [
+    leafGroup("📄", "Core Java", [
+      "OOPS Basics",
+      "Data Types",
+      "Scanner",
+      "Variables",
+      "Operators",
+      "Static Keyword",
+      "Memory Allocation",
+      "String",
+      "Wrapper Classes",
+      "Access Modifiers",
+      "Inheritance",
+      "Polymorphism",
+      "Abstraction",
+      "Encapsulation",
+      "Interfaces",
+      "Exception Handling",
+      "Collections Framework",
+      "Generics",
+      "Enums",
+      "File Handling",
+      "Java 8 Features",
+      "Lambda Expressions",
+      "Stream API",
+      "Functional Interface",
+      "Date & Time API",
+      "Multithreading",
+      "Synchronization",
+      "Executor Framework",
+    ]),
+    leafGroup("📄", "Programming", [
+      "Conditional Statements",
+      "Looping Statements",
+      "Arrays",
+      "Methods",
+      "Constructors",
+      "Recursion",
+      "Searching Algorithms",
+      "Sorting Algorithms",
+    ]),
+    leafGroup("💼", "Interview Programs", [
+      "Java Interview Programs – Level 1",
+      "Java Interview Programs – Level 2",
+      "Java Interview Programs – Advanced",
+    ]),
+    leafGroup("📦", "POJO", [
+      "POJO Class",
+      "Builder Pattern",
+      "Immutable Objects",
+    ]),
+    leafGroup("📖", "Java Theory", [
+      "JVM",
+      "JDK vs JRE",
+      "Garbage Collection",
+      "Memory Management",
+      "Class Loader",
+    ]),
+  ]),
+  group("🌐", "Selenium", [
+    leafGroup("📄", "Basics", [
+      "Selenium Architecture",
+      "Selenium Components",
+      "Browser Drivers",
+    ]),
+    leafGroup("🎯", "WebDriver Methods", [
+      "Browser Commands",
+      "Navigation Commands",
+      "Wait Commands",
+      "Switch Commands",
+    ]),
+    leafGroup("🔶", "WebElement Methods", [
+      "Click",
+      "SendKeys",
+      "Clear",
+      "Submit",
+      "Attribute Methods",
+    ]),
+    leafGroup("📍", "Locators", [
+      "ID",
+      "Name",
+      "Class Name",
+      "Tag Name",
+      "Link Text",
+      "Partial Link Text",
+    ]),
+    leafGroup("❌", "XPath", [
+      "Absolute XPath",
+      "Relative XPath",
+      "Axes",
+      "Functions",
+    ]),
+    leafGroup("🎨", "CSS Selector", ["Basic CSS", "Advanced CSS"]),
+    leaf("☑️ CheckBox & Radio Button"),
+    leafGroup("📋", "Select Class", [
+      "Select By Visible Text",
+      "Select By Value",
+      "Select By Index",
+    ]),
+    leafGroup("💪", "Actions Class", [
+      "Drag & Drop",
+      "Hover",
+      "Right Click",
+      "Double Click",
+    ]),
+    leaf("🚨 Alerts"),
+    leaf("🖼️ Frames"),
+    leaf("🪟 Window Handling"),
+    leafGroup("⏰", "Waits", ["Implicit Wait", "Explicit Wait", "Fluent Wait"]),
+    leafGroup("📜", "JavaScript Executor", [
+      "Scroll",
+      "Click",
+      "Highlight Element",
+    ]),
+    leaf("📊 Web Tables"),
+    leaf("📸 Screenshots"),
+    leaf("📂 File Upload & Download"),
+    leaf("🧩 Selectable & Sortable"),
+    leaf("⚠️ Selenium Exceptions"),
+    leaf("📄 Page Object Model"),
+    leaf("🌑 Shadow DOM"),
+    leaf("🍪 Cookies"),
+    leaf("📱 Mobile Emulation"),
+    leaf("🔍 Browser Logs"),
+  ]),
+  group("🌍", "API Testing", [
+    leafGroup("🔥", "REST Assured", [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE",
+      "Authentication",
+      "Serialization",
+      "Deserialization",
+      "JSON Schema Validation",
+    ]),
+  ]),
+  leafGroup("🗄️", "SQL", [
+    "CRUD",
+    "Joins",
+    "Group By",
+    "Having",
+    "Stored Procedures",
+  ]),
+  leaf("📄 JDBC"),
+  leaf("❌ Fillo"),
+  leafGroup("🤖", "Gen AI", [
+    "ChatGPT",
+    "Copilot",
+    "Gemini",
+    "Claude",
+    "AI for Test Automation",
+    "Prompt Engineering",
+  ]),
+  group("🛠️", "Automation Tools", [
+    leafGroup("📦", "Maven", [
+      "POM.xml",
+      "Dependencies",
+      "Plugins",
+      "Profiles",
+    ]),
+    leafGroup("🌿", "Git", [
+      "Repository",
+      "Branch",
+      "Merge",
+      "Rebase",
+      "Cherry Pick",
+      "Stash",
+      "GitHub Flow",
+    ]),
+    leafGroup("🚀", "CI/CD", [
+      "Jenkins",
+      "GitHub Actions",
+      "Azure DevOps",
+      "GitLab CI",
+    ]),
+    leafGroup("📈", "Reporting", [
+      "Extent Reports",
+      "Allure Reports",
+      "HTML Reports",
+    ]),
+  ]),
+  group("🏗️", "Frameworks", [
+    leafGroup("🧪", "TestNG", [
+      "Annotations",
+      "Assertions",
+      "Groups",
+      "Listeners",
+      "Retry Analyzer",
+      "Parallel Execution",
+      "DataProvider",
+      "Parameters",
+    ]),
+    leafGroup("🥒", "Cucumber", [
+      "Gherkin",
+      "Feature Files",
+      "Step Definitions",
+      "Hooks",
+      "Tags",
+      "Scenario Outline",
+    ]),
+    leaf("📊 Data Driven Framework"),
+    leaf("🔥 Hybrid Framework"),
+    leaf("🧩 Keyword Driven Framework"),
+    leaf("🧪 JUnit"),
+  ]),
+  leafGroup("▶️", "Playwright", [
+    "Page Methods",
+    "Locator Methods",
+    "Advanced Locators",
+    "Dropdown",
+    "Actions",
+    "Alerts",
+    "Frames",
+    "Window Handling",
+    "File Upload & Download",
+    "Assertions",
+    "Keyboard Actions",
+    "Mouse Actions",
+    "Browser Context",
+    "Trace Viewer",
+    "Screenshots",
+    "Auto Waiting",
+    "Code Generator",
+    "Cookies",
+    "Mobile Testing",
+    "Shadow DOM",
+    "API Testing with Playwright",
+  ]),
+  leaf("📋 Scenario-Based Interview"),
+  leaf("💬 Tell Me About Yourself"),
 ];
 
-const TOOLS = [
+/* ---------- INTERVIEW & SCENARIOS LIST ---------- */
+const PREP_TREE = [
+  leaf("📁 Project"),
+  leaf("🧪 Testing Concepts"),
+  leaf("🏗️ Framework"),
+  leaf("🤖 Automation"),
+  leaf("📈 Agile Sprint"),
+  leaf("🌿 GitHub"),
+  leaf("🚀 CI/CD"),
+  leaf("📊 Data Driven Framework"),
+  leaf("🐞 Defect Management"),
+  leaf("🌐 API Testing"),
+  leaf("☁️ Cloud Testing"),
+  leaf("📱 Mobile Testing"),
+  leaf("⚡ Performance Testing"),
+  leaf("🔐 Security Testing"),
+  leaf("🤝 Team Collaboration"),
+  leaf("🎯 Client Communication"),
+  leaf("🧠 Debugging Scenarios"),
+  leaf("🔥 Real-Time Selenium Scenarios"),
+  leaf("🎭 Playwright Scenarios"),
+  leaf("📦 API Scenarios"),
+  leaf("💼 HR Interview"),
+];
+
+/* ---------- EXTERNAL RESOURCE LINKS ---------- */
+const EXTERNAL_LINKS = [
   {
-    id: "onecompiler",
-    name: "OneCompiler — Java",
-    initials: "{ }",
-    gradient: "linear-gradient(135deg,#f89820,#c05a1a)",
-    desc: "A free, instant Java compiler right in your browser. Write a class, hit run, and see the output immediately — perfect for testing the syntax from the Java PDFs.",
-    tags: ["No install", "Runs Java", "Free"],
-    url: "https://onecompiler.com/java",
+    icon: "✨",
+    name: "Claude",
+    desc: "Draft, debug and reason through tricky test scenarios.",
+    url: "https://claude.ai/new",
   },
   {
-    id: "w3schools",
+    icon: "💬",
+    name: "ChatGPT",
+    desc: "A second opinion on test cases, code or concepts.",
+    url: "https://chatgpt.com/",
+  },
+  {
+    icon: "📘",
     name: "W3Schools",
-    initials: "W3",
-    gradient: "linear-gradient(135deg,#2f9c3a,#1c6e26)",
-    desc: "The go-to reference for HTML, CSS, JavaScript, SQL and more — with try-it-yourself editors for nearly every topic.",
-    tags: ["Reference", "Try-it editors", "Free"],
+    desc: "Quick syntax reference for Java, SQL, HTML & more.",
     url: "https://www.w3schools.com/",
   },
   {
-    id: "selfmadeninja",
-    name: "Selfmade Ninja Academy",
-    initials: "SN",
-    gradient: "linear-gradient(135deg,#6a3bff,#0072ff)",
-    desc: "Sign in to continue your structured lessons and track your progress on the Selfmade Ninja Academy platform.",
-    tags: ["Login required", "Structured course"],
+    icon: "⚙️",
+    name: "OneCompiler",
+    desc: "Run Java snippets straight from the browser.",
+    url: "https://onecompiler.com/java",
+  },
+  {
+    icon: "🥷",
+    name: "Selfmade Ninja",
+    desc: "Structured QA & automation coursework.",
     url: "https://academy.selfmade.ninja/login",
+  },
+  {
+    icon: "🎓",
+    name: "Udemy",
+    desc: "Deep-dive video courses on Selenium, Java & Playwright.",
+    url: "https://www.udemy.com/",
   },
 ];
 
-/* ============================================================
-   3. HELPERS — label prettifier, natural sort, debounce
-   ============================================================ */
-const ACRONYMS = {
-  api: "API",
-  sql: "SQL",
-  jdbc: "JDBC",
-  git: "GIT",
-  cicd: "CI/CD",
-  pojo: "POJO",
-  istqb: "ISTQB",
-  ctfl: "CTFL",
-  ng: "NG",
-  filo: "FILO",
-  genai: "GenAI",
+/* =====================================================================
+   State
+   ===================================================================== */
+const state = {
+  tab: "learn",
+  flatLearn: [],
+  flatPrep: [],
+  activePath: null, // array of node titles from root to current leaf
+  activeFlatIndex: -1,
+  activeTree: "learn",
+  done: new Set(), // in-memory "reviewed" tracker (session only)
 };
 
-const LABEL_OVERRIDES = {
-  "04.pdf": "Playwright 04",
-  "ISTQB_CTFL_Syllabus_v4.0.1.pdf": "ISTQB CTFL Syllabus (v4.0.1)",
-};
-
-function prettifyName(filename) {
-  if (LABEL_OVERRIDES[filename]) return LABEL_OVERRIDES[filename];
-  let base = filename.replace(/\.pdf$/i, "").replace(/_/g, " ");
-  base = base
-    .replace(/([a-zA-Z])(\d)/g, "$1 $2")
-    .replace(/(\d)([a-zA-Z])/g, "$1 $2");
-  return base
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((w) => {
-      const lw = w.toLowerCase();
-      if (ACRONYMS[lw]) return ACRONYMS[lw];
-      if (/^v?\d+(\.\d+)*$/i.test(w)) return w;
-      return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
-    })
-    .join(" ");
-}
-
-function naturalSort(a, b) {
-  const re = /(\d+)|(\D+)/g;
-  const ax = a.match(re) || [],
-    bx = b.match(re) || [];
-  const len = Math.max(ax.length, bx.length);
-  for (let i = 0; i < len; i++) {
-    const av = ax[i] || "",
-      bv = bx[i] || "";
-    const an = parseInt(av, 10),
-      bn = parseInt(bv, 10);
-    if (!Number.isNaN(an) && !Number.isNaN(bn)) {
-      if (an !== bn) return an - bn;
-    } else if (av !== bv) {
-      return av < bv ? -1 : 1;
+/* =====================================================================
+   Flatten trees (for prev/next + search + progress denominators)
+   ===================================================================== */
+function flatten(nodes, trail, out) {
+  nodes.forEach((node) => {
+    const path = [...trail, node];
+    if (node.children && node.children.length) {
+      flatten(node.children, path, out);
+    } else {
+      out.push(path);
     }
-  }
-  return 0;
+  });
+}
+flatten(LEARN_TREE, [], state.flatLearn);
+flatten(PREP_TREE, [], state.flatPrep);
+
+/* =====================================================================
+   Render sidebar tree
+   ===================================================================== */
+const treeLearnEl = document.getElementById("treeLearn");
+const treePrepEl = document.getElementById("treePrep");
+
+function buildAllTrees() {
+  const fragL = document.createDocumentFragment();
+  renderInto(fragL, LEARN_TREE, [], 1);
+  treeLearnEl.innerHTML = "";
+  treeLearnEl.appendChild(fragL);
+
+  const fragP = document.createDocumentFragment();
+  renderInto(fragP, PREP_TREE, [], 1);
+  treePrepEl.innerHTML = "";
+  treePrepEl.appendChild(fragP);
 }
 
-function debounce(fn, wait = 200) {
-  let t;
-  return (...args) => {
-    clearTimeout(t);
-    t = setTimeout(() => fn(...args), wait);
+/* simpler recursive builder that appends directly into a fragment/container */
+function renderInto(container, nodes, trail, depth) {
+  nodes.forEach((node) => {
+    const isBranch = !!(node.children && node.children.length);
+    const wrap = document.createElement("div");
+    wrap.className = "node";
+    wrap.dataset.depth = depth;
+    wrap.dataset.path = JSON.stringify([...trail, node.title]);
+
+    const row = document.createElement("div");
+    row.className = "node-row" + (isBranch ? "" : " leaf");
+    row.tabIndex = 0;
+
+    const icon = document.createElement("span");
+    icon.className = "n-icon";
+    icon.textContent = node.icon || (isBranch ? "📁" : "▫️");
+    row.appendChild(icon);
+
+    const label = document.createElement("span");
+    label.className = "n-label";
+    label.textContent = node.title;
+    row.appendChild(label);
+
+    if (isBranch) {
+      const caret = document.createElement("span");
+      caret.className = "n-caret";
+      caret.textContent = "▸";
+      row.appendChild(caret);
+      row.addEventListener("click", () => wrap.classList.toggle("open"));
+      row.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          wrap.classList.toggle("open");
+        }
+      });
+      wrap.appendChild(row);
+
+      const childBox = document.createElement("div");
+      childBox.className = "children";
+      renderInto(childBox, node.children, [...trail, node.title], depth + 1);
+      wrap.appendChild(childBox);
+    } else {
+      const fullPath = [...trail, node.title];
+      row.addEventListener("click", () =>
+        selectLeaf(fullPath, container.closest("#treePrep") ? "prep" : "learn"),
+      );
+      row.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          selectLeaf(
+            fullPath,
+            container.closest("#treePrep") ? "prep" : "learn",
+          );
+        }
+      });
+      wrap.appendChild(row);
+    }
+    container.appendChild(wrap);
+  });
+}
+
+buildAllTrees();
+
+/* =====================================================================
+   Topbar quick links
+   ===================================================================== */
+const topLinksEl = document.getElementById("topLinks");
+EXTERNAL_LINKS.forEach((l) => {
+  const a = document.createElement("a");
+  a.href = l.url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  a.title = l.name;
+  a.textContent = l.icon;
+  topLinksEl.appendChild(a);
+});
+
+const quickGridEl = document.getElementById("quickGrid");
+EXTERNAL_LINKS.forEach((l) => {
+  const a = document.createElement("a");
+  a.className = "quick-card";
+  a.href = l.url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  a.innerHTML = `
+    <span class="qc-icon">${l.icon}</span>
+    <span class="qc-name">${l.name}</span>
+    <span class="qc-desc">${l.desc}</span>
+    <span class="qc-go">Open ↗</span>`;
+  quickGridEl.appendChild(a);
+});
+
+/* "Jump back in" stat cards */
+const statRowEl = document.getElementById("statRow");
+const STAT_ENTRIES = [
+  {
+    icon: "🌐",
+    title: "Selenium Locators",
+    sub: "ID · XPath · CSS Selector",
+    path: ["🌐 Selenium", "📍 Locators", "ID"],
+  },
+  {
+    icon: "☕",
+    title: "Core Java",
+    sub: "OOPS to Multithreading",
+    path: ["☕ JAVA — Updated", "📄 Core Java", "OOPS Basics"],
+  },
+  {
+    icon: "🔥",
+    title: "REST Assured",
+    sub: "GET · POST · Auth",
+    path: ["🌍 API Testing", "🔥 REST Assured", "GET"],
+  },
+  {
+    icon: "💼",
+    title: "HR Interview",
+    sub: "Tell Me About Yourself",
+    path: ["💬 Tell Me About Yourself"],
+  },
+];
+STAT_ENTRIES.forEach((s) => {
+  const card = document.createElement("div");
+  card.className = "stat-card";
+  card.innerHTML = `<span class="sc-icon">${s.icon}</span><div class="sc-title">${s.title}</div><div class="sc-sub">${s.sub}</div>`;
+  card.addEventListener("click", () => selectLeaf(s.path, "learn"));
+  statRowEl.appendChild(card);
+});
+
+/* =====================================================================
+   Views / selection logic
+   ===================================================================== */
+const homeView = document.getElementById("homeView");
+const topicView = document.getElementById("topicView");
+const crumbEl = document.getElementById("crumb");
+const topicIcon = document.getElementById("topicIcon");
+const topicPath = document.getElementById("topicPath");
+const topicTitle = document.getElementById("topicTitle");
+const topicBody = document.getElementById("topicBody");
+const markBtn = document.getElementById("markBtn");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+const CATEGORY_HINTS = {
+  agile: {
+    blurb:
+      "the working rhythm agile teams use to plan, size and ship in short cycles",
+    tool: EXTERNAL_LINKS[0],
+  },
+  jira: {
+    blurb: "how work items are tracked, filtered and reported on inside JIRA",
+    tool: EXTERNAL_LINKS[0],
+  },
+  istqb: {
+    blurb: "core testing theory as examined by the ISTQB syllabus",
+    tool: EXTERNAL_LINKS[2],
+  },
+  java: {
+    blurb: "a foundational Java concept used throughout automation code",
+    tool: EXTERNAL_LINKS[3],
+  },
+  programming: {
+    blurb: "a core programming building block used across languages",
+    tool: EXTERNAL_LINKS[3],
+  },
+  pojo: {
+    blurb: "a plain-object design pattern used in Java automation frameworks",
+    tool: EXTERNAL_LINKS[2],
+  },
+  selenium: {
+    blurb: "a piece of browser automation with Selenium WebDriver",
+    tool: EXTERNAL_LINKS[2],
+  },
+  api: {
+    blurb: "a request/response concept for testing services and APIs",
+    tool: EXTERNAL_LINKS[2],
+  },
+  sql: {
+    blurb: "a database concept testers rely on for backend validation",
+    tool: EXTERNAL_LINKS[2],
+  },
+  "gen ai": {
+    blurb: "how generative AI tools plug into a modern QA workflow",
+    tool: EXTERNAL_LINKS[1],
+  },
+  automation: {
+    blurb: "tooling that keeps automated test suites reliable and repeatable",
+    tool: EXTERNAL_LINKS[4],
+  },
+  framework: {
+    blurb: "a structural piece of a test automation framework",
+    tool: EXTERNAL_LINKS[4],
+  },
+  playwright: {
+    blurb: "a modern end-to-end testing capability in Playwright",
+    tool: EXTERNAL_LINKS[2],
+  },
+  interview: {
+    blurb: "a scenario commonly raised in QA interview rounds",
+    tool: EXTERNAL_LINKS[0],
+  },
+  jdbc: {
+    blurb: "how Java code talks directly to a database",
+    tool: EXTERNAL_LINKS[2],
+  },
+  fillo: {
+    blurb: "a lightweight way to drive tests from Excel data",
+    tool: EXTERNAL_LINKS[2],
+  },
+};
+
+function hintFor(path) {
+  const joined = path.join(" ").toLowerCase();
+  for (const k of Object.keys(CATEGORY_HINTS)) {
+    if (joined.includes(k)) return CATEGORY_HINTS[k];
+  }
+  return {
+    blurb: "a topic on your QA and automation learning map",
+    tool: EXTERNAL_LINKS[5],
   };
 }
 
-function totalFileCount() {
-  return CATEGORIES.reduce((sum, c) => sum + c.files.length, 0);
+function stripEmoji(s) {
+  return s.replace(/^[^\w(]+\s*/u, "").trim() || s;
 }
 
-function findCategory(id) {
-  return CATEGORIES.find((c) => c.id === id);
+function findSiblings(path, tree) {
+  // walk tree to locate the node's parent children list
+  let nodes = tree,
+    parentTitle = null;
+  for (let i = 0; i < path.length - 1; i++) {
+    const found = nodes.find((n) => n.title === path[i]);
+    if (!found) return { siblings: [], parentTitle: null };
+    parentTitle = found.title;
+    nodes = found.children || [];
+  }
+  return {
+    siblings: nodes
+      .map((n) => n.title)
+      .filter((t) => t !== path[path.length - 1]),
+    parentTitle,
+  };
 }
 
-function allEntries() {
-  return CATEGORIES.flatMap((c) =>
-    [...c.files].sort(naturalSort).map((f) => ({
-      file: f,
-      folder: c.folder,
-      catId: c.id,
-      catTitle: c.title,
-      label: prettifyName(f),
-    })),
+function renderTopicBody(path, treeKey) {
+  const title = path[path.length - 1];
+  const clean = stripEmoji(title);
+  const hint = hintFor(path);
+  const tree = treeKey === "prep" ? PREP_TREE : LEARN_TREE;
+  const { siblings, parentTitle } = findSiblings(path, tree);
+
+  let html = `<span class="tb-tag">${treeKey === "prep" ? "Interview & Scenarios" : "Learning Path"}</span>`;
+  html += `<p>This node covers <strong>${clean}</strong> — ${hint.blurb}. Use it as a placeholder outline: attach your own notes, code samples or a worked example here, and this hub carries the structure for you.</p>`;
+
+  if (siblings.length) {
+    html += `<p>Other topics alongside it under <strong>${stripEmoji(parentTitle || "")}</strong>:</p>`;
+    html += `<ul>${siblings
+      .slice(0, 10)
+      .map((s) => `<li>${stripEmoji(s)}</li>`)
+      .join("")}</ul>`;
+  }
+
+  html += `<p>Need a hand fleshing this out? <a href="${hint.tool.url}" target="_blank" rel="noopener noreferrer" style="color:var(--blue-2)">${hint.tool.name} ↗</a> is a solid place to start.</p>`;
+
+  topicBody.innerHTML = html;
+}
+
+function selectLeaf(path, treeKey) {
+  state.activePath = path;
+  state.activeTree = treeKey;
+
+  const flat = treeKey === "prep" ? state.flatPrep : state.flatLearn;
+  state.activeFlatIndex = flat.findIndex((p) => p.join("›") === path.join("›"));
+
+  // breadcrumb
+  crumbEl.innerHTML = "";
+  const homeCrumb = document.createElement("span");
+  homeCrumb.className = "crumb-item";
+  homeCrumb.textContent =
+    treeKey === "prep" ? "Interview & Scenarios" : "Learning Path";
+  crumbEl.appendChild(homeCrumb);
+  path.forEach((p) => {
+    const sep = document.createElement("span");
+    sep.className = "sep";
+    sep.textContent = "/";
+    crumbEl.appendChild(sep);
+    const item = document.createElement("span");
+    item.className = "crumb-item current";
+    item.textContent = stripEmoji(p);
+    crumbEl.appendChild(item);
+  });
+
+  const title = path[path.length - 1];
+  const iconMatch = title.match(
+    /^\p{Emoji_Presentation}|\p{Extended_Pictographic}/u,
   );
+  topicIcon.textContent = iconMatch ? iconMatch[0] : "📄";
+  topicPath.textContent =
+    path.slice(0, -1).map(stripEmoji).join("  ›  ") ||
+    (treeKey === "prep" ? "Interview & Scenarios" : "Learning Path");
+  topicTitle.textContent = stripEmoji(title);
+
+  renderTopicBody(path, treeKey);
+
+  const key = path.join("›");
+  markBtn.classList.toggle("done", state.done.has(key));
+  markBtn.textContent = state.done.has(key) ? "✓ Reviewed" : "Mark as reviewed";
+
+  prevBtn.disabled = state.activeFlatIndex <= 0;
+  nextBtn.disabled =
+    state.activeFlatIndex === -1 || state.activeFlatIndex >= flat.length - 1;
+
+  homeView.hidden = true;
+  topicView.hidden = false;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  highlightActiveInTree(key);
+  closeMobileSidebar();
 }
 
-/* ============================================================
-   4. THEME MANAGER — light / night mode, persisted + synced
-   ============================================================ */
-class ThemeManager {
-  static KEY = "ts-theme";
-
-  static init() {
-    const saved = localStorage.getItem(this.KEY);
-    const prefersDark = window.matchMedia?.(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-    this.apply(saved || (prefersDark ? "dark" : "light"), { silent: true });
-
-    // Follow system changes only if the user hasn't chosen explicitly.
-    window
-      .matchMedia?.("(prefers-color-scheme: dark)")
-      .addEventListener("change", (e) => {
-        if (!localStorage.getItem(this.KEY + "-explicit")) {
-          this.apply(e.matches ? "dark" : "light", { silent: true });
-        }
-      });
-  }
-
-  static apply(mode, { silent = false } = {}) {
-    document.documentElement.classList.toggle("dark", mode === "dark");
-    localStorage.setItem(this.KEY, mode);
-    document.querySelectorAll(".theme-toggle").forEach((btn) => {
-      btn.setAttribute("aria-checked", mode === "dark" ? "true" : "false");
-      const knob = btn.querySelector(".knob");
-      if (knob) knob.textContent = mode === "dark" ? "☾" : "☀";
-    });
-    if (!silent)
-      Toast.show(mode === "dark" ? "Night mode on" : "Bright mode on");
-  }
-
-  static toggle() {
-    const isDark = document.documentElement.classList.contains("dark");
-    localStorage.setItem(this.KEY + "-explicit", "1");
-    this.apply(isDark ? "light" : "dark");
-  }
-}
-
-/* ============================================================
-   5. TOAST — small non-blocking notifications
-   ============================================================ */
-class Toast {
-  static show(message) {
-    const stack = document.getElementById("toastStack");
-    if (!stack) return;
-    const el = document.createElement("div");
-    el.className = "toast";
-    el.innerHTML = `<span class="toast-dot"></span><span>${message}</span>`;
-    stack.appendChild(el);
-    setTimeout(() => {
-      el.classList.add("leaving");
-      el.addEventListener("animationend", () => el.remove(), { once: true });
-    }, 2400);
-  }
-}
-
-/* ============================================================
-   6. REVEAL — IntersectionObserver-driven fade/slide-in
-   ============================================================ */
-class Reveal {
-  static observer = null;
-
-  static ensureObserver() {
-    if (this.observer) return this.observer;
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-            this.observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
-    );
-    return this.observer;
-  }
-
-  static watch(container) {
-    const obs = this.ensureObserver();
-    container
-      .querySelectorAll(".reveal-group .card")
-      .forEach((card) => obs.observe(card));
-  }
-}
-
-/* ============================================================
-   7. ANIMATED COUNTERS
-   ============================================================ */
-function animateCount(el, target, duration = 900) {
-  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
-    el.textContent = target;
-    return;
-  }
-  const start = performance.now();
-  function tick(now) {
-    const p = Math.min(1, (now - start) / duration);
-    const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
-    el.textContent = Math.round(eased * target);
-    if (p < 1) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-
-/* ============================================================
-   8. RECENTLY VIEWED — persisted in localStorage
-   ============================================================ */
-class RecentStore {
-  static KEY = "ts-recent";
-  static MAX = 4;
-
-  static get() {
+function highlightActiveInTree(key) {
+  document
+    .querySelectorAll(".node-row.leaf.active")
+    .forEach((el) => el.classList.remove("active"));
+  document.querySelectorAll(".node").forEach((nodeEl) => {
     try {
-      return JSON.parse(localStorage.getItem(this.KEY)) || [];
-    } catch {
-      return [];
+      const p = JSON.parse(nodeEl.dataset.path || "[]");
+      if (p.join("›") === key) {
+        const row = nodeEl.querySelector(":scope > .node-row");
+        row.classList.add("active");
+        row.classList.toggle("done", state.done.has(key));
+        // expand ancestors
+        let ancestor = nodeEl.parentElement;
+        while (ancestor && ancestor !== document.body) {
+          if (ancestor.classList && ancestor.classList.contains("node"))
+            ancestor.classList.add("open");
+          ancestor = ancestor.parentElement;
+        }
+      }
+    } catch (e) {
+      /* not a leaf-path node */
     }
-  }
-
-  static add(entry) {
-    const list = this.get().filter((e) => e.file !== entry.file);
-    list.unshift(entry);
-    localStorage.setItem(this.KEY, JSON.stringify(list.slice(0, this.MAX)));
-  }
+  });
 }
 
-/* ============================================================
-   9. RENDERERS — build DOM for each view
-   ============================================================ */
-const Render = {
-  home() {
-    document.getElementById("statTopics").closest(".stat");
-    animateCount(document.getElementById("statFiles"), totalFileCount());
-    animateCount(document.getElementById("statTopics"), CATEGORIES.length);
-    document.querySelectorAll("#statsRow .stat b[data-count]").forEach((b) => {
-      const n = Number(b.dataset.count);
-      if (b.id !== "statFiles" && b.id !== "statTopics")
-        animateCount(b, n, 700);
+/* mark as reviewed */
+markBtn.addEventListener("click", () => {
+  if (!state.activePath) return;
+  const key = state.activePath.join("›");
+  if (state.done.has(key)) state.done.delete(key);
+  else state.done.add(key);
+  markBtn.classList.toggle("done", state.done.has(key));
+  markBtn.textContent = state.done.has(key) ? "✓ Reviewed" : "Mark as reviewed";
+  highlightActiveInTree(key);
+  updateProgress();
+});
+
+/* prev / next */
+prevBtn.addEventListener("click", () => {
+  const flat = state.activeTree === "prep" ? state.flatPrep : state.flatLearn;
+  if (state.activeFlatIndex > 0)
+    selectLeaf(flat[state.activeFlatIndex - 1], state.activeTree);
+});
+nextBtn.addEventListener("click", () => {
+  const flat = state.activeTree === "prep" ? state.flatPrep : state.flatLearn;
+  if (state.activeFlatIndex < flat.length - 1)
+    selectLeaf(flat[state.activeFlatIndex + 1], state.activeTree);
+});
+
+/* progress */
+function updateProgress() {
+  const total = state.flatLearn.length + state.flatPrep.length;
+  const done = state.done.size;
+  document.getElementById("progressCount").textContent = `${done} / ${total}`;
+  document.getElementById("progressFill").style.width = total
+    ? `${(done / total) * 100}%`
+    : "0%";
+}
+updateProgress();
+
+/* =====================================================================
+   Tabs
+   ===================================================================== */
+document.querySelectorAll(".tab").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach((b) => {
+      b.classList.remove("active");
+      b.setAttribute("aria-selected", "false");
     });
+    btn.classList.add("active");
+    btn.setAttribute("aria-selected", "true");
+    state.tab = btn.dataset.tab;
+    treeLearnEl.hidden = state.tab !== "learn";
+    treePrepEl.hidden = state.tab !== "prep";
+  });
+});
 
-    const grid = document.getElementById("homeCatGrid");
-    grid.innerHTML = CATEGORIES.map(
-      (c) => `
-      <a class="card cat-card" href="#/courses/${c.id}" data-link>
-        <span class="icon-chip">${ICONS[c.icon] || ICONS.book}</span>
-        <h3>${c.title}</h3>
-        <p>${c.desc}</p>
-        <div class="meta"><span>View resources</span><span class="count-pill">${c.files.length}</span></div>
-      </a>
-    `,
-    ).join("");
+/* =====================================================================
+   Search
+   ===================================================================== */
+const searchInput = document.getElementById("searchInput");
+const searchClear = document.getElementById("searchClear");
 
-    document.getElementById("homeToolsGrid").innerHTML = Render.toolCards(
-      TOOLS.slice(0, 3),
-      { compact: true },
-    );
-
-    Render.recent();
-    Reveal.watch(document.getElementById("view-home"));
-  },
-
-  recent() {
-    const list = RecentStore.get();
-    const section = document.getElementById("recentSection");
-    const grid = document.getElementById("recentGrid");
-    if (!list.length) {
-      section.hidden = true;
-      return;
-    }
-    section.hidden = false;
-    grid.innerHTML = list
-      .map(
-        (e) => `
-      <a class="card cat-card" href="${encodeURI(e.folder + e.file)}" target="_blank" rel="noopener noreferrer" data-recent-open="${encodeURIComponent(JSON.stringify(e))}">
-        <span class="icon-chip">${ICONS.clock}</span>
-        <h3 style="font-size:15px;">${e.label}</h3>
-        <p style="min-height:0;">${e.catTitle}</p>
-        <div class="meta"><span>Open again</span><span class="count-pill">PDF</span></div>
-      </a>
-    `,
-      )
-      .join("");
-  },
-
-  toolCards(tools, { compact = false } = {}) {
-    return tools
-      .map(
-        (t) => `
-      <div class="card tool-card">
-        <div class="tool-top">
-          <span class="tool-logo" style="background:${t.gradient}">${t.initials}</span>
-          <div><h3 style="margin:0;font-size:${compact ? 16 : 17}px;">${t.name}</h3></div>
-        </div>
-        <p class="desc">${t.desc}</p>
-        <div class="tool-tags">${t.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}</div>
-        <a class="btn btn-primary ${compact ? "btn-sm" : ""}" href="${t.url}" target="_blank" rel="noopener noreferrer" data-tool="${t.id}">
-          Open ${t.name.split(" — ")[0]} ↗
-        </a>
-      </div>
-    `,
-      )
-      .join("");
-  },
-
-  compiler() {
-    document.getElementById("toolsGrid").innerHTML = Render.toolCards(TOOLS);
-    Reveal.watch(document.getElementById("view-compiler"));
-  },
-
-  courses(catId = "all", query = "") {
-    const catList = document.getElementById("catList");
-    const fileGrid = document.getElementById("fileGrid");
-    const resTitle = document.getElementById("resTitle");
-    const resCount = document.getElementById("resCount");
-    const emptyState = document.getElementById("emptyState");
-
-    // Sidebar
-    catList.innerHTML = `
-      <li><button data-id="all" class="${catId === "all" ? "active" : ""}">
-        <span class="ic">${ICONS.bolt}</span> All Topics <span class="n">${totalFileCount()}</span>
-      </button></li>
-      ${CATEGORIES.map(
-        (c) => `
-        <li><button data-id="${c.id}" class="${catId === c.id ? "active" : ""}">
-          <span class="ic">${ICONS[c.icon] || ICONS.book}</span> ${c.title} <span class="n">${c.files.length}</span>
-        </button></li>
-      `,
-      ).join("")}
-    `;
-
-    // Entries
-    let entries =
-      catId === "all"
-        ? allEntries()
-        : allEntries().filter((e) => e.catId === catId);
-    if (query.trim()) {
-      const q = query.trim().toLowerCase();
-      entries = entries.filter(
-        (e) =>
-          e.label.toLowerCase().includes(q) ||
-          e.catTitle.toLowerCase().includes(q),
-      );
-    }
-
-    resTitle.textContent =
-      catId === "all"
-        ? "All Topics"
-        : findCategory(catId)?.title || "All Topics";
-    resCount.textContent = `${entries.length} ${entries.length === 1 ? "file" : "files"}`;
-
-    if (!entries.length) {
-      fileGrid.style.display = "none";
-      emptyState.hidden = false;
-    } else {
-      fileGrid.style.display = "grid";
-      emptyState.hidden = true;
-      fileGrid.innerHTML = entries
-        .map((e) => {
-          const href = encodeURI(e.folder + e.file);
-          const payload = encodeURIComponent(JSON.stringify(e));
-          return `
-        <div class="file-card">
-          <div class="file-top">
-            <span class="file-ic">${ICONS.pdf}</span>
-            <div>
-              <h5>${e.label}</h5>
-              ${catId === "all" ? `<span class="tag" style="margin-top:6px;display:inline-block;">${e.catTitle}</span>` : ""}
-            </div>
-          </div>
-          <div class="file-actions">
-            <a class="open" href="${href}" target="_blank" rel="noopener noreferrer" data-file-open="${payload}">Open PDF</a>
-            <a href="${href}" download data-file-open="${payload}">Download</a>
-          </div>
-        </div>`;
-        })
-        .join("");
-    }
-
-    Reveal.watch(document.getElementById("view-courses"));
-  },
-};
-
-/* ============================================================
-   10. ROUTER — hash-based, no reloads
-   ============================================================ */
-class Router {
-  constructor(routes) {
-    this.routes = routes;
-    this.current = null;
-    window.addEventListener("hashchange", () => this.resolve());
-  }
-
-  start() {
-    this.resolve();
-  }
-
-  navigate(hash) {
-    if (window.location.hash === hash) {
-      this.resolve();
-      return;
-    }
-    window.location.hash = hash;
-  }
-
-  resolve() {
-    const raw = window.location.hash.replace(/^#\/?/, "") || "home";
-    const [name, ...rest] = raw.split("/");
-    const routeName = this.routes[name] ? name : "home";
-    this.current = routeName;
-
-    document
-      .querySelectorAll(".view")
-      .forEach((v) => v.classList.remove("is-active"));
-    const view = document.getElementById(`view-${routeName}`);
-    if (view) view.classList.add("is-active");
-
-    document.querySelectorAll(".navlinks a[data-route]").forEach((a) => {
-      const active = a.dataset.route === routeName;
-      a.classList.toggle("active", active);
-      if (active) a.setAttribute("aria-current", "page");
-      else a.removeAttribute("aria-current");
-    });
-
-    this.routes[routeName](rest);
-    window.scrollTo({
-      top: 0,
-      behavior:
-        "instant" in document.documentElement.style ? "instant" : "auto",
-    });
-
-    const navLinks = document.getElementById("navlinks");
-    navLinks?.classList.remove("open");
-  }
+function escapeReg(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-/* ============================================================
-   11. APP BOOTSTRAP
-   ============================================================ */
-class App {
-  constructor() {
-    this.router = new Router({
-      home: () => Render.home(),
-      courses: (rest) => {
-        const catId = rest[0] || "all";
-        this.coursesState = { catId, query: this.coursesState?.query || "" };
-        Render.courses(catId, this.coursesState.query);
-        const input = document.getElementById("searchInput");
-        if (input) input.value = this.coursesState.query;
-      },
-      compiler: () => Render.compiler(),
-    });
-    this.coursesState = { catId: "all", query: "" };
-  }
-
-  init() {
-    ThemeManager.init();
-    this.bindGlobalUI();
-    this.bindDelegatedEvents();
-    this.router.start();
-  }
-
-  bindGlobalUI() {
-    document.querySelectorAll(".theme-toggle").forEach((btn) => {
-      btn.addEventListener("click", () => ThemeManager.toggle());
-    });
-
-    const navToggleBtn = document.querySelector(".nav-toggle-btn");
-    const navLinks = document.getElementById("navlinks");
-    navToggleBtn?.addEventListener("click", () => {
-      navLinks.classList.toggle("open");
-      navToggleBtn.setAttribute(
-        "aria-expanded",
-        navLinks.classList.contains("open") ? "true" : "false",
-      );
-    });
-
-    // Keyboard shortcut: "/" focuses search (jumping to Courses if needed)
-    document.addEventListener("keydown", (e) => {
-      if (e.key !== "/") return;
-      const tag = document.activeElement?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA") return;
-      e.preventDefault();
-      if (this.router.current !== "courses") {
-        this.router.navigate("#/courses");
-        requestAnimationFrame(() =>
-          document.getElementById("searchInput")?.focus(),
+function applySearch(q) {
+  searchClear.classList.toggle("show", !!q);
+  const query = q.trim().toLowerCase();
+  const activeTreeEl = state.tab === "prep" ? treePrepEl : treeLearnEl;
+  const otherTreeEl = state.tab === "prep" ? treeLearnEl : treePrepEl;
+  [activeTreeEl, otherTreeEl].forEach((root) => {
+    const nodes = root.querySelectorAll(".node");
+    if (!query) {
+      nodes.forEach((n) => {
+        n.style.display = "";
+        n.classList.remove("open");
+        const l = n.querySelector(":scope>.node-row .n-label");
+        if (l) l.innerHTML = l.textContent;
+      });
+      const existingMsg = root.querySelector(".no-results");
+      if (existingMsg) existingMsg.remove();
+      return;
+    }
+    let anyMatch = false;
+    nodes.forEach((n) => {
+      const labelEl = n.querySelector(":scope > .node-row .n-label");
+      if (!labelEl) return;
+      const text = labelEl.textContent;
+      const match = text.toLowerCase().includes(query);
+      if (match) {
+        anyMatch = true;
+        labelEl.innerHTML = text.replace(
+          new RegExp("(" + escapeReg(q) + ")", "ig"),
+          "<mark>$1</mark>",
         );
       } else {
-        document.getElementById("searchInput")?.focus();
+        labelEl.innerHTML = text;
       }
     });
-  }
-
-  bindDelegatedEvents() {
-    // Debounced live search inside Courses view
-    document.addEventListener(
-      "input",
-      debounce((e) => {
-        if (e.target?.id !== "searchInput") return;
-        this.coursesState.query = e.target.value;
-        Render.courses(this.coursesState.catId, this.coursesState.query);
-      }, 180),
-    );
-
-    // Category sidebar clicks (event delegation, works after re-renders)
-    document.addEventListener("click", (e) => {
-      const catBtn = e.target.closest("#catList button[data-id]");
-      if (catBtn) {
-        const id = catBtn.dataset.id;
-        this.coursesState = { catId: id, query: this.coursesState.query };
-        this.router.navigate(id === "all" ? "#/courses" : `#/courses/${id}`);
-        return;
-      }
-
-      // Track "recently viewed" whenever a PDF is opened or downloaded
-      const fileLink = e.target.closest("[data-file-open], [data-recent-open]");
-      if (fileLink) {
-        const raw = fileLink.dataset.fileOpen || fileLink.dataset.recentOpen;
-        try {
-          const entry = JSON.parse(decodeURIComponent(raw));
-          RecentStore.add(entry);
-          Toast.show(`Opening “${entry.label}”…`);
-        } catch {
-          /* ignore malformed payload */
-        }
-        return;
-      }
-
-      // Practice tool clicks -> toast confirmation
-      const toolLink = e.target.closest("[data-tool]");
-      if (toolLink) {
-        const tool = TOOLS.find((t) => t.id === toolLink.dataset.tool);
-        if (tool) Toast.show(`Opening ${tool.name} in a new tab…`);
-      }
+    nodes.forEach((n) => {
+      const label = n
+        .querySelector(":scope > .node-row .n-label")
+        .textContent.toLowerCase();
+      const selfMatch = label.includes(query);
+      const descMatch =
+        n.querySelector(".n-label") &&
+        Array.from(n.querySelectorAll(".n-label")).some((l) =>
+          l.textContent.toLowerCase().includes(query),
+        );
+      const show = selfMatch || descMatch;
+      n.style.display = show ? "" : "none";
+      if (show && descMatch) n.classList.add("open");
     });
-  }
+    const existingMsg = root.querySelector(".no-results");
+    if (existingMsg) existingMsg.remove();
+    if (!anyMatch) {
+      const msg = document.createElement("div");
+      msg.className = "no-results";
+      msg.textContent = `No topics match "${q}"`;
+      root.appendChild(msg);
+    }
+  });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  new App().init();
+searchInput.addEventListener("input", (e) => applySearch(e.target.value));
+searchClear.addEventListener("click", () => {
+  searchInput.value = "";
+  applySearch("");
+  searchInput.focus();
+});
+
+/* =====================================================================
+   Mobile sidebar toggle
+   ===================================================================== */
+const sidebar = document.getElementById("sidebar");
+const scrim = document.getElementById("sidebarScrim");
+document.getElementById("menuBtn").addEventListener("click", () => {
+  sidebar.classList.add("open");
+  scrim.classList.add("show");
+});
+document
+  .getElementById("sidebarClose")
+  .addEventListener("click", closeMobileSidebar);
+scrim.addEventListener("click", closeMobileSidebar);
+function closeMobileSidebar() {
+  sidebar.classList.remove("open");
+  scrim.classList.remove("show");
+}
+
+/* =====================================================================
+   Home link (breadcrumb "Home"/logo click returns to hero)
+   ===================================================================== */
+document.querySelector(".brand").addEventListener("click", () => {
+  topicView.hidden = true;
+  homeView.hidden = false;
+  crumbEl.innerHTML = '<span class="crumb-item">Home</span>';
+  window.scrollTo({ top: 0, behavior: "smooth" });
 });

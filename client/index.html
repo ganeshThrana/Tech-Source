@@ -3,190 +3,127 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tech Source — Learning Hub</title>
-<meta name="description" content="Tech Source: a bright, night-mode-ready single-page learning hub for Automation Testing — Java, Selenium, Playwright, API, SQL, frameworks and more, plus a live Java compiler.">
-<link rel="icon" type="image/jpeg" href="Media.jpg">
+<title>Tech Source | QA &amp; Automation Knowledge Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="main.css">
 </head>
 <body>
 
-<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+<div class="circuit-bg" aria-hidden="true"></div>
 
-<header class="topbar">
-  <div class="topbar-inner">
-    <a href="#/home" class="brand" data-link aria-label="Tech Source home">
-      <span class="brand-badge"><img src=".jpg" alt="Tech Source logo"></span>
-      <span class="brand-text">
-        <span class="brand-name"><span class="t1">TECH</span> <span class="t2">SOURCE</span></span>
-        <span class="brand-tag">Creativity at it's peak!</span>
-      </span>
-    </a>
+<div class="app">
 
-    <nav>
-      <ul class="navlinks" id="navlinks">
-        <li><a href="#/home" data-link data-route="home">Home</a></li>
-        <li><a href="#/courses" data-link data-route="courses">Courses</a></li>
-        <li><a href="#/compiler" data-link data-route="compiler">Compiler &amp; Practice</a></li>
-      </ul>
-    </nav>
-
-    <div class="nav-right">
-      <button class="theme-toggle" role="switch" aria-checked="false" aria-label="Toggle night mode">
-        <span class="knob">☀</span>
-      </button>
-      <button class="nav-toggle-btn" aria-label="Open menu" aria-expanded="false">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <img src="logo.jpg" alt="Tech Source logo" class="brand-logo">
+      <div class="brand-text">
+        <span class="brand-name">TECH <em>SOURCE</em></span>
+        <span class="brand-tagline">Creativity at it's peak!</span>
+      </div>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
     </div>
-  </div>
-</header>
 
-<main id="app">
+    <div class="pill-header">
+      <span class="pill-icon">📚</span>
+      <span>Software Testing</span>
+    </div>
 
-  <!-- ============ HOME VIEW ============ -->
-  <section class="view" id="view-home" data-view="home">
-    <section class="hero">
-      <svg class="trace-svg" viewBox="0 0 1240 460" preserveAspectRatio="none" aria-hidden="true">
-        <g fill="none" stroke="url(#g1)" stroke-width="1.4">
-          <path d="M0 380 H180 L220 340 H420 L460 300 H700"/>
-          <path d="M1240 60 H1040 L1000 100 H860 L820 140 H620"/>
-          <path d="M0 60 H120 L150 90 H300"/>
-        </g>
-        <g fill="#00c2ff" opacity=".8">
-          <circle cx="700" cy="300" r="4"/><circle cx="460" cy="300" r="3"/><circle cx="220" cy="340" r="3"/>
-          <circle cx="620" cy="140" r="4"/><circle cx="820" cy="140" r="3"/><circle cx="300" cy="90" r="3"/>
-        </g>
-        <defs>
-          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#0072ff" stop-opacity="0"/>
-            <stop offset=".5" stop-color="#00c2ff" stop-opacity=".8"/>
-            <stop offset="1" stop-color="#0072ff" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="searchInput" placeholder="Search topics, e.g. XPath, Sprint..." autocomplete="off">
+      <button id="searchClear" class="search-clear" aria-label="Clear search">✕</button>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="learn" role="tab" aria-selected="true">Learning Path</button>
+      <button class="tab" data-tab="prep" role="tab" aria-selected="false">Interview &amp; Scenarios</button>
+    </div>
+
+    <nav class="tree" id="treeLearn"></nav>
+    <nav class="tree" id="treePrep" hidden></nav>
+
+    <div class="progress-box">
+      <div class="progress-labels">
+        <span>Progress</span>
+        <span id="progressCount">0 / 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+  </aside>
+
+  <div class="sidebar-scrim" id="sidebarScrim"></div>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+      <div class="crumb" id="crumb">
+        <span class="crumb-item">Home</span>
+      </div>
+      <div class="topbar-links" id="topLinks"></div>
+    </header>
+
+    <!-- HOME / HERO VIEW -->
+    <section class="view home-view" id="homeView">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="pulse-dot"></span> QA · Automation · Interview-Ready
+        </div>
+        <h1 class="hero-title">Trace every path<br> from <span class="grad">manual&nbsp;testing</span> to <span class="grad">automation&nbsp;mastery</span>.</h1>
+        <p class="hero-sub">One map for Agile, JIRA, ISTQB, Core Java, Selenium, Playwright, API testing, SQL, frameworks, CI/CD and the interview rounds that follow. Pick a node in the sidebar and follow the trace.</p>
+
+        <svg class="hero-circuit" viewBox="0 0 900 140" preserveAspectRatio="none" aria-hidden="true">
+          <path class="circuit-path" d="M0,70 L120,70 L150,40 L260,40 L290,70 L420,70 L450,100 L560,100 L590,70 L720,70 L750,40 L900,40" />
+          <circle class="circuit-node" cx="150" cy="40" r="4"></circle>
+          <circle class="circuit-node" cx="290" cy="70" r="4"></circle>
+          <circle class="circuit-node" cx="450" cy="100" r="4"></circle>
+          <circle class="circuit-node" cx="590" cy="70" r="4"></circle>
+          <circle class="circuit-node" cx="750" cy="40" r="4"></circle>
+          <circle class="circuit-pulse" r="5"><animateMotion dur="4.5s" repeatCount="indefinite" path="M0,70 L120,70 L150,40 L260,40 L290,70 L420,70 L450,100 L560,100 L590,70 L720,70 L750,40 L900,40"/></circle>
+        </svg>
+      </div>
+
+      <div class="quick-section">
+        <h2 class="section-label">Practice &amp; reference decks</h2>
+        <div class="quick-grid" id="quickGrid"></div>
+      </div>
+
+      <div class="quick-section">
+        <h2 class="section-label">Jump back in</h2>
+        <div class="stat-row" id="statRow"></div>
+      </div>
+    </section>
+
+    <!-- TOPIC DETAIL VIEW -->
+    <section class="view topic-view" id="topicView" hidden>
+      <div class="topic-head">
+        <span class="topic-icon" id="topicIcon">📄</span>
+        <div>
+          <div class="topic-path" id="topicPath"></div>
+          <h1 class="topic-title" id="topicTitle">Topic</h1>
+        </div>
+        <button class="mark-btn" id="markBtn">Mark as reviewed</button>
+      </div>
+
+      <svg class="divider-circuit" viewBox="0 0 900 24" preserveAspectRatio="none" aria-hidden="true">
+        <path class="circuit-path thin" d="M0,12 L860,12 L880,4 L900,4"/>
+        <circle class="circuit-node" cx="860" cy="12" r="3"></circle>
       </svg>
 
-      <div class="hero-inner">
-        <div>
-          <span class="eyebrow"><span class="dot"></span> Automation Testing · Learning Hub</span>
-          <h1>Learn to build, break and <span>automate</span> real software.</h1>
-          <p class="lead">Tech Source — Java, Selenium, Playwright, API, SQL, frameworks, Git, Agile and more </p>
-          <div class="hero-ctas">
-            <a href="#/courses" data-link class="btn btn-primary">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5z"/><path d="M20 5.5C20 4.7 19.3 4 18.5 4H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"/></svg>
-              Browse Courses
-            </a>
-            <a href="#/compiler" data-link class="btn btn-ghost">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13 6l-2 12"/></svg>
-              Open Java Compiler
-            </a>
-          </div>
+      <div class="topic-body" id="topicBody"></div>
 
-          <div class="stats" id="statsRow">
-            <div class="stat"><b data-count="0" id="statFiles">0</b><span>PDF RESOURCES</span></div>
-            <div class="stat"><b data-count="0" id="statTopics">0</b><span>TOPIC AREAS</span></div>
-            <div class="stat"><b data-count="3">0</b><span>PRACTICE TOOLS</span></div>
-            <div class="stat"><b data-count="2">0</b><span>DISPLAY MODES</span></div>
-          </div>
-        </div>
-
-        <div class="hero-visual">
-          <div class="hero-ring" aria-hidden="true"></div>
-          <div class="hero-badge"><img src="Media.jpg" alt="Tech Source"></div>
-        </div>
+      <div class="topic-nav">
+        <button class="nav-arrow" id="prevBtn">← Previous</button>
+        <button class="nav-arrow" id="nextBtn">Next →</button>
       </div>
     </section>
 
-    <section class="section wrap" id="recentSection" hidden>
-      <div class="section-head">
-        <div class="circuit-rule"><span class="dot"></span></div>
-        <h2>Jump back in</h2>
-        <p>The resources you opened most recently.</p>
-      </div>
-      <div class="grid grid-4" id="recentGrid"></div>
-    </section>
-
-    <section class="section wrap">
-      <div class="section-head">
-        <div class="circuit-rule"><span class="dot"></span></div>
-        <h2>Where do you want to start?</h2>
-        <p>Jump straight into a topic, or head to Courses to see everything at once with search and filters.</p>
-      </div>
-      <div class="grid grid-4 reveal-group" id="homeCatGrid"></div>
-    </section>
-
-    <section class="section wrap">
-      <div class="section-head">
-        <div class="circuit-rule"><span class="dot"></span></div>
-        <h2>Practice while you learn</h2>
-        <p>Three external tools, always one click away — opened safely in a new tab so your place here is never lost.</p>
-      </div>
-      <div class="grid grid-3 reveal-group" id="homeToolsGrid"></div>
-    </section>
-  </section>
-
-  <!-- ============ COURSES VIEW ============ -->
-  <section class="view" id="view-courses" data-view="courses">
-    <section class="section wrap" style="padding-top:44px;">
-      <div class="section-head">
-        <div class="circuit-rule"><span class="dot"></span></div>
-        <h2>All course resources</h2>
-        <p>Every PDF from the pack, grouped by topic. Search by keyword, filter by category, or press <kbd>/</kbd> to jump to search.</p>
-      </div>
-
-      <div class="courses-layout">
-        <aside class="side-panel">
-          <h4>Topics</h4>
-          <ul class="cat-list" id="catList"></ul>
-        </aside>
-
-        <div>
-          <div class="search-box">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-            <input id="searchInput" type="text" placeholder="Search resources, e.g. &quot;Cucumber&quot; or &quot;Java 12&quot;" aria-label="Search resources">
-            <kbd class="kbd-hint">/</kbd>
-          </div>
-
-          <div class="res-header">
-            <h3 id="resTitle">All Topics</h3>
-            <span class="res-count" id="resCount"></span>
-          </div>
-
-          <div class="file-grid" id="fileGrid"></div>
-          <div class="empty-state" id="emptyState" hidden>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M9 16h6M9 8h2"/><path d="M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"/></svg>
-            <p>No resources match that search. Try a different keyword.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </section>
-
-  <!-- ============ COMPILER / PRACTICE VIEW ============ -->
-  <section class="view" id="view-compiler" data-view="compiler">
-    <section class="section wrap" style="padding-top:44px;">
-      <div class="section-head">
-        <div class="circuit-rule"><span class="dot"></span></div>
-        <h2>Compiler &amp; Practice</h2>
-        <p>Three trusted external tools for hands-on practice. Each opens in a new tab, so this hub — and your place in it — stays right where you left it.</p>
-      </div>
-
-      <div class="grid grid-3 reveal-group" id="toolsGrid"></div>
-
-      <div class="tip-banner">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-        <p><strong>Tip:</strong> these are independent, third-party sites — Tech Source links out to them but doesn't control their content or availability. If a pop-up blocker stops a tab from opening, allow pop-ups for this page, or right-click a button and choose "Open link in new tab".</p>
-      </div>
-    </section>
-  </section>
-
-</main>
-
-<footer>
-  <div class="wrap footer-inner">
-    <span class="fbrand"><img src="Media.jpg" alt=""> Tech Source — Creativity at it's peak!</span>
-    <span>Single-page learning hub · Press <kbd>/</kbd> to search · Toggle night mode anytime.</span>
-  </div>
-</footer>
+  </main>
+</div>
 
 <script src="main.js"></script>
 </body>
