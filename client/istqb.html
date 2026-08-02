@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISTQB® CTFL v4.0.1 — Study Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0F2436;
+    --ink-2:#16324a;
+    --paper:#F5F6F3;
+    --panel:#FFFFFF;
+    --line:#DCE2E4;
+    --teal:#0E8C7F;
+    --teal-dark:#0A6B61;
+    --amber:#C77B25;
+    --coral:#C15B4C;
+    --slate:#3E4A52;
+    --slate-soft:#6B7780;
+    --k1:#3E7CB1;
+    --k2:#0E8C7F;
+    --k3:#C15B4C;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--slate);
+    font-family:'IBM Plex Sans', -apple-system, sans-serif;
+    line-height:1.55;
+  }
+  ::selection{ background:var(--teal); color:#fff; }
+
+  /* ===== Layout shell ===== */
+  .shell{
+    display:grid;
+    grid-template-columns: 268px 1fr;
+    min-height:100vh;
+  }
+  @media (max-width: 860px){
+    .shell{ grid-template-columns: 1fr; }
+    .sidebar{ position:relative; height:auto; }
+  }
+
+  /* ===== Sidebar ===== */
+  .sidebar{
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+    background:var(--ink);
+    color:#cfe0e4;
+    padding:28px 20px 40px;
+    border-right:1px solid #08202f;
+  }
+  .brand{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--teal); opacity:.9; margin-bottom:6px;
+  }
+  .brand-title{
+    font-family:'IBM Plex Serif', serif;
+    font-weight:700; font-size:22px; color:#fff; line-height:1.2; margin:0 0 4px;
+  }
+  .brand-sub{
+    font-size:12.5px; color:#93a6ae; margin-bottom:26px;
+  }
+  .nav-group-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+    color:#5f7580; margin:22px 0 8px;
+  }
+  .navlink{
+    display:flex; align-items:baseline; gap:10px;
+    padding:7px 8px; border-radius:7px;
+    color:#cfe0e4; text-decoration:none; font-size:13.5px;
+    transition:background .15s ease, color .15s ease;
+  }
+  .navlink:hover{ background:#132f42; color:#fff; }
+  .navlink.active{ background:#123549; color:#fff; }
+  .navlink .num{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--teal);
+    min-width:20px;
+  }
+  .navlink .mins{
+    margin-left:auto; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:#5f7580;
+  }
+  .sidebar-foot{
+    margin-top:30px; padding-top:16px; border-top:1px solid #1c3b4e;
+    font-size:11.5px; color:#5f7580;
+  }
+
+  /* ===== Main ===== */
+  main{ min-width:0; }
+
+  .hero{
+    padding:64px 56px 46px;
+    background:
+      radial-gradient(1200px 400px at 85% -10%, rgba(14,140,127,.18), transparent 60%),
+      linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 100%);
+    color:#f2f6f5;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero:before{
+    content:"";
+    position:absolute; inset:0;
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 1px, transparent 1px 64px);
+    pointer-events:none;
+  }
+  .hero-eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--teal); margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .hero-eyebrow .dot{ width:7px; height:7px; border-radius:50%; background:var(--teal); box-shadow:0 0 0 4px rgba(14,140,127,.25);}
+  h1.hero-title{
+    font-family:'IBM Plex Serif', serif; font-weight:700;
+    font-size:clamp(34px, 4.4vw, 54px); line-height:1.05; margin:0 0 18px; max-width:780px;
+  }
+  .hero-title em{ color:var(--teal); font-style:normal; }
+  .hero-desc{ max-width:640px; color:#b9c8ca; font-size:16px; margin-bottom:34px; }
+  .hero-stats{
+    display:flex; gap:0; flex-wrap:wrap; border-top:1px solid rgba(255,255,255,.12);
+  }
+  .stat{ padding:18px 30px 4px 0; margin-right:30px; border-right:1px solid rgba(255,255,255,.12); }
+  .stat:last-child{ border-right:none; }
+  .stat-num{ font-family:'IBM Plex Mono', monospace; font-size:26px; color:#fff; font-weight:600; }
+  .stat-label{ font-size:11.5px; color:#8fa3a8; letter-spacing:.04em; margin-top:2px; }
+
+  .content{ padding:8px 56px 100px; max-width:980px; }
+  @media (max-width: 700px){
+    .hero{ padding:44px 24px 30px; }
+    .content{ padding:8px 24px 80px; }
+  }
+
+  section.chapter{
+    padding-top:56px; scroll-margin-top:20px;
+  }
+  section.chapter + section.chapter{ border-top:1px solid var(--line); margin-top:40px; }
+
+  .chapter-kicker{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--teal-dark);
+    letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px; display:flex; gap:14px; align-items:center;
+  }
+  .chapter-kicker .time-pill{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; background:#e7f3f1; color:var(--teal-dark);
+    padding:3px 9px; border-radius:20px; border:1px solid #cfe6e2;
+  }
+  h2.chapter-title{
+    font-family:'IBM Plex Serif', serif; font-size:32px; margin:0 0 18px; color:var(--ink);
+  }
+
+  .keywords{
+    display:flex; flex-wrap:wrap; gap:8px; margin:18px 0 30px;
+  }
+  .kw{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px;
+    background:var(--panel); border:1px solid var(--line); color:var(--slate);
+    padding:5px 10px; border-radius:6px;
+  }
+
+  .lo-table{
+    width:100%; border-collapse:collapse; margin:14px 0 32px;
+    background:var(--panel); border:1px solid var(--line); border-radius:10px; overflow:hidden;
+  }
+  .lo-table caption{
+    text-align:left; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--slate-soft); padding:10px 4px; caption-side:top;
+  }
+  .lo-table th{
+    text-align:left; font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--slate-soft); background:#f4f6f5; padding:10px 14px; border-bottom:1px solid var(--line);
+    font-family:'IBM Plex Mono', monospace; font-weight:600;
+  }
+  .lo-table td{
+    padding:11px 14px; border-bottom:1px solid var(--line); font-size:13.6px; vertical-align:top;
+  }
+  .lo-table tr:last-child td{ border-bottom:none; }
+  .lo-id{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--slate-soft); white-space:nowrap; }
+  .klevel{
+    display:inline-block; font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:11px;
+    width:26px; height:20px; line-height:20px; text-align:center; border-radius:5px; color:#fff;
+  }
+  .klevel.k1{ background:var(--k1); }
+  .klevel.k2{ background:var(--k2); }
+  .klevel.k3{ background:var(--k3); }
+
+  h3.sub{
+    font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:18px; color:var(--ink);
+    margin:34px 0 10px; padding-left:14px; border-left:3px solid var(--teal);
+  }
+  h4.subsub{
+    font-size:14.5px; font-weight:600; color:var(--ink-2); margin:20px 0 6px;
+  }
+  p{ margin:0 0 12px; font-size:14.8px; }
+  ul.tick, ol.tick{ margin:0 0 14px; padding-left:0; list-style:none; }
+  ul.tick li, ol.tick li{
+    position:relative; padding:3px 0 3px 22px; font-size:14.8px;
+  }
+  ul.tick li:before{
+    content:"›"; position:absolute; left:2px; top:2px; color:var(--teal); font-weight:700; font-size:15px;
+  }
+  ol.tick{ counter-reset:step; }
+  ol.tick li{ counter-increment:step; }
+  ol.tick li:before{
+    content:counter(step); position:absolute; left:0; top:2px; color:var(--teal-dark);
+    font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:11px;
+    background:#e7f3f1; width:16px; height:16px; line-height:16px; text-align:center; border-radius:4px;
+  }
+
+  .callout{
+    background:#fff; border:1px solid var(--line); border-left:4px solid var(--amber);
+    border-radius:8px; padding:14px 18px; margin:16px 0 24px; font-size:13.8px;
+  }
+  .callout strong{ color:var(--ink); }
+
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0 26px; }
+  @media (max-width:640px){ .grid2{ grid-template-columns:1fr; } }
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px 18px;
+  }
+  .card h4{ margin:0 0 8px; font-size:13.5px; color:var(--ink); font-family:'IBM Plex Mono', monospace; letter-spacing:.02em;}
+  .card p, .card ul{ font-size:13.4px; margin:0; }
+  .card ul{ padding-left:18px; }
+  .card ul li{ margin-bottom:4px; }
+
+  table.datatable{ width:100%; border-collapse:collapse; margin:14px 0 26px; font-size:13.4px; }
+  table.datatable th{ text-align:left; background:#f4f6f5; padding:8px 12px; border:1px solid var(--line); font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--slate-soft);}
+  table.datatable td{ padding:8px 12px; border:1px solid var(--line); }
+
+  .k-legend{
+    display:flex; gap:18px; flex-wrap:wrap; margin:10px 0 30px; font-size:12.5px; color:var(--slate-soft);
+  }
+  .k-legend span.dot{ display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:-1px;}
+
+  /* Back to top */
+  .totop{
+    position:fixed; right:26px; bottom:26px; width:42px; height:42px; border-radius:50%;
+    background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center;
+    text-decoration:none; box-shadow:0 6px 18px rgba(0,0,0,.18); opacity:0; pointer-events:none;
+    transition:opacity .2s ease;
+    font-family:'IBM Plex Mono', monospace; font-size:16px;
+  }
+  .totop.show{ opacity:1; pointer-events:auto; }
+
+  .appendix-strip{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; margin:20px 0 40px;
+  }
+  .app-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px;
+  }
+  .app-card .tag{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--teal-dark); text-transform:uppercase; letter-spacing:.08em;}
+  .app-card h5{ margin:6px 0 6px; font-size:14.5px; color:var(--ink); }
+  .app-card p{ font-size:12.8px; margin:0; color:var(--slate-soft); }
+
+  footer.pagefoot{
+    padding:30px 56px 60px; color:var(--slate-soft); font-size:12px; border-top:1px solid var(--line);
+    font-family:'IBM Plex Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- ============ SIDEBAR ============ -->
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">ISTQB® · v4.0.1</div>
+    <div class="brand-title">CTFL Study Reference</div>
+    <div class="brand-sub">Certified Tester Foundation Level Syllabus — condensed &amp; navigable</div>
+
+    <div class="nav-group-label">Orientation</div>
+    <a class="navlink" href="#intro"><span class="num">00</span> Introduction &amp; outcomes</a>
+
+    <div class="nav-group-label">Chapters</div>
+    <a class="navlink" href="#ch1"><span class="num">01</span> Fundamentals of Testing <span class="mins">180m</span></a>
+    <a class="navlink" href="#ch2"><span class="num">02</span> Testing Throughout the SDLC <span class="mins">130m</span></a>
+    <a class="navlink" href="#ch3"><span class="num">03</span> Static Testing <span class="mins">80m</span></a>
+    <a class="navlink" href="#ch4"><span class="num">04</span> Test Analysis &amp; Design <span class="mins">390m</span></a>
+    <a class="navlink" href="#ch5"><span class="num">05</span> Managing Test Activities <span class="mins">335m</span></a>
+    <a class="navlink" href="#ch6"><span class="num">06</span> Test Tools <span class="mins">20m</span></a>
+
+    <div class="nav-group-label">Reference</div>
+    <a class="navlink" href="#appendix">Appendices &amp; K-levels</a>
+
+    <div class="sidebar-foot">
+      Total instruction time: <strong style="color:#cfe0e4">1135 min</strong> (18h 55m)<br>
+      Released 15 Sep 2024 · Errata edition
+    </div>
+  </nav>
+
+  <!-- ============ MAIN ============ -->
+  <main>
+    <div class="hero">
+      <div class="hero-eyebrow"><span class="dot"></span> International Software Testing Qualifications Board</div>
+      <h1 class="hero-title">Certified Tester <em>Foundation Level</em> — Syllabus v4.0.1</h1>
+      <p class="hero-desc">A condensed, navigable reference built from the official ISTQB® CTFL syllabus: six examinable chapters, every learning objective, keyword set, and cognitive level (K1–K3), organized for quick review and exam prep.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">6</div><div class="stat-label">Examinable chapters</div></div>
+        <div class="stat"><div class="stat-num">40</div><div class="stat-label">Learning objectives</div></div>
+        <div class="stat"><div class="stat-num">14</div><div class="stat-label">Business outcomes</div></div>
+        <div class="stat"><div class="stat-num">18h55</div><div class="stat-label">Min. instruction time</div></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ============ INTRO ============ -->
+      <section class="chapter" id="intro">
+        <div class="chapter-kicker">00 · Orientation</div>
+        <h2 class="chapter-title">Introduction &amp; Business Outcomes</h2>
+        <p>The syllabus is the basis for the Foundation Level exam and serves member boards, certification bodies, training providers, and candidates. It's aimed at anyone touching software testing — testers, analysts, developers, product owners, and managers — and is the entry point to ISTQB's Core Advanced, Expert, Agile, and Specialist certification tracks.</p>
+
+        <h3 class="sub">14 Business Outcomes</h3>
+        <p>Every learning objective in the syllabus traces back to one of these outcomes — what a certified tester can actually <em style="color:var(--ink);font-style:normal;font-weight:600;">do</em> after passing.</p>
+        <div class="grid2">
+          <div class="card"><h4>BO1–BO4</h4><ul>
+            <li>Understand what testing is &amp; why it's beneficial</li>
+            <li>Understand fundamental testing concepts</li>
+            <li>Select test approach &amp; activities by context</li>
+            <li>Assess and improve documentation quality</li>
+          </ul></div>
+          <div class="card"><h4>BO5–BO8</h4><ul>
+            <li>Increase test effectiveness &amp; efficiency</li>
+            <li>Align testing with the SDLC</li>
+            <li>Understand test management principles</li>
+            <li>Write clear, understandable defect reports</li>
+          </ul></div>
+          <div class="card"><h4>BO9–BO11</h4><ul>
+            <li>Understand priority/effort drivers in testing</li>
+            <li>Work as part of a cross-functional team</li>
+            <li>Know risks &amp; benefits of test automation</li>
+          </ul></div>
+          <div class="card"><h4>BO12–BO14</h4><ul>
+            <li>Identify essential testing skills</li>
+            <li>Understand risk's impact on testing</li>
+            <li>Effectively report progress &amp; quality</li>
+          </ul></div>
+        </div>
+
+        <div class="callout"><strong>Cognitive levels.</strong> All content is examinable at K1. Each learning objective additionally carries K1 (Remember), K2 (Understand), or K3 (Apply) — see the legend in the Appendix section.</div>
+      </section>
+
+      <!-- ============ CHAPTER 1 ============ -->
+      <section class="chapter" id="ch1">
+        <div class="chapter-kicker">01 · Chapter <span class="time-pill">180 minutes</span></div>
+        <h2 class="chapter-title">Fundamentals of Testing</h2>
+
+        <div class="keywords">
+          <span class="kw">coverage</span><span class="kw">debugging</span><span class="kw">defect</span><span class="kw">error</span>
+          <span class="kw">failure</span><span class="kw">quality</span><span class="kw">quality assurance</span><span class="kw">root cause</span>
+          <span class="kw">test analysis</span><span class="kw">test basis</span><span class="kw">test case</span><span class="kw">test condition</span>
+          <span class="kw">test control</span><span class="kw">test data</span><span class="kw">test design</span><span class="kw">test execution</span>
+          <span class="kw">test monitoring</span><span class="kw">test object</span><span class="kw">test objective</span><span class="kw">test planning</span>
+          <span class="kw">test procedure</span><span class="kw">test process</span><span class="kw">test result</span><span class="kw">testware</span>
+          <span class="kw">traceability</span><span class="kw">validation</span><span class="kw">verification</span>
+        </div>
+
+        <table class="lo-table">
+          <caption>Learning objectives — Chapter 1</caption>
+          <tr><th>ID</th><th>K</th><th>Objective</th></tr>
+          <tr><td class="lo-id">FL-1.1.1</td><td><span class="klevel k1">K1</span></td><td>Identify typical test objectives</td></tr>
+          <tr><td class="lo-id">FL-1.1.2</td><td><span class="klevel k2">K2</span></td><td>Differentiate testing from debugging</td></tr>
+          <tr><td class="lo-id">FL-1.2.1</td><td><span class="klevel k2">K2</span></td><td>Exemplify why testing is necessary</td></tr>
+          <tr><td class="lo-id">FL-1.2.2</td><td><span class="klevel k1">K1</span></td><td>Recall the relation between testing and QA</td></tr>
+          <tr><td class="lo-id">FL-1.2.3</td><td><span class="klevel k2">K2</span></td><td>Distinguish root cause, error, defect, failure</td></tr>
+          <tr><td class="lo-id">FL-1.3.1</td><td><span class="klevel k2">K2</span></td><td>Explain the seven testing principles</td></tr>
+          <tr><td class="lo-id">FL-1.4.1</td><td><span class="klevel k2">K2</span></td><td>Explain test activities and related tasks</td></tr>
+          <tr><td class="lo-id">FL-1.4.2</td><td><span class="klevel k2">K2</span></td><td>Explain the impact of context on the test process</td></tr>
+          <tr><td class="lo-id">FL-1.4.3</td><td><span class="klevel k2">K2</span></td><td>Differentiate testware supporting test activities</td></tr>
+          <tr><td class="lo-id">FL-1.4.4</td><td><span class="klevel k2">K2</span></td><td>Explain the value of maintaining traceability</td></tr>
+          <tr><td class="lo-id">FL-1.4.5</td><td><span class="klevel k2">K2</span></td><td>Compare the different roles in testing</td></tr>
+          <tr><td class="lo-id">FL-1.5.1</td><td><span class="klevel k2">K2</span></td><td>Give examples of generic skills required for testing</td></tr>
+          <tr><td class="lo-id">FL-1.5.2</td><td><span class="klevel k1">K1</span></td><td>Recall the advantages of the whole team approach</td></tr>
+          <tr><td class="lo-id">FL-1.5.3</td><td><span class="klevel k2">K2</span></td><td>Distinguish benefits/drawbacks of test independence</td></tr>
+        </table>
+
+        <h3 class="sub">1.1 · What is Testing?</h3>
+        <p>Testing is a set of activities to <strong>discover defects</strong> and <strong>evaluate quality</strong> of work products (test objects). It's more than execution — it includes planning, analysis, design, implementation, and completion. Testing covers both <strong>verification</strong> ("did we build it to spec?") and <strong>validation</strong> ("did we build the right thing for the user?"). It can be <strong>dynamic</strong> (executing software) or <strong>static</strong> (no execution — reviews, static analysis).</p>
+        <p>Typical objectives: evaluate work products, cause failures &amp; find defects, ensure coverage, reduce risk of poor quality, verify requirements/compliance, inform stakeholder decisions, build confidence, and validate the object meets stakeholder expectations.</p>
+
+        <h4 class="subsub">Testing vs. debugging</h4>
+        <p>Testing finds/triggers defects; debugging (a development activity) reproduces, diagnoses, and fixes them. After a fix: <strong>confirmation testing</strong> checks the original defect is gone; <strong>regression testing</strong> checks nothing else broke.</p>
+
+        <h3 class="sub">1.2 · Why is Testing Necessary?</h3>
+        <ul class="tick">
+          <li>Cost-effective defect detection → indirectly raises quality (defects are removed via debugging)</li>
+          <li>Direct quality evaluation feeding release decisions across the SDLC</li>
+          <li>Gives users indirect representation in the project</li>
+          <li>May be mandated by contracts, law, or regulation</li>
+        </ul>
+        <h4 class="subsub">Testing vs. Quality Assurance</h4>
+        <p>Testing is <strong>product-oriented &amp; corrective</strong> (a form of quality control). QA is <strong>process-oriented &amp; preventive</strong> — good process ⇒ good product — and is everyone's responsibility.</p>
+        <h4 class="subsub">Errors → Defects → Failures</h4>
+        <p>Human <strong>errors</strong> (mistakes) create <strong>defects</strong> (bugs); an executed defect may cause a <strong>failure</strong>. Not all defects fail every time; failures can also come from environmental conditions. <strong>Root cause analysis</strong> targets the underlying reason to prevent recurrence.</p>
+
+        <h3 class="sub">1.3 · The Seven Testing Principles</h3>
+        <ol class="tick">
+          <li><strong>Testing shows presence, not absence, of defects.</strong> It reduces undiscovered defects but can't prove correctness.</li>
+          <li><strong>Exhaustive testing is impossible.</strong> Use techniques, prioritization, and risk to focus effort.</li>
+          <li><strong>Early testing saves time and money.</strong> Start static and dynamic testing as early as possible.</li>
+          <li><strong>Defects cluster together</strong> (Pareto principle) — predicted/observed clusters drive risk-based testing.</li>
+          <li><strong>Tests wear out.</strong> Repeated tests lose power to find new defects; vary and refresh them.</li>
+          <li><strong>Testing is context dependent.</strong> No universal approach fits every project.</li>
+          <li><strong>Absence-of-defects is a fallacy.</strong> A bug-free system can still fail to meet real user needs — validation matters too.</li>
+        </ol>
+
+        <h3 class="sub">1.4 · Test Activities, Testware &amp; Roles</h3>
+        <table class="datatable">
+          <tr><th>Activity</th><th>Answers</th><th>Typical outputs</th></tr>
+          <tr><td>Test planning</td><td>What's the approach?</td><td>Test plan, schedule, risk register</td></tr>
+          <tr><td>Monitoring &amp; control</td><td>Are we on track?</td><td>Progress reports, control directives</td></tr>
+          <tr><td>Test analysis</td><td>What to test?</td><td>Test conditions, defect reports on basis</td></tr>
+          <tr><td>Test design</td><td>How to test?</td><td>Test cases, charters, coverage items</td></tr>
+          <tr><td>Test implementation</td><td>Are we ready?</td><td>Scripts, test suites, execution schedule</td></tr>
+          <tr><td>Test execution</td><td>Running tests</td><td>Test logs, defect reports</td></tr>
+          <tr><td>Test completion</td><td>Wrapping up</td><td>Completion report, lessons learned</td></tr>
+        </table>
+        <p><strong>Context factors</strong> shaping the process: stakeholders, team skills, business domain, technical factors, project constraints, org factors, SDLC model, and tooling.</p>
+        <p><strong>Traceability</strong> links test basis ↔ testware ↔ results ↔ defects — it drives coverage evaluation, impact analysis, audits, and clearer reporting.</p>
+        <p><strong>Two principal roles:</strong> <em>test management</em> (planning, monitoring, control, completion) and <em>testing</em> (analysis, design, implementation, execution) — one person can hold both.</p>
+
+        <h3 class="sub">1.5 · Essential Skills &amp; Good Practices</h3>
+        <div class="grid2">
+          <div class="card"><h4>Generic skills</h4><ul>
+            <li>Testing &amp; domain knowledge</li>
+            <li>Thoroughness, curiosity, attention to detail</li>
+            <li>Communication &amp; active listening</li>
+            <li>Analytical/critical thinking, creativity</li>
+            <li>Technical knowledge</li>
+          </ul></div>
+          <div class="card"><h4>Independence of testing</h4><ul>
+            <li>None → author tests own work</li>
+            <li>Some → peer from same team</li>
+            <li>High → tester outside the team</li>
+            <li>Very high → tester outside the org</li>
+            <li>Benefit: fresh perspective; risk: isolation from dev team</li>
+          </ul></div>
+        </div>
+        <p>The <strong>whole team approach</strong> (from Extreme Programming) has any skilled member perform any task, with shared responsibility for quality — great for collaboration, but not always appropriate (e.g., safety-critical systems may need higher independence).</p>
+      </section>
+
+      <!-- ============ CHAPTER 2 ============ -->
+      <section class="chapter" id="ch2">
+        <div class="chapter-kicker">02 · Chapter <span class="time-pill">130 minutes</span></div>
+        <h2 class="chapter-title">Testing Throughout the SDLC</h2>
+
+        <div class="keywords">
+          <span class="kw">acceptance testing</span><span class="kw">black-box testing</span><span class="kw">component integration testing</span>
+          <span class="kw">component testing</span><span class="kw">confirmation testing</span><span class="kw">functional testing</span>
+          <span class="kw">integration testing</span><span class="kw">maintenance testing</span><span class="kw">non-functional testing</span>
+          <span class="kw">regression testing</span><span class="kw">shift left</span><span class="kw">system integration testing</span>
+          <span class="kw">system testing</span><span class="kw">test level</span><span class="kw">test object</span><span class="kw">test type</span>
+          <span class="kw">white-box testing</span>
+        </div>
+
+        <table class="lo-table">
+          <caption>Learning objectives — Chapter 2</caption>
+          <tr><th>ID</th><th>K</th><th>Objective</th></tr>
+          <tr><td class="lo-id">FL-2.1.1</td><td><span class="klevel k2">K2</span></td><td>Explain the impact of the chosen SDLC on testing</td></tr>
+          <tr><td class="lo-id">FL-2.1.2</td><td><span class="klevel k1">K1</span></td><td>Recall good testing practices across all SDLCs</td></tr>
+          <tr><td class="lo-id">FL-2.1.3</td><td><span class="klevel k1">K1</span></td><td>Recall test-first approach examples</td></tr>
+          <tr><td class="lo-id">FL-2.1.4</td><td><span class="klevel k2">K2</span></td><td>Summarize DevOps's impact on testing</td></tr>
+          <tr><td class="lo-id">FL-2.1.5</td><td><span class="klevel k2">K2</span></td><td>Explain shift left</td></tr>
+          <tr><td class="lo-id">FL-2.1.6</td><td><span class="klevel k2">K2</span></td><td>Explain retrospectives as process improvement</td></tr>
+          <tr><td class="lo-id">FL-2.2.1</td><td><span class="klevel k2">K2</span></td><td>Distinguish the different test levels</td></tr>
+          <tr><td class="lo-id">FL-2.2.2</td><td><span class="klevel k2">K2</span></td><td>Distinguish the different test types</td></tr>
+          <tr><td class="lo-id">FL-2.2.3</td><td><span class="klevel k2">K2</span></td><td>Distinguish confirmation vs regression testing</td></tr>
+          <tr><td class="lo-id">FL-2.3.1</td><td><span class="klevel k2">K2</span></td><td>Summarize maintenance testing and its triggers</td></tr>
+        </table>
+
+        <h3 class="sub">2.1 · SDLC Context</h3>
+        <p>SDLC models: <strong>sequential</strong> (waterfall, V-model), <strong>iterative</strong> (spiral, prototyping), <strong>incremental</strong> (Unified Process) — plus finer-grained methods like ATDD, BDD, DDD, XP, FDD, Kanban, Lean IT, Scrum, TDD. The chosen model impacts test scope/timing, documentation detail, technique choice, automation extent, and tester responsibilities.</p>
+        <div class="grid2">
+          <div class="card"><h4>Test-first approaches</h4><ul>
+            <li><strong>TDD</strong> — write test, then code, then refactor</li>
+            <li><strong>ATDD</strong> — derive tests from acceptance criteria before building</li>
+            <li><strong>BDD</strong> — Given/When/Then natural-language behavior specs</li>
+          </ul></div>
+          <div class="card"><h4>DevOps &amp; testing</h4><ul>
+            <li>Fast feedback via CI/CD pipelines</li>
+            <li>Promotes shift left; stable, automated environments</li>
+            <li>Risk: pipeline/tooling upkeep, automation resourcing</li>
+          </ul></div>
+        </div>
+        <p><strong>Shift left</strong> = perform testing earlier (review specs, write tests before code, static analysis before dynamic, non-functional testing from component level) — without neglecting later-stage testing. <strong>Retrospectives</strong> (what worked / what didn't / how to improve) drive continuous improvement and feed the test completion report.</p>
+
+        <h3 class="sub">2.2 · Test Levels &amp; Test Types</h3>
+        <table class="datatable">
+          <tr><th>Level</th><th>Focus</th></tr>
+          <tr><td>Component testing</td><td>Individual components in isolation (usually by developers)</td></tr>
+          <tr><td>Component integration testing</td><td>Interfaces/interactions between components</td></tr>
+          <tr><td>System testing</td><td>Whole system behavior, functional + non-functional</td></tr>
+          <tr><td>System integration testing</td><td>Interfaces between the system and external systems/services</td></tr>
+          <tr><td>Acceptance testing</td><td>Validation &amp; deployment readiness — UAT, operational, contractual, regulatory, alpha/beta</td></tr>
+        </table>
+        <table class="datatable">
+          <tr><th>Type</th><th>Question it answers</th></tr>
+          <tr><td>Functional</td><td>What should the system do?</td></tr>
+          <tr><td>Non-functional</td><td>How well does it behave? (performance, usability, security, reliability…)</td></tr>
+          <tr><td>Black-box</td><td>Does behavior match spec? (no internal structure knowledge)</td></tr>
+          <tr><td>White-box</td><td>Is the internal structure adequately exercised?</td></tr>
+        </table>
+        <p><strong>Confirmation testing</strong> re-checks that a specific defect is fixed. <strong>Regression testing</strong> checks that a change hasn't broken anything else — a prime automation candidate, especially under CI.</p>
+
+        <h3 class="sub">2.3 · Maintenance Testing</h3>
+        <p>Triggered by <strong>modifications</strong> (planned enhancements, corrective fixes, hot fixes), <strong>upgrades/migrations</strong> of the operational environment, or <strong>retirement</strong> of a system (data archiving/restore testing). Scope depends on change risk, system size, and change size.</p>
+      </section>
+
+      <!-- ============ CHAPTER 3 ============ -->
+      <section class="chapter" id="ch3">
+        <div class="chapter-kicker">03 · Chapter <span class="time-pill">80 minutes</span></div>
+        <h2 class="chapter-title">Static Testing</h2>
+
+        <div class="keywords">
+          <span class="kw">anomaly</span><span class="kw">dynamic testing</span><span class="kw">formal review</span>
+          <span class="kw">informal review</span><span class="kw">inspection</span><span class="kw">review</span>
+          <span class="kw">static analysis</span><span class="kw">static testing</span><span class="kw">technical review</span><span class="kw">walkthrough</span>
+        </div>
+
+        <table class="lo-table">
+          <caption>Learning objectives — Chapter 3</caption>
+          <tr><th>ID</th><th>K</th><th>Objective</th></tr>
+          <tr><td class="lo-id">FL-3.1.1</td><td><span class="klevel k1">K1</span></td><td>Recognize work products examinable by static testing</td></tr>
+          <tr><td class="lo-id">FL-3.1.2</td><td><span class="klevel k2">K2</span></td><td>Explain the value of static testing</td></tr>
+          <tr><td class="lo-id">FL-3.1.3</td><td><span class="klevel k2">K2</span></td><td>Compare static and dynamic testing</td></tr>
+          <tr><td class="lo-id">FL-3.2.1</td><td><span class="klevel k1">K1</span></td><td>Identify benefits of early/frequent stakeholder feedback</td></tr>
+          <tr><td class="lo-id">FL-3.2.2</td><td><span class="klevel k2">K2</span></td><td>Summarize review process activities</td></tr>
+          <tr><td class="lo-id">FL-3.2.3</td><td><span class="klevel k1">K1</span></td><td>Recall responsibilities of principal review roles</td></tr>
+          <tr><td class="lo-id">FL-3.2.4</td><td><span class="klevel k2">K2</span></td><td>Compare the different review types</td></tr>
+          <tr><td class="lo-id">FL-3.2.5</td><td><span class="klevel k1">K1</span></td><td>Recall factors for a successful review</td></tr>
+        </table>
+
+        <h3 class="sub">3.1 · Static Testing Basics</h3>
+        <p>Static testing examines work products <strong>without executing code</strong> — via manual review or tool-based static analysis. It can be applied almost anywhere: requirements, code, test plans, contracts, models. It catches defects dynamic testing can't (unreachable code, requirement ambiguity) and catches them earlier and cheaper — especially requirement/design defects, coding-standard deviations, interface mismatches, and certain security flaws.</p>
+
+        <table class="datatable">
+          <tr><th>Static testing</th><th>Dynamic testing</th></tr>
+          <tr><td>Finds defects directly</td><td>Causes failures → defect found via analysis</td></tr>
+          <tr><td>Works on non-executable products</td><td>Requires executable code</td></tr>
+          <tr><td>Measures e.g. maintainability</td><td>Measures e.g. performance efficiency</td></tr>
+          <tr><td>Reaches rarely-executed code paths easily</td><td>Can struggle to reach them</td></tr>
+        </table>
+
+        <h3 class="sub">3.2 · Feedback &amp; Review Process</h3>
+        <p>Early, frequent stakeholder feedback prevents costly rework and missed deadlines by catching misunderstandings before they compound.</p>
+        <ol class="tick">
+          <li><strong>Planning</strong> — define scope, criteria, effort, timeframe</li>
+          <li><strong>Review initiation</strong> — distribute materials, confirm roles</li>
+          <li><strong>Individual review</strong> — each reviewer logs anomalies solo</li>
+          <li><strong>Communication &amp; analysis</strong> — discuss, triage, agree follow-ups</li>
+          <li><strong>Fixing &amp; reporting</strong> — log defects, confirm exit criteria, report results</li>
+        </ol>
+        <div class="grid2">
+          <div class="card"><h4>Review roles</h4><ul>
+            <li>Manager — resources, scope decision</li>
+            <li>Author — creates/fixes the product</li>
+            <li>Moderator — runs the meeting</li>
+            <li>Scribe — records anomalies/decisions</li>
+            <li>Reviewer — performs the review</li>
+            <li>Review leader — overall responsibility</li>
+          </ul></div>
+          <div class="card"><h4>Review types (least → most formal)</h4><ul>
+            <li><strong>Informal</strong> — no defined process</li>
+            <li><strong>Walkthrough</strong> — led by author</li>
+            <li><strong>Technical review</strong> — led by moderator, technical peers</li>
+            <li><strong>Inspection</strong> — most formal, metrics-driven; author can't be leader/scribe</li>
+          </ul></div>
+        </div>
+        <p><strong>Success factors:</strong> clear objectives/exit criteria, right review type for context, small review chunks, feedback loop to authors, prep time, management support, cultural buy-in, training, and good facilitation.</p>
+      </section>
+
+      <!-- ============ CHAPTER 4 ============ -->
+      <section class="chapter" id="ch4">
+        <div class="chapter-kicker">04 · Chapter <span class="time-pill">390 minutes</span></div>
+        <h2 class="chapter-title">Test Analysis and Design</h2>
+
+        <div class="keywords">
+          <span class="kw">acceptance criteria</span><span class="kw">ATDD</span><span class="kw">black-box technique</span>
+          <span class="kw">boundary value analysis</span><span class="kw">branch coverage</span><span class="kw">checklist-based testing</span>
+          <span class="kw">collaboration-based approach</span><span class="kw">coverage item</span><span class="kw">decision table testing</span>
+          <span class="kw">equivalence partitioning</span><span class="kw">error guessing</span><span class="kw">experience-based technique</span>
+          <span class="kw">exploratory testing</span><span class="kw">state transition testing</span><span class="kw">statement coverage</span>
+          <span class="kw">white-box technique</span>
+        </div>
+
+        <table class="lo-table">
+          <caption>Learning objectives — Chapter 4</caption>
+          <tr><th>ID</th><th>K</th><th>Objective</th></tr>
+          <tr><td class="lo-id">FL-4.1.1</td><td><span class="klevel k2">K2</span></td><td>Distinguish black-box, white-box, experience-based techniques</td></tr>
+          <tr><td class="lo-id">FL-4.2.1</td><td><span class="klevel k3">K3</span></td><td>Use equivalence partitioning to derive test cases</td></tr>
+          <tr><td class="lo-id">FL-4.2.2</td><td><span class="klevel k3">K3</span></td><td>Use boundary value analysis to derive test cases</td></tr>
+          <tr><td class="lo-id">FL-4.2.3</td><td><span class="klevel k3">K3</span></td><td>Use decision table testing to derive test cases</td></tr>
+          <tr><td class="lo-id">FL-4.2.4</td><td><span class="klevel k3">K3</span></td><td>Use state transition testing to derive test cases</td></tr>
+          <tr><td class="lo-id">FL-4.3.1</td><td><span class="klevel k2">K2</span></td><td>Explain statement testing</td></tr>
+          <tr><td class="lo-id">FL-4.3.2</td><td><span class="klevel k2">K2</span></td><td>Explain branch testing</td></tr>
+          <tr><td class="lo-id">FL-4.3.3</td><td><span class="klevel k2">K2</span></td><td>Explain the value of white-box testing</td></tr>
+          <tr><td class="lo-id">FL-4.4.1</td><td><span class="klevel k2">K2</span></td><td>Explain error guessing</td></tr>
+          <tr><td class="lo-id">FL-4.4.2</td><td><span class="klevel k2">K2</span></td><td>Explain exploratory testing</td></tr>
+          <tr><td class="lo-id">FL-4.4.3</td><td><span class="klevel k2">K2</span></td><td>Explain checklist-based testing</td></tr>
+          <tr><td class="lo-id">FL-4.5.1</td><td><span class="klevel k2">K2</span></td><td>Explain collaborative user story writing</td></tr>
+          <tr><td class="lo-id">FL-4.5.2</td><td><span class="klevel k2">K2</span></td><td>Classify options for writing acceptance criteria</td></tr>
+          <tr><td class="lo-id">FL-4.5.3</td><td><span class="klevel k3">K3</span></td><td>Use ATDD to derive test cases</td></tr>
+        </table>
+
+        <h3 class="sub">4.1 · Technique Families</h3>
+        <div class="grid2">
+          <div class="card"><h4>Black-box</h4><p>Specification-based; independent of implementation, so test cases survive refactors.</p></div>
+          <div class="card"><h4>White-box</h4><p>Structure-based; depends on code/design, so it can only be built after implementation.</p></div>
+        </div>
+        <p><strong>Experience-based</strong> techniques lean on tester skill/knowledge, complementing the two structured families.</p>
+
+        <h3 class="sub">4.2 · Black-Box Techniques</h3>
+        <table class="datatable">
+          <tr><th>Technique</th><th>Idea</th><th>100% coverage means…</th></tr>
+          <tr><td>Equivalence Partitioning</td><td>Group data expected to be handled the same way</td><td>Every partition (valid &amp; invalid) hit ≥1×</td></tr>
+          <tr><td>Boundary Value Analysis</td><td>Bugs cluster at partition edges</td><td>2-value: boundary + nearest neighbor; 3-value: boundary + both neighbors</td></tr>
+          <tr><td>Decision Table Testing</td><td>Map condition combinations → actions</td><td>Every feasible rule/column exercised</td></tr>
+          <tr><td>State Transition Testing</td><td>Model states, events, transitions</td><td>All states / all valid transitions / all transitions (incl. invalid)</td></tr>
+        </table>
+
+        <h3 class="sub">4.3 · White-Box Techniques</h3>
+        <ul class="tick">
+          <li><strong>Statement testing</strong> — coverage item = executable statement; 100% ⇒ every line executed at least once</li>
+          <li><strong>Branch testing</strong> — coverage item = branch (true/false, switch outcomes, loop exit); subsumes statement coverage</li>
+        </ul>
+        <p>White-box testing reveals defects even when specs are vague or outdated — but can't detect missing functionality (defects of omission).</p>
+
+        <h3 class="sub">4.4 · Experience-Based Techniques</h3>
+        <div class="grid2">
+          <div class="card"><h4>Error guessing</h4><p>Anticipate likely defects from past behavior, common developer mistakes, and similar-app failure history (a.k.a. fault attacks).</p></div>
+          <div class="card"><h4>Exploratory testing</h4><p>Simultaneous design/execution/evaluation; often session-based, guided by a test charter, ending in a debrief.</p></div>
+        </div>
+        <p><strong>Checklist-based testing</strong> executes tests against a maintained checklist — flexible, but less repeatable than scripted test cases.</p>
+
+        <h3 class="sub">4.5 · Collaboration-Based Approaches</h3>
+        <p>User stories follow the <strong>3 C's</strong>: Card, Conversation, Confirmation. Good stories are <strong>INVEST</strong>: Independent, Negotiable, Valuable, Estimable, Small, Testable. <strong>Acceptance criteria</strong> are usually written scenario-oriented (Given/When/Then) or rule-oriented (bullet/tabular).</p>
+        <p><strong>ATDD</strong>: a specification workshop defines/refines the story and criteria → test cases are derived (positive first, then negative, then non-functional) → developers automate them as executable requirements.</p>
+      </section>
+
+      <!-- ============ CHAPTER 5 ============ -->
+      <section class="chapter" id="ch5">
+        <div class="chapter-kicker">05 · Chapter <span class="time-pill">335 minutes</span></div>
+        <h2 class="chapter-title">Managing the Test Activities</h2>
+
+        <div class="keywords">
+          <span class="kw">defect management</span><span class="kw">defect report</span><span class="kw">entry criteria</span>
+          <span class="kw">exit criteria</span><span class="kw">product risk</span><span class="kw">project risk</span><span class="kw">risk analysis</span>
+          <span class="kw">risk assessment</span><span class="kw">risk control</span><span class="kw">risk-based testing</span>
+          <span class="kw">test plan</span><span class="kw">test progress report</span><span class="kw">test pyramid</span>
+          <span class="kw">test strategy</span><span class="kw">testing quadrants</span>
+        </div>
+
+        <table class="lo-table">
+          <caption>Learning objectives — Chapter 5</caption>
+          <tr><th>ID</th><th>K</th><th>Objective</th></tr>
+          <tr><td class="lo-id">FL-5.1.1</td><td><span class="klevel k2">K2</span></td><td>Exemplify the purpose &amp; content of a test plan</td></tr>
+          <tr><td class="lo-id">FL-5.1.2</td><td><span class="klevel k1">K1</span></td><td>Recognize how a tester contributes to iteration/release planning</td></tr>
+          <tr><td class="lo-id">FL-5.1.3</td><td><span class="klevel k2">K2</span></td><td>Compare entry criteria and exit criteria</td></tr>
+          <tr><td class="lo-id">FL-5.1.4</td><td><span class="klevel k3">K3</span></td><td>Use estimation techniques to calculate test effort</td></tr>
+          <tr><td class="lo-id">FL-5.1.5</td><td><span class="klevel k3">K3</span></td><td>Apply test case prioritization</td></tr>
+          <tr><td class="lo-id">FL-5.1.6</td><td><span class="klevel k1">K1</span></td><td>Recall test pyramid concepts</td></tr>
+          <tr><td class="lo-id">FL-5.1.7</td><td><span class="klevel k2">K2</span></td><td>Summarize the testing quadrants</td></tr>
+          <tr><td class="lo-id">FL-5.2.1</td><td><span class="klevel k1">K1</span></td><td>Identify risk level via likelihood &amp; impact</td></tr>
+          <tr><td class="lo-id">FL-5.2.2</td><td><span class="klevel k2">K2</span></td><td>Distinguish project risks from product risks</td></tr>
+          <tr><td class="lo-id">FL-5.2.3</td><td><span class="klevel k2">K2</span></td><td>Explain how product risk analysis shapes test scope</td></tr>
+          <tr><td class="lo-id">FL-5.2.4</td><td><span class="klevel k2">K2</span></td><td>Explain responses to analyzed product risks</td></tr>
+          <tr><td class="lo-id">FL-5.3.1</td><td><span class="klevel k1">K1</span></td><td>Recall metrics used for testing</td></tr>
+          <tr><td class="lo-id">FL-5.3.2</td><td><span class="klevel k2">K2</span></td><td>Summarize purpose/content/audience of test reports</td></tr>
+          <tr><td class="lo-id">FL-5.3.3</td><td><span class="klevel k2">K2</span></td><td>Exemplify communicating test status</td></tr>
+          <tr><td class="lo-id">FL-5.4.1</td><td><span class="klevel k2">K2</span></td><td>Summarize how configuration management supports testing</td></tr>
+          <tr><td class="lo-id">FL-5.5.1</td><td><span class="klevel k3">K3</span></td><td>Prepare a defect report</td></tr>
+        </table>
+
+        <h3 class="sub">5.1 · Test Planning</h3>
+        <p>A test plan documents objectives, schedule, and approach, and demonstrates alignment with test policy/strategy. Typical content: context, assumptions/constraints, stakeholders, communication plan, risk register, test approach, budget/schedule.</p>
+        <div class="grid2">
+          <div class="card"><h4>Entry vs. exit criteria</h4><p><strong>Entry</strong> = preconditions to start (resources, testware, initial quality). <strong>Exit</strong> = what "done" means (coverage achieved, defect thresholds, tests executed). Running out of time/budget can itself be an accepted exit criterion.</p></div>
+          <div class="card"><h4>Estimation techniques</h4><ul>
+            <li>Ratio-based (e.g., dev:test = 3:2)</li>
+            <li>Extrapolation from early iteration data</li>
+            <li>Wideband Delphi / Planning Poker</li>
+            <li>Three-point: E = (a + 4m + b) / 6</li>
+          </ul></div>
+        </div>
+        <p><strong>Test case prioritization:</strong> risk-based, coverage-based, or requirements-based — constrained by dependencies and resource availability.</p>
+        <div class="grid2">
+          <div class="card"><h4>Test pyramid</h4><p>Bottom layer = many small, fast, isolated tests (unit); top layer = fewer, slower, high-level end-to-end tests. Higher layer ⇒ lower isolation, higher execution time.</p></div>
+          <div class="card"><h4>Testing quadrants (Marick)</h4><ul>
+            <li>Q1 — technology-facing, supports team (component tests, automated in CI)</li>
+            <li>Q2 — business-facing, supports team (functional/acceptance tests)</li>
+            <li>Q3 — business-facing, critiques product (exploratory, usability, UAT — often manual)</li>
+            <li>Q4 — technology-facing, critiques product (non-functional, smoke — often automated)</li>
+          </ul></div>
+        </div>
+
+        <h3 class="sub">5.2 · Risk Management</h3>
+        <p>Risk = likelihood × impact. <strong>Project risks</strong> threaten schedule/budget/scope (organizational, people, technical, supplier issues). <strong>Product risks</strong> threaten quality characteristics (missing functionality, security holes, poor performance) with consequences ranging from user dissatisfaction to, in extreme cases, physical harm.</p>
+        <p>Product risk analysis (identification + assessment) shapes test scope, levels, techniques, coverage targets, effort, and prioritization. Risk control (mitigation + monitoring) response options: mitigate via testing, accept, transfer, or contingency-plan.</p>
+
+        <h3 class="sub">5.3 · Monitoring, Control &amp; Completion</h3>
+        <table class="datatable">
+          <tr><th>Metric family</th><th>Examples</th></tr>
+          <tr><td>Project progress</td><td>Task completion, resource usage, effort</td></tr>
+          <tr><td>Test progress</td><td>Cases run/passed/failed, execution time</td></tr>
+          <tr><td>Product quality</td><td>Availability, response time, MTTF</td></tr>
+          <tr><td>Defect</td><td>Count/priority, density, detection %</td></tr>
+          <tr><td>Coverage</td><td>Requirements, code coverage</td></tr>
+        </table>
+        <p><strong>Test progress reports</strong> (frequent, informal) support ongoing control; <strong>test completion reports</strong> (formal, one-off) summarize a finished activity — both may use dashboards, chat, or formal documents depending on audience and team distribution.</p>
+
+        <h3 class="sub">5.4 · Configuration Management</h3>
+        <p>CM uniquely identifies, version-controls, and tracks testware as configuration items, turning them into <strong>baselines</strong> changeable only via formal change control — enabling reproducible test results, often automated inside a DevOps pipeline.</p>
+
+        <h3 class="sub">5.5 · Defect Management</h3>
+        <p>A defect report typically includes: unique ID, title/summary, date/author/role, test object &amp; environment, context, reproduction steps, expected vs. actual results, severity, priority, status, and references.</p>
+      </section>
+
+      <!-- ============ CHAPTER 6 ============ -->
+      <section class="chapter" id="ch6">
+        <div class="chapter-kicker">06 · Chapter <span class="time-pill">20 minutes</span></div>
+        <h2 class="chapter-title">Test Tools</h2>
+
+        <div class="keywords"><span class="kw">test automation</span></div>
+
+        <table class="lo-table">
+          <caption>Learning objectives — Chapter 6</caption>
+          <tr><th>ID</th><th>K</th><th>Objective</th></tr>
+          <tr><td class="lo-id">FL-6.1.1</td><td><span class="klevel k2">K2</span></td><td>Explain how different tool types support testing</td></tr>
+          <tr><td class="lo-id">FL-6.2.1</td><td><span class="klevel k1">K1</span></td><td>Recall benefits &amp; risks of test automation</td></tr>
+        </table>
+
+        <h3 class="sub">6.1 · Tool Categories</h3>
+        <p>Test management · static testing (reviews/analysis) · test design &amp; implementation · execution &amp; coverage · non-functional testing · DevOps/CI-CD · collaboration · scalability/containerization — plus anything else pressed into service (even a spreadsheet counts).</p>
+
+        <h3 class="sub">6.2 · Automation — Benefits vs. Risks</h3>
+        <div class="grid2">
+          <div class="card"><h4 style="color:var(--teal-dark)">Benefits</h4><ul>
+            <li>Saves time on repetitive manual work</li>
+            <li>More consistent, repeatable execution</li>
+            <li>Objective measures too complex for manual tracking</li>
+            <li>Easier progress/quality reporting</li>
+            <li>Faster feedback → earlier defect detection</li>
+            <li>Frees testers for deeper, exploratory work</li>
+          </ul></div>
+          <div class="card"><h4 style="color:var(--coral)">Risks</h4><ul>
+            <li>Unrealistic expectations of tool capability</li>
+            <li>Underestimated introduction/maintenance cost</li>
+            <li>Over-reliance, displacing human critical thinking</li>
+            <li>Vendor/open-source dependency &amp; abandonment</li>
+            <li>Platform incompatibility</li>
+            <li>Regulatory/safety non-compliance</li>
+          </ul></div>
+        </div>
+      </section>
+
+      <!-- ============ APPENDIX ============ -->
+      <section class="chapter" id="appendix">
+        <div class="chapter-kicker">Reference</div>
+        <h2 class="chapter-title">Appendices &amp; Cognitive Levels</h2>
+
+        <h3 class="sub">Cognitive level legend</h3>
+        <div class="k-legend">
+          <div><span class="dot" style="background:var(--k1)"></span><strong>K1 — Remember:</strong> identify, recall, recognize</div>
+          <div><span class="dot" style="background:var(--k2)"></span><strong>K2 — Understand:</strong> classify, compare, distinguish, explain, summarize</div>
+          <div><span class="dot" style="background:var(--k3)"></span><strong>K3 — Apply:</strong> apply, implement, prepare, use</div>
+        </div>
+
+        <div class="appendix-strip">
+          <div class="app-card"><div class="tag">Appendix A</div><h5>Learning Objectives / K-level</h5><p>Defines the action verbs and examples behind K1/K2/K3 classification used throughout this reference.</p></div>
+          <div class="app-card"><div class="tag">Appendix B</div><h5>Business Outcomes Matrix</h5><p>Full traceability grid mapping all 40 learning objectives back to the 14 business outcomes (BO1–BO14).</p></div>
+          <div class="app-card"><div class="tag">Appendix C</div><h5>Release Notes</h5><p>v4.0.1 is an errata pass on v4.0: LO wording aligned to glossary terms, ISO 25010 terminology refresh, minor text corrections.</p></div>
+          <div class="app-card"><div class="tag">Chapter 7</div><h5>References</h5><p>Standards (ISO/IEC/IEEE 29119 series, ISO 25010, ISO/IEC 20246, ISO 31000) plus a curated reading list — Beizer, Myers, Kaner, Crispin &amp; Gregory, and more.</p></div>
+        </div>
+
+        <div class="callout"><strong>Exam scope note.</strong> All sections of Chapters 1–6 are examinable; the Introduction and Appendices are not. Standards are referenced for context only — their full content isn't examined beyond what's summarized here.</div>
+      </section>
+
+    </div>
+
+    <footer class="pagefoot">
+      Source: ISTQB® Certified Tester Foundation Level Syllabus v4.0.1 · © International Software Testing Qualifications Board · Released 2024-09-15 · Reference compiled for study purposes.
+    </footer>
+  </main>
+</div>
+
+<a href="#intro" class="totop" id="totop" aria-label="Back to top">↑</a>
+
+<script>
+  // Active-link highlighting on scroll
+  const links = document.querySelectorAll('.navlink');
+  const sections = Array.from(links).map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
+
+  function onScroll(){
+    let idx = 0;
+    const y = window.scrollY + 120;
+    sections.forEach((sec, i) => { if (sec.offsetTop <= y) idx = i; });
+    links.forEach(l => l.classList.remove('active'));
+    if(links[idx]) links[idx].classList.add('active');
+
+    const totop = document.getElementById('totop');
+    if(window.scrollY > 500) totop.classList.add('show'); else totop.classList.remove('show');
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+</script>
+</body>
+</html>
