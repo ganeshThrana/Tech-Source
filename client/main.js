@@ -117,7 +117,7 @@ function slugifyInner(text) {
     .replace(/(^-|-$)/g, "");
 }
 
-const innerTopics = {
+/*const innerTopics = {
   "java-core-java": [
     "OOPS",
     "Basics",
@@ -187,7 +187,7 @@ const innerTopics = {
     "Shadow DOM",
     "API Testing with Playwright",
   ],
-};
+};*/
 
 // Remembers which sub-topic index was last open for each parent (so re-visiting a
 // parent from the sidebar doesn't always reset back to item 1).
