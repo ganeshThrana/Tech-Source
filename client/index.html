@@ -122,7 +122,7 @@
         <span class="badge" id="activeTopicBadge">Select a topic from the left menu</span>
       </div>
       <div class="content-display" id="contentDisplay">
-        <div class="content-pane" id="agile"><h3>Agile</h3><p>will add</p></div>
+        <div class="content-pane" id="agile"></div> <script>fetch('agile.html').then(response => response.text()).then(data => { document.getElementById('agile').innerHTML = data; }); </script>
 <div class="content-pane" id="jira"><h3>JIRA</h3><p>will add</p></div>
 <div class="content-pane" id="istqb"><h3>ISTQB</h3><p>will add</p></div>
 <div class="content-pane" id="java"><h3>JAVA – Updated</h3><p>will add</p></div>
