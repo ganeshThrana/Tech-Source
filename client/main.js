@@ -4,18 +4,31 @@
 
 /* ---------- LIVE CLOCK ---------- */
 function updateClock() {
-  const now = new Date();
   const el = document.getElementById("clock");
-  if (el) {
-    el.textContent =
-      now.toLocaleDateString(undefined, { day: "2-digit", month: "short" }) +
-      "  " +
-      now.toLocaleTimeString();
-  }
+  if (!el) return;
+
+  const now = new Date();
+  const pad = (value) => String(value).padStart(2, "0");
+  const hours = now.getHours();
+  const displayHours = hours % 12 || 12;
+  const meridiem = hours >= 12 ? "PM" : "AM";
+  const datePart = now.toLocaleDateString(undefined, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+  const timePart = `${pad(displayHours)}:${pad(now.getMinutes())}:${pad(now.getSeconds())} ${meridiem}`;
+
+  el.textContent = `${datePart} • ${timePart}`;
 }
+
 updateClock();
 setInterval(updateClock, 1000);
-document.getElementById("year").textContent = new Date().getFullYear();
+
+const yearEl = document.getElementById("year");
+if (yearEl) {
+  yearEl.textContent = new Date().getFullYear();
+}
 
 /* ---------- THEME TOGGLE ---------- */
 const themeToggle = document.getElementById("themeToggle");
@@ -48,6 +61,49 @@ themeToggle.addEventListener("click", () => {
       ? "dark"
       : "light";
   applyTheme(current === "dark" ? "light" : "dark");
+});
+
+/* ---------- CONTENT PANEL VIEW CONTROLS ---------- */
+const contentPanel = document.querySelector(".content-panel");
+const contentPanelButtons = document.querySelectorAll(".content-control-btn");
+let contentViewMode = "normal";
+
+function setContentViewMode(mode) {
+  contentViewMode = mode;
+  contentPanel.classList.remove("is-minimized", "is-maximized");
+
+  if (mode === "minimized") {
+    contentPanel.classList.add("is-minimized");
+  } else if (mode === "maximized") {
+    contentPanel.classList.add("is-maximized");
+  }
+
+  contentPanelButtons.forEach((btn) => {
+    const isActive = btn.dataset.action === mode;
+    btn.classList.toggle("active", isActive);
+  });
+}
+
+contentPanelButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const action = btn.dataset.action;
+    if (action === "minimize") {
+      setContentViewMode("minimized");
+    } else if (action === "maximize") {
+      setContentViewMode("maximized");
+    } else {
+      setContentViewMode("normal");
+    }
+  });
+});
+
+document.addEventListener("keydown", (event) => {
+  if (
+    event.key === "Escape" &&
+    contentPanel?.classList.contains("is-maximized")
+  ) {
+    setContentViewMode("normal");
+  }
 });
 
 /* ---------- SIDEBAR NAV: parent accordion toggle ---------- */

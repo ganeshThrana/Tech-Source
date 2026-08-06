@@ -222,8 +222,15 @@
   <main class="main-content">
     <section class="content-panel">
       <div class="panel-header">
-        <h2>Learning Panel</h2>
-        <span class="badge" id="activeTopicBadge">Select a topic from the left menu</span>
+        <div class="panel-title-wrap">
+          <h2>Learning Panel</h2>
+          <span class="badge" id="activeTopicBadge">Select a topic from the left menu</span>
+        </div>
+        <div class="panel-actions" role="group" aria-label="Content panel controls">
+          <button class="content-control-btn" data-action="minimize" type="button" title="Minimize content">➖</button>
+          <button class="content-control-btn" data-action="maximize" type="button" title="Maximize content">⤢</button>
+          <button class="content-control-btn" data-action="restore" type="button" title="Restore content">↺</button>
+        </div>
       </div>
       <div class="content-display" id="contentDisplay">
         <div class="content-pane" id="agile"></div> <script>fetch('agile.html').then(response => response.text()).then(data => { document.getElementById('agile').innerHTML = data; }); </script>
@@ -498,6 +505,9 @@
     </a>
     <a href="https://academy.selfmade.ninja/login" target="_blank" rel="noopener" class="link-card">
       <span class="link-icon">🥷</span> Selfmade Ninja Academy
+    </a>
+    <a href="https://www.udemy.com/" target="_blank" rel="noopener" class="link-card">
+      <span class="link-icon">📚</span> Udemy
     </a>
   </div>
 </section>
