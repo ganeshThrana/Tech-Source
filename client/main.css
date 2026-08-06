@@ -37,7 +37,7 @@
   --accent-blue-hover: #98e0ff;
   --accent-green: #3ba76b;
   --accent-green-strong: #8cf0b0;
-  --text-on-accent: #04160f;
+  --text-on-accent: #f5fff8;
   --input-bg: #1e342c;
   --shadow: 0 8px 28px rgba(0,0,0,0.5);
 }
@@ -220,6 +220,7 @@ button{ font-family: inherit; cursor: pointer; }
   border-radius: 8px;
   margin: 4px 0;
   font-size: .85rem;
+  font-weight: 600;
   transition: background .2s ease, transform .15s ease, color .2s ease;
 }
 
@@ -239,6 +240,12 @@ button{ font-family: inherit; cursor: pointer; }
   font-weight: 700;
   background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-blue) 100%);
   color: var(--text-on-accent);
+}
+
+.nav-btn.sub-btn,
+.nav-btn.sub-btn:hover,
+.nav-btn.sub-btn.active{
+  color: var(--text);
 }
 .nav-btn.parent-btn .arrow{
   float:right;
@@ -261,8 +268,12 @@ button{ font-family: inherit; cursor: pointer; }
 .nav-btn.sub-btn{
   font-size: .78rem;
   background: transparent;
+  color: var(--text);
 }
-.nav-btn.sub-btn:hover{ background: var(--accent-blue); }
+.nav-btn.sub-btn:hover{
+  background: var(--accent-blue);
+  color: var(--text-on-accent);
+}
 
 .nav-btn.hidden-by-search{ display:none; }
 
@@ -318,7 +329,7 @@ button{ font-family: inherit; cursor: pointer; }
   height: 38px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-strong) 100%);
-  color: #fff;
+  color: var(--text-on-accent);
   box-shadow: 0 6px 16px rgba(87, 201, 138, 0.22);
   transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
 }
@@ -401,7 +412,7 @@ button{ font-family: inherit; cursor: pointer; }
 }
 
 .inner-nav-btn{
-  background: var(--bg-alt);
+  background: var(--panel-strong);
   border: 1px solid var(--border);
   color: var(--text);
   padding: 7px 12px;
@@ -410,10 +421,14 @@ button{ font-family: inherit; cursor: pointer; }
   font-weight: 600;
   transition: background .2s ease, color .2s ease, transform .15s ease;
 }
-.inner-nav-btn:hover{ background: var(--accent-blue); color:#0b2b3d; transform: translateY(-2px); }
+.inner-nav-btn:hover{
+  background: var(--accent-blue);
+  color: var(--text-on-accent);
+  transform: translateY(-2px);
+}
 .inner-nav-btn.active{
   background: var(--accent-blue);
-  color: #0b2b3d;
+  color: var(--text-on-accent);
   border-color: var(--accent-blue);
   font-weight: 800;
 }
@@ -503,13 +518,14 @@ button{ font-family: inherit; cursor: pointer; }
   margin-bottom: 12px;
   animation: fadeIn .3s ease;
 }
-.quiz-question p.q-text{ font-weight:700; margin: 0 0 10px; }
+.quiz-question p.q-text{ font-weight:700; margin: 0 0 10px; color: var(--text); }
 .quiz-options label{
   display:block;
   padding: 6px 10px;
   border-radius: 8px;
   margin-bottom: 6px;
   cursor:pointer;
+  color: var(--text);
   transition: background .2s ease;
 }
 .quiz-options label:hover{ background: var(--accent-blue); }
@@ -581,7 +597,7 @@ button{ font-family: inherit; cursor: pointer; }
 
 .btn-primary{
   background: var(--accent-blue);
-  color: #0b2b3d;
+  color: var(--text-on-accent);
   border: none;
   font-weight: 800;
   padding: 10px 22px;
@@ -599,7 +615,7 @@ button{ font-family: inherit; cursor: pointer; }
   border-radius: 999px;
   transition: background .2s ease, color .2s ease;
 }
-.btn-secondary:hover{ background: var(--accent-green-strong); color:#fff; }
+.btn-secondary:hover{ background: var(--accent-green-strong); color: var(--text-on-accent); }
 
 .quiz-result{
   margin-top: 14px;
@@ -619,7 +635,7 @@ button{ font-family: inherit; cursor: pointer; }
   align-items:center;
   gap: 8px;
   background: var(--accent-blue);
-  color: #0b2b3d;
+  color: var(--text-on-accent);
   text-decoration:none;
   font-weight: 700;
   padding: 12px 14px;
