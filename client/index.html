@@ -227,9 +227,10 @@
           <span class="badge" id="activeTopicBadge">Select a topic from the left menu</span>
         </div>
         <div class="panel-actions" role="group" aria-label="Content panel controls">
-          <button class="content-control-btn" data-action="minimize" type="button" title="Minimize content">➖</button>
-          <button class="content-control-btn" data-action="maximize" type="button" title="Maximize content">⤢</button>
+          <button class="content-control-btn" data-action="minimize" type="button" title="Minimize content">▾</button>
+          <button class="content-control-btn" data-action="maximize" type="button" title="Maximize content">▣</button>
           <button class="content-control-btn" data-action="restore" type="button" title="Restore content">↺</button>
+          <button class="content-control-btn" data-action="quiz" type="button" title="Open Quick Quiz">Q</button>
         </div>
       </div>
       <div class="content-display" id="contentDisplay">
@@ -458,8 +459,12 @@
 
   <!-- ===================== QUIZ SIDE PANEL (right, one-by-one) ===================== -->
   <aside class="quiz-panel" id="quizPanel">
-    <div class="panel-header">
+    <div class="panel-header quiz-panel-header">
       <h2>📝 Quick Quiz</h2>
+      <div class="quiz-header-actions">
+        <button class="quiz-hide-btn" type="button" data-action="collapse-quiz" aria-label="Hide quiz">Hide</button>
+        <button class="quiz-restore-btn" type="button" data-action="expand-quiz" aria-label="Restore quiz">Restore</button>
+      </div>
       <span class="badge" id="quizTopicBadge">General</span>
     </div>
     <p class="quiz-sub">Answer one question at a time, check it, then navigate.</p>
@@ -518,20 +523,36 @@
 
 <!-- ===================== CHAT BOX ===================== -->
 <div class="chat-widget">
-  <button id="chatToggle" class="chat-toggle" aria-label="Open chat">💬</button>
+  <button id="chatToggle" class="chat-toggle" aria-label="Open TS chat">🔷</button>
 
   <div class="chat-box" id="chatBox">
     <div class="chat-header">
-      <span>Tech Source Assistant</span>
+      <span><span class="chat-brand-icon">🔷</span> TS Chat</span>
       <button id="chatClose" aria-label="Close chat">✕</button>
     </div>
-    <div class="chat-messages" id="chatMessages">
-      <div class="msg bot">👋 Hi! Ask me about Java, Selenium, Agile, JIRA, or how to use this app.</div>
+
+    <div class="chat-tabs">
+      <button class="chat-tab active" data-view="teams">Teams</button>
+      <button class="chat-tab" data-view="single">Single</button>
     </div>
-    <form id="chatForm" class="chat-input-row">
-      <input type="text" id="chatInput" placeholder="Type your question..." autocomplete="off">
-      <button type="submit" class="btn-send">Send</button>
-    </form>
+
+    <div class="chat-body">
+      <aside class="chat-sidebar" id="chatSidebar">
+        <div class="chat-sidebar-top">
+          <input type="text" id="newChatName" placeholder="New group / DM name" autocomplete="off">
+          <button id="createChatBtn" type="button">Create</button>
+        </div>
+        <div class="chat-list" id="chatList"></div>
+      </aside>
+
+      <section class="chat-panel">
+        <div class="chat-messages" id="chatMessages"></div>
+        <form id="chatForm" class="chat-input-row">
+          <input type="text" id="chatInput" placeholder="Type your message..." autocomplete="off">
+          <button type="submit" class="btn-send">Send</button>
+        </form>
+      </section>
+    </div>
   </div>
 </div>
 

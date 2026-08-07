@@ -87,12 +87,42 @@ function setContentViewMode(mode) {
 contentPanelButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     const action = btn.dataset.action;
+    if (action === "quiz") {
+      window.location.href = "quiz.html";
+      return;
+    }
     if (action === "minimize") {
       setContentViewMode("minimized");
     } else if (action === "maximize") {
       setContentViewMode("maximized");
     } else {
       setContentViewMode("normal");
+    }
+  });
+});
+
+document.querySelectorAll(".quick-quick-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const panel = btn.closest(".quick-quick-panel");
+    if (!panel) return;
+    const action = btn.dataset.action;
+    if (action === "minimize-quick") {
+      panel.classList.add("is-minimized");
+    } else {
+      panel.classList.remove("is-minimized");
+    }
+  });
+});
+
+document.querySelectorAll(".quiz-toggle-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const panel = btn.closest(".quiz-panel");
+    if (!panel) return;
+    const action = btn.dataset.action;
+    if (action === "collapse-quiz") {
+      panel.classList.add("is-collapsed");
+    } else {
+      panel.classList.remove("is-collapsed");
     }
   });
 });
@@ -120,6 +150,7 @@ document.querySelectorAll(".parent-btn").forEach((btn) => {
 /* ---------- SIDEBAR NAV: topic selection ---------- */
 const contentPanes = document.querySelectorAll(".content-pane");
 const activeBadge = document.getElementById("activeTopicBadge");
+const innerTopics = {};
 
 function selectTopic(targetId, btnEl) {
   contentPanes.forEach((p) => p.classList.remove("active"));
@@ -129,7 +160,7 @@ function selectTopic(targetId, btnEl) {
     target.classList.add("active");
     const heading = target.querySelector("h3");
     label = heading ? heading.textContent : targetId;
-    activeBadge.textContent = label;
+    if (activeBadge) activeBadge.textContent = label;
   }
   document
     .querySelectorAll(".nav-btn")
@@ -148,9 +179,10 @@ function selectTopic(targetId, btnEl) {
   }
 
   // scroll content panel into view on small screens
-  document
-    .querySelector(".content-panel")
-    .scrollIntoView({ behavior: "smooth", block: "start" });
+  document.querySelector(".content-panel")?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
 }
 
 document.querySelectorAll(".nav-btn:not(.parent-btn)").forEach((btn) => {
@@ -765,78 +797,174 @@ resetQuizBtn.addEventListener("click", () => {
 loadQuizForTopic("general", "General");
 
 /* =========================================================
-   CHAT BOX (rule-based demo assistant)
+   CHAT BOX (group + single thread chat)
    ========================================================= */
+const CHAT_STORAGE_KEY = "ts-chat-threads";
 const chatToggle = document.getElementById("chatToggle");
 const chatBox = document.getElementById("chatBox");
 const chatClose = document.getElementById("chatClose");
 const chatForm = document.getElementById("chatForm");
 const chatInput = document.getElementById("chatInput");
 const chatMessages = document.getElementById("chatMessages");
+const chatTabs = document.querySelectorAll(".chat-tab");
+const chatList = document.getElementById("chatList");
+const createChatBtn = document.getElementById("createChatBtn");
+const newChatName = document.getElementById("newChatName");
 
-chatToggle.addEventListener("click", () => chatBox.classList.toggle("open"));
-chatClose.addEventListener("click", () => chatBox.classList.remove("open"));
+let activeChatType = "teams";
+let activeChatId = "teams-shared";
 
-function addMessage(text, who) {
-  const div = document.createElement("div");
-  div.className = `msg ${who}`;
-  div.textContent = text;
-  chatMessages.appendChild(div);
+function getDefaultChatThreads() {
+  return [
+    {
+      id: "teams-shared",
+      type: "teams",
+      name: "TS Shared Channel",
+      messages: [
+        {
+          who: "bot",
+          text: "🔹 Welcome to TS Shared Channel. This is the team thread for any user of the app.",
+        },
+      ],
+    },
+    {
+      id: "single-ts",
+      type: "single",
+      name: "TS Chat",
+      messages: [
+        {
+          who: "bot",
+          text: "🔹 Welcome to TS Chat. Use this private chat thread to ask quick questions.",
+        },
+      ],
+    },
+  ];
+}
+
+function loadChatThreads() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY));
+    if (Array.isArray(stored) && stored.length) {
+      return stored;
+    }
+  } catch (e) {}
+  return getDefaultChatThreads();
+}
+
+function saveChatThreads() {
+  try {
+    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatThreads));
+  } catch (e) {}
+}
+
+let chatThreads = loadChatThreads();
+
+function renderChatList() {
+  chatList.innerHTML = "";
+  const items = chatThreads.filter((thread) => thread.type === activeChatType);
+  items.forEach((thread) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = thread.name;
+    btn.className = thread.id === activeChatId ? "active" : "";
+    btn.addEventListener("click", () => {
+      activeChatId = thread.id;
+      renderChatList();
+      renderMessages();
+    });
+    chatList.appendChild(btn);
+  });
+}
+
+function renderMessages() {
+  const thread =
+    chatThreads.find((t) => t.id === activeChatId) || chatThreads[0];
+  if (!thread) return;
+  chatMessages.innerHTML = "";
+  thread.messages.forEach((msg) => {
+    const div = document.createElement("div");
+    div.className = `msg ${msg.who}`;
+    div.textContent = msg.text;
+    chatMessages.appendChild(div);
+  });
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-const botReplies = [
-  {
-    keys: ["hello", "hi", "hey"],
-    reply:
-      "Hello! 👋 I'm the Tech Source assistant. Ask me about any topic in the menu, or the quiz.",
-  },
-  {
-    keys: ["java"],
-    reply:
-      "Java topics are under 'JAVA – Updated' in the sidebar: Core Java, Programming, Interview Programs, POJO, and Java Theory.",
-  },
-  {
-    keys: ["selenium"],
-    reply:
-      "Selenium has 19 sub-topics in the sidebar — from Basics and Locators to Waits, Frames, and TestNG.",
-  },
-  {
-    keys: ["agile"],
-    reply:
-      "Agile covers sprints, ceremonies, and roles. Check the Agile button in Learning Topics, and 'Agile Sprint' under Interview Tips.",
-  },
-  {
-    keys: ["jira"],
-    reply:
-      "JIRA is for tracking Epics, Stories, Tasks, and Bugs. Click JIRA in the sidebar to explore.",
-  },
-  {
-    keys: ["quiz"],
-    reply:
-      "The Quick Quiz panel is on the right. Pick a topic on the left to load its quiz, answer one question at a time, click 'Check Answer' to see if you're right and read the explanation, then use Prev/Next to move through the set.",
-  },
-  {
-    keys: ["dark", "light", "theme"],
-    reply:
-      "Use the theme toggle button in the top bar to switch between dark and light mode. Your preference is remembered.",
-  },
-  {
-    keys: ["link", "reference"],
-    reply:
-      "Check the 'Helpful References' section for ChatGPT, Claude AI, OneCompiler, W3Schools, and Selfmade Ninja Academy links.",
-  },
-  {
-    keys: ["interview"],
-    reply:
-      "Interview Tips & Scenario buttons are at the bottom of the sidebar — covering Framework, Automation, CI/CD, HR Interview and more.",
-  },
-  { keys: ["thank"], reply: "You're welcome! Happy learning. 🚀" },
-];
+function addMessage(text, who, threadId = activeChatId) {
+  const thread = chatThreads.find((t) => t.id === threadId);
+  if (!thread) return;
+  thread.messages.push({ who, text });
+  saveChatThreads();
+  if (thread.id === activeChatId) {
+    const div = document.createElement("div");
+    div.className = `msg ${who}`;
+    div.textContent = text;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+}
 
-function getBotReply(userText) {
+function getBotReply(userText, threadType) {
   const lower = userText.toLowerCase();
-  for (const entry of botReplies) {
+  if (threadType === "teams") {
+    if (lower.includes("team") || lower.includes("group")) {
+      return "This team thread is good for collaboration. Try asking about a shared topic or posting a quick update.";
+    }
+    return getBotReplySingle(userText);
+  }
+  return getBotReplySingle(userText);
+}
+
+function getBotReplySingle(userText) {
+  const lower = userText.toLowerCase();
+  const replies = [
+    {
+      keys: ["hello", "hi", "hey"],
+      reply:
+        "Hello! 👋 I'm the Tech Source assistant. Ask me about any topic in the menu, or the quiz.",
+    },
+    {
+      keys: ["java"],
+      reply:
+        "Java topics are under 'JAVA – Updated' in the sidebar: Core Java, Programming, Interview Programs, POJO, and Java Theory.",
+    },
+    {
+      keys: ["selenium"],
+      reply:
+        "Selenium has 19 sub-topics in the sidebar — from Basics and Locators to Waits, Frames, and TestNG.",
+    },
+    {
+      keys: ["agile"],
+      reply:
+        "Agile covers sprints, ceremonies, and roles. Check the Agile button in Learning Topics, and 'Agile Sprint' under Interview Tips.",
+    },
+    {
+      keys: ["jira"],
+      reply:
+        "JIRA is for tracking Epics, Stories, Tasks, and Bugs. Click JIRA in the sidebar to explore.",
+    },
+    {
+      keys: ["quiz"],
+      reply:
+        "The Quick Quiz panel is on the right. Pick a topic on the left to load its quiz, answer one question at a time, and review your score.",
+    },
+    {
+      keys: ["dark", "light", "theme"],
+      reply:
+        "Use the theme toggle button in the top bar to switch between dark and light mode. Your preference is remembered.",
+    },
+    {
+      keys: ["link", "reference"],
+      reply:
+        "Check the 'Helpful References' section for ChatGPT, Claude AI, OneCompiler, W3Schools, and Selfmade Ninja Academy links.",
+    },
+    {
+      keys: ["interview"],
+      reply:
+        "Interview Tips & Scenario buttons are at the bottom of the sidebar — covering Framework, Automation, CI/CD, HR Interview and more.",
+    },
+  ];
+  for (const entry of replies) {
     if (entry.keys.some((k) => lower.includes(k))) {
       return entry.reply;
     }
@@ -844,13 +972,76 @@ function getBotReply(userText) {
   return "I'm a simple demo assistant. Try asking about 'Java', 'Selenium', 'Agile', 'JIRA', 'quiz', or 'theme'.";
 }
 
+chatToggle.addEventListener("click", () => chatBox.classList.toggle("open"));
+chatClose.addEventListener("click", () => chatBox.classList.remove("open"));
+
+chatTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    chatTabs.forEach((t) => t.classList.remove("active"));
+    tab.classList.add("active");
+    activeChatType = tab.dataset.view;
+    const selected = chatThreads.find((t) => t.type === activeChatType);
+    if (selected) activeChatId = selected.id;
+    renderChatList();
+    renderMessages();
+  });
+});
+
+createChatBtn.addEventListener("click", () => {
+  const name = newChatName.value.trim();
+  if (!name) return;
+  const id = `${activeChatType}-${Date.now()}`;
+  const newThread = {
+    id,
+    type: activeChatType,
+    name,
+    messages: [
+      {
+        who: "bot",
+        text: `🔹 New ${activeChatType === "teams" ? "team" : "single"} chat created. Start the conversation!`,
+      },
+    ],
+  };
+  chatThreads.push(newThread);
+  saveChatThreads();
+  activeChatId = id;
+  newChatName.value = "";
+  renderChatList();
+  renderMessages();
+});
+
 chatForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const text = chatInput.value.trim();
   if (!text) return;
   addMessage(text, "user");
   chatInput.value = "";
+  const thread = chatThreads.find((t) => t.id === activeChatId);
   setTimeout(() => {
-    addMessage(getBotReply(text), "bot");
-  }, 400);
+    if (!thread) return;
+    addMessage(getBotReply(text, thread.type), "bot");
+  }, 450);
 });
+
+window.addEventListener("storage", (event) => {
+  if (event.key === CHAT_STORAGE_KEY) {
+    try {
+      const updated = JSON.parse(event.newValue || "[]");
+      if (Array.isArray(updated)) {
+        chatThreads = updated;
+        const selected = chatThreads.find((t) => t.id === activeChatId);
+        if (!selected) {
+          const first =
+            chatThreads.find((t) => t.type === activeChatType) ||
+            chatThreads[0];
+          if (first) activeChatId = first.id;
+        }
+        renderChatList();
+        renderMessages();
+      }
+    } catch (e) {}
+  }
+});
+
+renderChatList();
+renderMessages();
