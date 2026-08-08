@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Source | Creativity at it's peak!</title>
+<link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+<!-- ===================== TOP BAR ===================== -->
+<header class="topbar">
+  <div class="clock" id="clock">--:--:--</div>
+
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <circle class="logo-ring" cx="60" cy="60" r="46" />
+      <circle class="logo-dot d1" cx="94" cy="34" r="3" />
+      <circle class="logo-dot d2" cx="102" cy="46" r="2.4" />
+      <circle class="logo-dot d3" cx="88" cy="24" r="2" />
+      <text x="34" y="76" class="logo-letters">TS</text>
+    </svg>
+    <div class="brand-text">
+      <h1>Tech <span>Source</span></h1>
+      <p class="slogan">Creativity at it's peak!</p>
+    </div>
+  </div>
+
+  <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark and light mode">
+    <span class="toggle-icon">🌙</span> <span class="toggle-label">Dark Mode</span>
+  </button>
+</header>
+
+<!-- ===================== APP BODY ===================== -->
+<div class="app-body">
+
+  <!-- SIDEBAR NAVIGATION -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-search">
+      <input type="text" id="navSearch" placeholder="🔍 Search a topic...">
+    </div>
+    <div class="nav-group-title">📘 Learning Topics</div>
+<button class="nav-btn" data-target="agile">Agile</button>
+<button class="nav-btn" data-target="jira">JIRA</button>
+<button class="nav-btn" data-target="istqb">ISTQB</button>
+<div class="nav-item-parent">
+  <button class="nav-btn parent-btn" data-toggle="sub-java" data-target="java">Core – Java <span class="arrow">▾</span></button>
+  <div class="sub-nav" id="sub-java">
+    <button class="nav-btn sub-btn" data-target="java-oops">OOPS</button>
+    <button class="nav-btn sub-btn" data-target="java--inheritance">Inheritance</button>
+    <button class="nav-btn sub-btn" data-target="java-polymorphism">Polymorphism</button>
+    <button class="nav-btn sub-btn" data-target="java-encapsulation">Encapsulation</button>
+    <button class="nav-btn sub-btn" data-target="java-abstraction">Abstraction</button>
+    <button class="nav-btn sub-btn" data-target="java-data-types">Data Types</button>
+    <button class="nav-btn sub-btn" data-target="java-scanner">Scanner</button>
+    <button class="nav-btn sub-btn" data-target="java-variables">Variables</button>
+    <button class="nav-btn sub-btn" data-target="java-static-keyword">Static Keyword</button>
+    <button class="nav-btn sub-btn" data-target="java-memory-allocation">Memory Allocation</button>
+    <button class="nav-btn sub-btn" data-target="java-string">String</button>
+    <button class="nav-btn sub-btn" data-target="java-access-modifiers">Access Modifiers</button>
+    <button class="nav-btn sub-btn" data-target="java-conditional-statements">Conditional Statements</button>
+    <button class="nav-btn sub-btn" data-target="java-looping-statements">Looping Statements</button>
+    <button class="nav-btn sub-btn" data-target="java-array">Array</button>
+    <button class="nav-btn sub-btn" data-target="java-constructors">Constructors</button>
+    <button class="nav-btn sub-btn" data-target="java-collection">Collection</button>
+    <button class="nav-btn sub-btn" data-target="java-list">List</button>
+     <button class="nav-btn sub-btn" data-target="java-set">Set</button>
+    <button class="nav-btn sub-btn" data-target="java-map">Map</button>
+    <button class="nav-btn sub-btn" data-target="java-exception-handling">Exception Handling</button>
+    </div>
+    </div>
+
+    <div class="nav-item-parent">
+  <button class="nav-btn parent-btn" data-toggle="sub-javaprogram" data-target="javaprogram">Java Programs <span class="arrow">▾</span></button>
+  <div class="sub-nav" id="sub-javaprogram">
+    <button class="nav-btn sub-btn" data-target="javaprogram-string-palindrome">String Palindrome</button>
+    <button class="nav-btn sub-btn" data-target="javaprogram-reverse-variants">Reverse Variants</button>
+    <button class="nav-btn sub-btn" data-target="javaprogram-character-count">Character count</button>
+    <button class="nav-btn sub-btn" data-target="javaprogram-find-duplicate-characters">Find Duplicate characters</button>
+    <button class="nav-btn sub-btn" data-target="javaprogram-remove-duplicate-characters">Remove Duplicate characters</button>
+    <button class="nav-btn sub-btn" data-target="javaprogram-first-unique-character">First Unique Character</button>
+    <button class="nav-btn sub-btn" data-target="javaprogram-anagram">Anagram</button>
+    <button class="nav-btn sub-btn" data-target="javaprogram-word-count">Word count</button>
+    <button class="nav-btn sub-btn" data-target="javaprogram-alpha-numeric">Alpha Numeric</button>
+    <button class="nav-btn sub-btn" data-target="javaprogram-vowels">Vowels</button>
+    <button class="nav-btn sub-btn" data-target="javaprogram-remove-special-char">Remove special char</button>
+</div>
+</div>
+
+<div class="nav-item-parent">
+  <button class="nav-btn parent-btn" data-toggle="sub-arrayprograms" data-target="arrayprograms">Array Programs <span class="arrow">▾</span></button>
+  <div class="sub-nav" id="sub-arrayprograms">
+    <button class="nav-btn sub-btn" data-target="arrayprograms-unique-duplicate">Unique and Duplicate Array</button>
+    <button class="nav-btn sub-btn" data-target="arrayprograms-sort">Array Sort</button>
+    <button class="nav-btn sub-btn" data-target="arrayprograms-largest">Largest in Array</button>
+    <button class="nav-btn sub-btn" data-target="arrayprograms-smallest">Smallest in Array</button>
+    <button class="nav-btn sub-btn" data-target="arrayprograms-missing">Missing Element</button>
+    <button class="nav-btn sub-btn" data-target="arrayprograms-sort-string">Sort String Array</button>
+    <button class="nav-btn sub-btn" data-target="arrayprograms-reverse-an-array">Reverse an Array</button>
+    <button class="nav-btn sub-btn" data-target="arrayprograms-second-largest">Second Largest</button>
+    <button class="nav-btn sub-btn" data-target="arrayprograms-move-zeros">Move Zeros</button>
+    <button class="nav-btn sub-btn" data-target="arrayprograms-compare-arrays">Compare two Arrays</button>
+    <button class="nav-btn sub-btn" data-target="arrayprograms-frequency">Frequency of Numbers</button>
+    <button class="nav-btn sub-btn" data-target="arrayprograms-common-elements">Common Elements</button>
+  </div>
+  </div>
+
+  <div class="nav-item-parent">
+  <button class="nav-btn parent-btn" data-toggle="sub-oddeven" data-target="oddeven">Odd or Even Programs<span class="arrow">▾</span></button>
+  <div class="sub-nav" id="sub-oddeven">
+    <button class="nav-btn sub-btn" data-target="oddeven-odd-or-even">Odd or Even</button>
+    <button class="nav-btn sub-btn" data-target="oddeven-java-theory">Sum of Odd/Even</button>
+    <button class="nav-btn sub-btn" data-target="oddeven-java-theory">Count of Odd/Even</button>
+    </div>
+    </div>
+
+    <div class="nav-item-parent">
+  <button class="nav-btn parent-btn" data-toggle="sub-numberprograms" data-target="numberprograms">Number Programs<span class="arrow">▾</span></button>
+  <div class="sub-nav" id="sub-numberprograms">
+    <button class="nav-btn sub-btn" data-target="numberprograms-factorial">Factorial</button>
+    <button class="nav-btn sub-btn" data-target="numberprograms-largest">Largest Number</button>
+    <button class="nav-btn sub-btn" data-target="numberprograms-smallest">Smallest Number</button>
+    <button class="nav-btn sub-btn" data-target="numberprograms-swapping">Swapping Numbers</button>
+    <button class="nav-btn sub-btn" data-target="numberprograms-sum-of-digits">Sum of Digits</button>
+    <button class="nav-btn sub-btn" data-target="numberprograms-integer-reverse">Integer Reverse</button>
+    <button class="nav-btn sub-btn" data-target="numberprograms-fibonacci-series">Fibonacci Series</button>
+    <button class="nav-btn sub-btn" data-target="numberprograms-armstrong-number">Armstrong Number</button>
+    <button class="nav-btn sub-btn" data-target="numberprograms-prime-numbers">Prime Numbers</button>
+    <button class="nav-btn sub-btn" data-target="numberprograms-grade-system">Grade System</button>
+    <button class="nav-btn sub-btn" data-target="numberprograms-star-pattern">Star Pattern</button>
+    <button class="nav-btn sub-btn" data-target="numberprograms-train-coach">Train coach</button>
+    <button class="nav-btn sub-btn" data-target="numberprograms-maps">Maps</button>
+</div>
+</div>
+
+<div class="nav-item-parent">
+  <button class="nav-btn parent-btn" data-toggle="sub-selenium" data-target="selenium">Selenium <span class="arrow">▾</span></button>
+  <div class="sub-nav" id="sub-selenium">
+    <button class="nav-btn sub-btn" data-target="selenium-basics">Basics</button>
+    <button class="nav-btn sub-btn" data-target="selenium-webdriver-methods">WebDriver Methods</button>
+    <button class="nav-btn sub-btn" data-target="selenium-webelement-methods">WebElement Methods</button>
+    <button class="nav-btn sub-btn" data-target="selenium-locators">Locators</button>
+    <button class="nav-btn sub-btn" data-target="selenium-xpath">XPath</button>
+    <button class="nav-btn sub-btn" data-target="selenium-css-selector">CSS Selector</button>
+    <button class="nav-btn sub-btn" data-target="selenium-checkbox---radio-button">CheckBox & Radio Button</button>
+    <button class="nav-btn sub-btn" data-target="selenium-select-class">Select Class</button>
+    <button class="nav-btn sub-btn" data-target="selenium-actions-class">Actions Class</button>
+    <button class="nav-btn sub-btn" data-target="selenium-javascript-executor">JavaScript Executor</button>
+    <button class="nav-btn sub-btn" data-target="selenium-waits">Waits</button>
+    <button class="nav-btn sub-btn" data-target="selenium-frames">Frames</button>
+    <button class="nav-btn sub-btn" data-target="selenium-alerts">Alerts</button>
+    <button class="nav-btn sub-btn" data-target="selenium-windows">Windows</button>
+    <button class="nav-btn sub-btn" data-target="selenium-web-tables">Web Tables</button>
+    <button class="nav-btn sub-btn" data-target="selenium-calendar">Calendar</button>
+    <button class="nav-btn sub-btn" data-target="selenium-file-upload---download">File Upload & Download</button>
+    <button class="nav-btn sub-btn" data-target="selenium-screenshot">Screenshot</button>
+    <button class="nav-btn sub-btn" data-target="selenium-testng">TestNG</button>
+  </div>
+</div>
+
+<button class="nav-btn" data-target="maven">Maven</button>
+<button class="nav-btn" data-target="git-github">Git & GitHub</button>
+<button class="nav-btn" data-target="sql">SQL</button>
+<button class="nav-btn" data-target="api-testing">API Testing</button>
+<button class="nav-btn" data-target="postman">Postman</button>
+
+<div class="nav-item-parent">
+  <button class="nav-btn parent-btn" data-toggle="sub-playwright" data-target="playwright">Playwright<span class="arrow">▾</span></button>
+  <div class="sub-nav" id="sub-playwright">
+<button class="nav-btn" data-target="playwright-page-methods">Page Methods</button>
+<button class="nav-btn" data-target="playwright-locator-methods">Locator Methods</button>
+<button class="nav-btn" data-target="playwright-locator">Locators</button>
+<button class="nav-btn" data-target="playwright-select-dropdown">Select Dropdown</button>
+<button class="nav-btn" data-target="playwright-actions">Actions</button>
+<button class="nav-btn" data-target="playwright-alert-dialog">Alert/Dialog</button>
+<button class="nav-btn" data-target="playwright-frames">Frames in Playwright</button>
+<button class="nav-btn" data-target="playwright-window-handling">Window Handling</button>
+<button class="nav-btn" data-target="playwright-file-upload-download">File Upload/Download</button>
+<button class="nav-btn" data-target="playwright-assertion">Assertion</button>
+<button class="nav-btn" data-target="playwright-keyboard-actions">Keyboard Actions</button>
+<button class="nav-btn" data-target="playwright-browser-context">Browser Context</button>
+<button class="nav-btn" data-target="playwright-trace-viewer">Trace Viewer</button>
+<button class="nav-btn" data-target="playwright-screenshot-videos">Screenshot and Videos</button>
+<button class="nav-btn" data-target="playwright-auto-waiting">Auto-waiting</button>
+<button class="nav-btn" data-target="playwright-code-gen">Code Gen</button>
+<button class="nav-btn" data-target="playwright-simple-basi-code">Simple Basic code</button>
+</div>
+</div>
+
+<button class="nav-btn" data-target="cucumber">Cucumber (BDD)</button>
+<button class="nav-btn" data-target="jenkins">Jenkins (CI/CD)</button>
+<button class="nav-btn" data-target="docker">Docker</button>
+<button class="nav-btn" data-target="linux">Linux Commands</button>
+<button class="nav-btn" data-target="framework-dev">Framework Development</button>
+<button class="nav-btn" data-target="design-patterns">Design Patterns</button>
+<button class="nav-btn" data-target="excel-poi">Excel (Apache POI)</button>
+<div class="nav-group-title">💼 Interview Tips / Scenarios</div>
+<button class="nav-btn" data-target="int-project">Project</button>
+<button class="nav-btn" data-target="int-testing-concepts">Testing Concepts</button>
+<button class="nav-btn" data-target="int-framework">Framework</button>
+<button class="nav-btn" data-target="int-automation">Automation</button>
+<button class="nav-btn" data-target="int-agile-sprint">Agile Sprint</button>
+<button class="nav-btn" data-target="int-github">GitHub</button>
+<button class="nav-btn" data-target="int-ci-cd">CI/CD</button>
+<button class="nav-btn" data-target="int-data-driven-framework">Data Driven Framework</button>
+<button class="nav-btn" data-target="int-defect-management">Defect Management</button>
+<button class="nav-btn" data-target="int-api-testing">API Testing</button>
+<button class="nav-btn" data-target="int-cloud-testing">Cloud Testing</button>
+<button class="nav-btn" data-target="int-mobile-testing">Mobile Testing</button>
+<button class="nav-btn" data-target="int-performance-testing">Performance Testing</button>
+<button class="nav-btn" data-target="int-security-testing">Security Testing</button>
+<button class="nav-btn" data-target="int-team-collaboration">Team Collaboration</button>
+<button class="nav-btn" data-target="int-client-communication">Client Communication</button>
+<button class="nav-btn" data-target="int-debugging-scenarios">Debugging Scenarios</button>
+<button class="nav-btn" data-target="int-real-time-selenium-scenarios">Real-Time Selenium Scenarios</button>
+<button class="nav-btn" data-target="int-playwright-scenarios">Playwright Scenarios</button>
+<button class="nav-btn" data-target="int-api-scenarios">API Scenarios</button>
+<button class="nav-btn" data-target="int-hr-interview">HR Interview</button>
+  </nav>
+
+  <!-- MAIN CONTENT (content only) -->
+  <main class="main-content">
+    <section class="content-panel">
+      <div class="panel-header">
+        <div class="panel-title-wrap">
+          <h2>Learning Panel</h2>
+          <span class="badge" id="activeTopicBadge">Select a topic from the left menu</span>
+        </div>
+        <div class="panel-actions" role="group" aria-label="Content panel controls">
+          <button class="content-control-btn" data-action="minimize" type="button" title="Minimize content">▾</button>
+          <button class="content-control-btn" data-action="maximize" type="button" title="Maximize content">▣</button>
+          <button class="content-control-btn" data-action="restore" type="button" title="Restore content">↺</button>
+          <button class="content-control-btn" data-action="quiz" type="button" title="Open Quick Quiz">Q</button>
+        </div>
+      </div>
+      <div class="content-display" id="contentDisplay">
+        <div class="content-pane" id="agile"></div> <script>fetch('agile.html').then(response => response.text()).then(data => { document.getElementById('agile').innerHTML = data; }); </script>
+<div class="content-pane" id="jira"></div> <script>fetch('jira.html').then(response => response.text()).then(data => { document.getElementById('jira').innerHTML = data; }); </script>
+<div class="content-pane" id="istqb"></div> <script>fetch('istqb.html').then(response => response.text()).then(data => { document.getElementById('istqb').innerHTML = data; }); </script>
+<div class="content-pane" id="java"></div> <script>fetch('java.html').then(response => response.text()).then(data => { document.getElementById('java').innerHTML = data; }); </script>
+
+<div class="content-pane" id="java-oops"><script>fetch('java-oops.html').then(response => response.text()).then(data => { document.getElementById('java-oops').innerHTML = data; }); </script></div>
+<div class="content-pane" id="java-inheritance"><script>fetch('java-inheritance.html').then(response => response.text()).then(data => { document.getElementById('java-inheritance').innerHTML = data; }); </script></div>
+<div class="content-pane" id="java-polymorphism"><script>fetch('java-polymorphism.html').then(response => response.text()).then(data => { document.getElementById('java-polymorphism').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-encapsulation"><script>fetch('java-encapsulation.html').then(response => response.text()).then(data => { document.getElementById('java-encapsulation').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-abstration"><script>fetch('java-abstration.html').then(response => response.text()).then(data => { document.getElementById('java-abstration').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-datatypes"><script>fetch('java-datatypes.html').then(response => response.text()).then(data => { document.getElementById('java-datatypes').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-scanner"><script>fetch('java-scanner.html').then(response => response.text()).then(data => { document.getElementById('java-scanner').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-variables"><script>fetch('java-variables.html').then(response => response.text()).then(data => { document.getElementById('java-variables').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-static"><script>fetch('java-static.html').then(response => response.text()).then(data => { document.getElementById('java-static').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-memory-allocation"><script>fetch('java-memory-allocation.html').then(response => response.text()).then(data => { document.getElementById('java-memory-allocation').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-string"><script>fetch('java-string.html').then(response => response.text()).then(data => { document.getElementById('java-string').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-accessmodifier"><script>fetch('java-accessmodifier.html').then(response => response.text()).then(data => { document.getElementById('java-accessmodifier').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-conditional"><script>fetch('java-conditional.html').then(response => response.text()).then(data => { document.getElementById('java-conditional').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-looping"><script>fetch('java-looping.html').then(response => response.text()).then(data => { document.getElementById('java-looping').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-array"><script>fetch('java-array.html').then(response => response.text()).then(data => { document.getElementById('java-array').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-constructor"><script>fetch('java-constructor.html').then(response => response.text()).then(data => { document.getElementById('java-constructor').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-collection"><script>fetch('java-collection.html').then(response => response.text()).then(data => { document.getElementById('java-collection').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-list"><script>fetch('java-list.html').then(response => response.text()).then(data => { document.getElementById('java-list').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-set"><script>fetch('java-set.html').then(response => response.text()).then(data => { document.getElementById('java-set').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-map"><script>fetch('java-map.html').then(response => response.text()).then(data => { document.getElementById('java-map').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="java-exception"><script>fetch('java-exception.html').then(response => response.text()).then(data => { document.getElementById('java-exception').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="javaprogram-stringprogram"><script>fetch('javaprogram-stringprogram.html').then(response => response.text()).then(data => { document.getElementById('javaprogram-stringprogram').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="stringpalindrome"><script>fetch('javaprogram-string-palindrome.html').then(response => response.text()).then(data => { document.getElementById('javaprogram-string-palindrome').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="reversevariants"><script>fetch('javaprogram-reverse-variants.html').then(response => response.text()).then(data => { document.getElementById('javaprogram-reverse-variants').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="charactercount"><script>fetch('javaprogram-character-count.html').then(response => response.text()).then(data => { document.getElementById('javaprogram-character-count').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="findduplicate"><script>fetch('javaprogram-find-duplicate.html').then(response => response.text()).then(data => { document.getElementById('javaprogram-find-duplicate').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="removeduplicate"><script>fetch('javaprogram-remove-duplicate.html').then(response => response.text()).then(data => { document.getElementById('javaprogram-remove-duplicate').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="firstunique"><script>fetch('javaprogram-first-unique.html').then(response => response.text()).then(data => { document.getElementById('javaprogram-first-unique').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="anagram"><script>fetch('javaprogram-anagram.html').then(response => response.text()).then(data => { document.getElementById('javaprogram-anagram').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="wordcount"><script>fetch('javaprogram-wordcount.html').then(response => response.text()).then(data => { document.getElementById('javaprogram-wordcount').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="alpha-numeric"><script>fetch('javaprogram-alpha-numeric.html').then(response => response.text()).then(data => { document.getElementById('javaprogram-alpha-numeric').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="vowels"><script>fetch('javaprogram-vowels.html').then(response => response.text()).then(data => { document.getElementById('javaprogram-vowels').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="remove-special-char"><script>fetch('javaprogram-remove-special-char.html').then(response => response.text()).then(data => { document.getElementById('javaprogram-remove-special-char').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="arrayprograms"><script>fetch('arrayprograms.html').then(response => response.text()).then(data => { document.getElementById('arrayprograms').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="arrayprograms-unique-duplicate"><script>fetch('arrayprograms-unique-duplicate.html').then(response => response.text()).then(data => { document.getElementById('arrayprograms-unique-duplicate').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="arrayprograms-sort"><script>fetch('arrayprograms-sort.html').then(response => response.text()).then(data => { document.getElementById('arrayprograms-sort').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="arrayprograms-largest"><script>fetch('arrayprograms-largest.html').then(response => response.text()).then(data => { document.getElementById('arrayprograms-largest').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="arrayprograms-smallest"><script>fetch('arrayprograms-smallest.html').then(response => response.text()).then(data => { document.getElementById('arrayprograms-smallest').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="arrayprograms-missing"><script>fetch('arrayprograms-missing.html').then(response => response.text()).then(data => { document.getElementById('arrayprograms-missing').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="arrayprograms-sort-string"><script>fetch('arrayprograms-sort-string.html').then(response => response.text()).then(data => { document.getElementById('arrayprograms-sort-string-array').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="arrayprograms-reverse-an-array"><script>fetch('arrayprograms-reverse-an-array.html').then(response => response.text()).then(data => { document.getElementById('arrayprograms-reverseanarray').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="arrayprograms-second-largest"><script>fetch('arrayprograms-second-largest.html').then(response => response.text()).then(data => { document.getElementById('arrayprograms-secondlargest').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="arrayprograms-move-zeros"><script>fetch('arrayprograms-move-zeros.html').then(response => response.text()).then(data => { document.getElementById('arrayprograms-movezeros').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="arrayprograms-compare-arrays"><script>fetch('arrayprograms-compare-arrays.html').then(response => response.text()).then(data => { document.getElementById('arrayprograms-comparetoarrays').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="arrayprograms-frequency"><script>fetch('arrayprograms-frequency.html').then(response => response.text()).then(data => { document.getElementById('arrayprograms-frequencyofnumbers').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="arrayprograms-common-elements"><script>fetch('arrayprograms-common-elements.html').then(response => response.text()).then(data => { document.getElementById('arrayprograms-commonelement').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="oddorevenprograme"><script>fetch('oddorevenprograme.html').then(response => response.text()).then(data => { document.getElementById('oddeven').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="oddoreven"><script>fetch('oddoreven.html').then(response => response.text()).then(data => { document.getElementById('oddoreven').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="countofoddeven"><script>fetch('countofoddeven.html').then(response => response.text()).then(data => { document.getElementById('countofoddeven').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="numberprograms"><script>fetch('numberprograms.html').then(response => response.text()).then(data => { document.getElementById('numberprograms').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="factorial"><script>fetch('factorial.html').then(response => response.text()).then(data => { document.getElementById('factorial').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="largestnumber"><script>fetch('largestnumber.html').then(response => response.text()).then(data => { document.getElementById('largestnumber').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="smallestnumber"><script>fetch('smallestnumber.html').then(response => response.text()).then(data => { document.getElementById('smallestnumber').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="swapnumbers"><script>fetch('swapnumbers.html').then(response => response.text()).then(data => { document.getElementById('swapnumbers').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="sumofdigits"><script>fetch('sumofdigits.html').then(response => response.text()).then(data => { document.getElementById('sumofdigits').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="integerreverse"><script>fetch('integerreverse.html').then(response => response.text()).then(data => { document.getElementById('integerreverse').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="fibonacci"><script>fetch('fibonacci.html').then(response => response.text()).then(data => { document.getElementById('fibonacci').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="armstrong"><script>fetch('armstrong.html').then(response => response.text()).then(data => { document.getElementById('armstrong').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="primenumber"><script>fetch('primenumber.html').then(response => response.text()).then(data => { document.getElementById('primenumber').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="gradesystem"><script>fetch('gradesystem.html').then(response => response.text()).then(data => { document.getElementById('gradesystem').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="starpattern"><script>fetch('starpattern.html').then(response => response.text()).then(data => { document.getElementById('starpattern').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="traincoach"><script>fetch('traincoach.html').then(response => response.text()).then(data => { document.getElementById('traincoach').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="maps"><script>fetch('maps.html').then(response => response.text()).then(data => { document.getElementById('maps').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="playwright"><script>fetch('playwright.html').then(response => response.text()).then(data => { document.getElementById('playwright').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="pagemethods"><script>fetch('pagemethods.html').then(response => response.text()).then(data => { document.getElementById('pagemethods').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="locatormethods"><script>fetch('locatormethods.html').then(response => response.text()).then(data => { document.getElementById('locatormethods').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="locatorsinplaywright"><script>fetch('locatorsinplaywright.html').then(response => response.text()).then(data => { document.getElementById('locatorsinplaywright').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="selectdropdown"><script>fetch('selectdropdown.html').then(response => response.text()).then(data => { document.getElementById('selectdropdown').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="actioninplaywright"><script>fetch('actioninplaywright.html').then(response => response.text()).then(data => { document.getElementById('actioninplaywright').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="alertdialog"><script>fetch('alertdialog.html').then(response => response.text()).then(data => { document.getElementById('alertdialog').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="framesinplaywright"><script>fetch('framesinplaywright.html').then(response => response.text()).then(data => { document.getElementById('framesinplaywright').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="windowhandlinginplaywright"><script>fetch('windowhandlinginplaywright.html').then(response => response.text()).then(data => { document.getElementById('windowhandlinginplaywright').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="fileuploaddownload"><script>fetch('fileuploaddownload.html').then(response => response.text()).then(data => { document.getElementById('fileuploaddownload').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="assertioninplaywright"><script>fetch('assertioninplaywright.html').then(response => response.text()).then(data => { document.getElementById('assertioninplaywright').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="keyboardactionspw"><script>fetch('keyboardactionspw.html').then(response => response.text()).then(data => { document.getElementById('keyboardactionspw').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="browseractonpw"><script>fetch('browseractonpw.html').then(response => response.text()).then(data => { document.getElementById('browseractonpw').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="traceviewer"><script>fetch('traceviewer.html').then(response => response.text()).then(data => { document.getElementById('traceviewer').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="screenshotandvideos"><script>fetch('screenshotandvideos.html').then(response => response.text()).then(data => { document.getElementById('screenshotandvideos').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="autowait"><script>fetch('autowait.html').then(response => response.text()).then(data => { document.getElementById('autowait').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="codegen"><script>fetch('codegen.html').then(response => response.text()).then(data => { document.getElementById('codegen').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="simplebasiccode"><script>fetch('simplebasiccode.html').then(response => response.text()).then(data => { document.getElementById('simplebasiccode').innerHTML = data; }); </script></div>
+
+<div class="content-pane" id="selenium"><script>fetch('selenium.html').then(response => response.text()).then(data => { document.getElementById('selenium').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-basics"><script>fetch('selenium-basics.html').then(response => response.text()).then(data => { document.getElementById('selenium-basics').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-webdriver-methods"><script>fetch('selenium-webdriver-methods.html').then(response => response.text()).then(data => { document.getElementById('selenium-webdriver-methods').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-webelement-methods"><script>fetch('selenium-webelement-methods.html').then(response => response.text()).then(data => { document.getElementById('selenium-webelement-methods').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-locators"><script>fetch('selenium-locators.html').then(response => response.text()).then(data => { document.getElementById('selenium-locators').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-xpath"><script>fetch('selenium-xpath.html').then(response => response.text()).then(data => { document.getElementById('selenium-xpath').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-css-selector"><script>fetch('selenium-css-selector.html').then(response => response.text()).then(data => { document.getElementById('selenium-css-selector').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-checkbox---radio-button"><script>fetch('selenium-checkbox---radio-button.html').then(response => response.text()).then(data => { document.getElementById('selenium-checkbox---radio-button').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-select-class"><script>fetch('selenium-select-class.html').then(response => response.text()).then(data => { document.getElementById('selenium-select-class').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-actions-class"><script>fetch('selenium-actions-class.html').then(response => response.text()).then(data => { document.getElementById('selenium-actions-class').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-javascript-executor"><script>fetch('selenium-javascript-executor.html').then(response => response.text()).then(data => { document.getElementById('selenium-javascript-executor').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-waits"><script>fetch('selenium-waits.html').then(response => response.text()).then(data => { document.getElementById('selenium-waits').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-frames"><script>fetch('selenium-frames.html').then(response => response.text()).then(data => { document.getElementById('selenium-frames').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-alerts"><script>fetch('selenium-alerts.html').then(response => response.text()).then(data => { document.getElementById('selenium-alerts').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-windows"><script>fetch('selenium-windows.html').then(response => response.text()).then(data => { document.getElementById('selenium-windows').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-web-tables"><script>fetch('selenium-web-tables.html').then(response => response.text()).then(data => { document.getElementById('selenium-web-tables').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-calendar"><script>fetch('selenium-calendar.html').then(response => response.text()).then(data => { document.getElementById('selenium-calendar').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-file-upload---download"><script>fetch('selenium-file-upload---download.html').then(response => response.text()).then(data => { document.getElementById('selenium-file-upload---download').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-screenshot"><script>fetch('selenium-screenshot.html').then(response => response.text()).then(data => { document.getElementById('selenium-screenshot').innerHTML = data; }); </script></div>
+<div class="content-pane" id="selenium-testng"><script>fetch('selenium-testng.html').then(response => response.text()).then(data => { document.getElementById('selenium-testng').innerHTML = data; }); </script></div>
+<div class="content-pane" id="maven"><script>fetch('maven.html').then(response => response.text()).then(data => { document.getElementById('maven').innerHTML = data; }); </script></div>
+<div class="content-pane" id="git-github"><script>fetch('git-github.html').then(response => response.text()).then(data => { document.getElementById('git-github').innerHTML = data; }); </script></div>
+<div class="content-pane" id="sql"><script>fetch('sql.html').then(response => response.text()).then(data => { document.getElementById('sql').innerHTML = data; }); </script></div>
+<div class="content-pane" id="api-testing"><script>fetch('api-testing.html').then(response => response.text()).then(data => { document.getElementById('api-testing').innerHTML = data; }); </script></div>
+<div class="content-pane" id="postman"><script>fetch('postman.html').then(response => response.text()).then(data => { document.getElementById('postman').innerHTML = data; }); </script></div>
+<div class="content-pane" id="playwright"><h3>Playwright</h3><div class="inner-nav-wrap" data-inner-parent="playwright"></div></div>
+<div class="content-pane" id="cucumber"><script>fetch('cucumber.html').then(response => response.text()).then(data => { document.getElementById('cucumber').innerHTML = data; }); </script></div>
+<div class="content-pane" id="jenkins"><script>fetch('jenkins.html').then(response => response.text()).then(data => { document.getElementById('jenkins').innerHTML = data; }); </script></div>
+<div class="content-pane" id="docker"><script>fetch('docker.html').then(response => response.text()).then(data => { document.getElementById('docker').innerHTML = data; }); </script></div>
+<div class="content-pane" id="linux"><script>fetch('linux.html').then(response => response.text()).then(data => { document.getElementById('linux').innerHTML = data; }); </script></div>
+<div class="content-pane" id="framework-dev"><script>fetch('framework-dev.html').then(response => response.text()).then(data => { document.getElementById('framework-dev').innerHTML = data; }); </script></div>
+<div class="content-pane" id="design-patterns"><script>fetch('design-patterns.html').then(response => response.text()).then(data => { document.getElementById('design-patterns').innerHTML = data; }); </script></div>
+<div class="content-pane" id="excel-poi"><script>fetch('excel-poi.html').then(response => response.text()).then(data => { document.getElementById('excel-poi').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-project"><script>fetch('int-project.html').then(response => response.text()).then(data => { document.getElementById('int-project').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-testing-concepts"><script>fetch('int-testing-concepts.html').then(response => response.text()).then(data => { document.getElementById('int-testing-concepts').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-framework"><script>fetch('int-framework.html').then(response => response.text()).then(data => { document.getElementById('int-framework').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-automation"><script>fetch('int-automation.html').then(response => response.text()).then(data => { document.getElementById('int-automation').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-agile-sprint"><script>fetch('int-agile-sprint.html').then(response => response.text()).then(data => { document.getElementById('int-agile-sprint').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-github"><script>fetch('int-github.html').then(response => response.text()).then(data => { document.getElementById('int-github').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-ci-cd"><script>fetch('int-ci-cd.html').then(response => response.text()).then(data => { document.getElementById('int-ci-cd').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-data-driven-framework"><script>fetch('int-data-driven-framework.html').then(response => response.text()).then(data => { document.getElementById('int-data-driven-framework').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-defect-management"><script>fetch('int-defect-management.html').then(response => response.text()).then(data => { document.getElementById('int-defect-management').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-api-testing"><script>fetch('int-api-testing.html').then(response => response.text()).then(data => { document.getElementById('int-api-testing').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-cloud-testing"><script>fetch('int-cloud-testing.html').then(response => response.text()).then(data => { document.getElementById('int-cloud-testing').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-mobile-testing"><script>fetch('int-mobile-testing.html').then(response => response.text()).then(data => { document.getElementById('int-mobile-testing').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-performance-testing"><script>fetch('int-performance-testing.html').then(response => response.text()).then(data => { document.getElementById('int-performance-testing').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-security-testing"><script>fetch('int-security-testing.html').then(response => response.text()).then(data => { document.getElementById('int-security-testing').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-team-collaboration"><script>fetch('int-team-collaboration.html').then(response => response.text()).then(data => { document.getElementById('int-team-collaboration').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-client-communication"><script>fetch('int-client-communication.html').then(response => response.text()).then(data => { document.getElementById('int-client-communication').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-debugging-scenarios"><script>fetch('int-debugging-scenarios.html').then(response => response.text()).then(data => { document.getElementById('int-debugging-scenarios').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-real-time-selenium-scenarios"><script>fetch('int-real-time-selenium-scenarios.html').then(response => response.text()).then(data => { document.getElementById('int-real-time-selenium-scenarios').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-playwright-scenarios"><script>fetch('int-playwright-scenarios.html').then(response => response.text()).then(data => { document.getElementById('int-playwright-scenarios').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-api-scenarios"><script>fetch('int-api-scenarios.html').then(response => response.text()).then(data => { document.getElementById('int-api-scenarios').innerHTML = data; }); </script></div>
+<div class="content-pane" id="int-hr-interview"><script>fetch('int-hr-interview.html').then(response => response.text()).then(data => { document.getElementById('int-hr-interview').innerHTML = data; }); </script></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== QUIZ SIDE PANEL (right, one-by-one) ===================== -->
+  <aside class="quiz-panel" id="quizPanel">
+    <div class="panel-header quiz-panel-header">
+      <h2>📝 Quick Quiz</h2>
+      <div class="quiz-header-actions">
+        <button class="quiz-hide-btn" type="button" data-action="collapse-quiz" aria-label="Hide quiz">Hide</button>
+        <button class="quiz-restore-btn" type="button" data-action="expand-quiz" aria-label="Restore quiz">Restore</button>
+      </div>
+      <span class="badge" id="quizTopicBadge">General</span>
+    </div>
+    <p class="quiz-sub">Answer one question at a time, check it, then navigate.</p>
+
+    <div class="quiz-progress" id="quizProgress">Question 1 of 1</div>
+
+    <div class="quiz-single" id="quizSingle"><!-- current question renders here --></div>
+
+    <!-- INNER NAVIGATION BUTTONS (per-topic quiz stepper) -->
+    <div class="quiz-inner-nav">
+      <button id="prevQ" class="btn-secondary" type="button">◀ Prev</button>
+      <button id="checkQ" class="btn-primary" type="button">Check Answer</button>
+      <button id="nextQ" class="btn-secondary" type="button">Next ▶</button>
+    </div>
+
+    <div class="quiz-dots" id="quizDots"></div>
+
+    <div class="quiz-actions">
+      <button id="resetQuiz" class="btn-secondary" type="button">Reset Quiz</button>
+    </div>
+
+    <div id="quizResult" class="quiz-result"></div>
+  </aside>
+</div>
+
+<!-- ===================== REFERENCE LINKS ===================== -->
+<section class="links-panel">
+  <div class="panel-header">
+    <h2>🔗 Helpful References</h2>
+  </div>
+  <div class="links-grid">
+    <a href="https://chatgpt.com/" target="_blank" rel="noopener" class="link-card">
+      <span class="link-icon">💬</span> ChatGPT
+    </a>
+    <a href="https://claude.ai/" target="_blank" rel="noopener" class="link-card">
+      <span class="link-icon">🤖</span> Claude AI
+    </a>
+    <a href="https://onecompiler.com/java" target="_blank" rel="noopener" class="link-card">
+      <span class="link-icon">☕</span> OneCompiler (Java)
+    </a>
+    <a href="https://www.w3schools.com/" target="_blank" rel="noopener" class="link-card">
+      <span class="link-icon">📚</span> W3Schools
+    </a>
+    <a href="https://academy.selfmade.ninja/login" target="_blank" rel="noopener" class="link-card">
+      <span class="link-icon">🥷</span> Selfmade Ninja Academy
+    </a>
+    <a href="https://www.udemy.com/" target="_blank" rel="noopener" class="link-card">
+      <span class="link-icon">📚</span> Udemy
+    </a>
+  </div>
+</section>
+
+<footer class="app-footer">
+  <p>Tech Source &copy; <span id="year"></span> — Creativity at it's peak!</p>
+</footer>
+
+<!-- ===================== CHAT BOX ===================== -->
+<div class="chat-widget">
+  <button id="chatToggle" class="chat-toggle" aria-label="Open TS chat">🔷</button>
+
+  <div class="chat-box" id="chatBox">
+    <div class="chat-header">
+      <span><span class="chat-brand-icon">🔷</span> TS Chat</span>
+      <button id="chatClose" aria-label="Close chat">✕</button>
+    </div>
+
+    <div class="chat-tabs">
+      <button class="chat-tab active" data-view="teams">Teams</button>
+      <button class="chat-tab" data-view="single">Single</button>
+    </div>
+
+    <div class="chat-body">
+      <aside class="chat-sidebar" id="chatSidebar">
+        <div class="chat-sidebar-top">
+          <input type="text" id="newChatName" placeholder="New group / DM name" autocomplete="off">
+          <button id="createChatBtn" type="button">Create</button>
+        </div>
+        <div class="chat-list" id="chatList"></div>
+      </aside>
+
+      <section class="chat-panel">
+        <div class="chat-messages" id="chatMessages"></div>
+        <form id="chatForm" class="chat-input-row">
+          <input type="text" id="chatInput" placeholder="Type your message..." autocomplete="off">
+          <button type="submit" class="btn-send">Send</button>
+        </form>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
