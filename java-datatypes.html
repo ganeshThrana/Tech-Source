@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DataTypes Notes</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1, h2, h3 {
+    color: #1a1a1a;
+  }
+  h2 {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 4px;
+    margin-top: 40px;
+  }
+  pre {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 15px;
+    overflow-x: auto;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: Consolas, "Courier New", monospace;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15px 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: left;
+  }
+  th {
+    background: #f0f0f0;
+  }
+  ul, ol {
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<h1>DataTypes: DataTypesCode</h1>
+
+<h2>1. Primitive DataTypes</h2>
+<table>
+  <tr><th>Type</th><th>What it stores</th><th>Example</th></tr>
+  <tr><td>int</td><td>Whole numbers</td><td><code>int age = 25;</code></td></tr>
+  <tr><td>float</td><td>Decimal numbers (less precise)</td><td><code>float price = 99.99f;</code></td></tr>
+  <tr><td>double</td><td>Decimal numbers (more precise)</td><td><code>double weight = 72.5;</code></td></tr>
+  <tr><td>char</td><td>A single character</td><td><code>char grade = 'A';</code></td></tr>
+  <tr><td>boolean</td><td>True or false</td><td><code>boolean isActive = true;</code></td></tr>
+  <tr><td>byte</td><td>Very small whole number</td><td><code>byte b = 100;</code></td></tr>
+  <tr><td>short</td><td>Small whole number</td><td><code>short s = 10000;</code></td></tr>
+  <tr><td>long</td><td>Big whole numbers</td><td><code>long distance = 9999999L;</code></td></tr>
+</table>
+
+<h2>2. Non-Primitive or Wrapper Class:</h2>
+<p>A class which contains primitive data types.<br>"String"</p>
+
+<table>
+  <tr><th>Primitive</th><th>Wrapper Class</th></tr>
+  <tr><td>int</td><td>Integer</td></tr>
+  <tr><td>char</td><td>Character</td></tr>
+  <tr><td>boolean</td><td>Boolean</td></tr>
+  <tr><td>float</td><td>Float</td></tr>
+  <tr><td>double</td><td>Double</td></tr>
+  <tr><td>byte</td><td>Byte</td></tr>
+  <tr><td>short</td><td>Short</td></tr>
+  <tr><td>long</td><td>Long</td></tr>
+</table>
+
+<h2>Primitive:</h2>
+<table>
+  <tr><th>Data Type</th><th>Size</th><th>Range</th></tr>
+  <tr><td>byte</td><td>1 byte (8 bits)</td><td>-128 to 127</td></tr>
+  <tr><td>short</td><td>2 bytes (16 bits)</td><td>-32,768 to 32,767</td></tr>
+  <tr><td>int</td><td>4 bytes (32 bits)</td><td>-2,147,483,648 to 2,147,483,647</td></tr>
+  <tr><td>long</td><td>8 bytes (64 bits)</td><td>-9,223,372,036,854,775,808 to 9,223,372,036,854,775,807</td></tr>
+  <tr><td>float</td><td>4 bytes</td><td>±3.40282347 × 10³⁸ (≈6–7 decimal digits)</td></tr>
+  <tr><td>double</td><td>8 bytes</td><td>±1.7976931348623157 × 10³⁰⁸ (≈15–16 decimal digits)</td></tr>
+  <tr><td>char</td><td>2 bytes</td><td>0 to 65,535 (Unicode characters)</td></tr>
+  <tr><td>boolean</td><td>—</td><td>true or false</td></tr>
+</table>
+
+<h2>Convert String to Integer and perform operations:</h2>
+<pre><code>String string = "100";
+int convertedString = Integer.parseInt(string);
+int integer = 200;
+System.out.println(convertedString+integer);
+</code></pre>
+
+<h1>Type Casting:</h1>
+<p>🔹 What is Typecasting?<br>
+Typecasting is the process of converting a variable from one data type to another.</p>
+<p>There are two types:</p>
+<ol>
+  <li>Widening (Implicit Typecasting)</li>
+  <li>Narrowing (Explicit Typecasting)</li>
+</ol>
+
+<h2>✅ 1. Widening Typecasting (Automatic / Safe) (Upcasting)</h2>
+<ul>
+  <li>Happens when converting smaller to larger data types.</li>
+  <li>No data loss.</li>
+</ul>
+<p>Example:</p>
+<pre><code>int num = 10;
+double d = num; // int to double (widening)
+System.out.println(d); // Output: 10.0
+</code></pre>
+
+<table>
+  <tr><th>From → To</th><th>Type</th><th>Example</th></tr>
+  <tr><td>int → double</td><td>Widening</td><td><code>double d = 10;</code></td></tr>
+  <tr><td>double → int</td><td>Narrowing</td><td><code>int i = (int) 10.99;</code></td></tr>
+  <tr><td>char → int</td><td>Widening</td><td><code>int code = 'A'; // 65</code></td></tr>
+  <tr><td>int → char</td><td>Narrowing</td><td><code>char ch = (char) 66; // B</code></td></tr>
+</table>
+
+<p><strong>Flow:</strong><br>
+byte → short → int → long → float → double</p>
+
+<h2>✅ 2. Narrowing Typecasting (Manual / Risky) (Downcasting)</h2>
+<ul>
+  <li>Happens when converting larger to smaller data types.</li>
+  <li>Might lose data or precision.</li>
+  <li>Needs explicit cast using (type).</li>
+</ul>
+<p>Example:</p>
+<pre><code>double d = 9.78;
+int num = (int) d; // double to int (narrowing)
+System.out.println(num); // Output: 9
+</code></pre>
+
+<h2>TypeCasting:</h2>
+<pre><code>package common;
+
+public class Simple {
+    //byte → short → int → long → float → double
+    public static void main(String[] args) {
+        float f = 10.5f;
+        double d = f;
+        System.out.println(d);// Widening Type Casting (float to double)
+
+        byte b = 5;
+        long l = b; //Widening Type Casting (byte to long)
+        System.out.println(l);
+
+        double d2 = 20.5;
+        float f2 = (float) d2; //Narrowing Type Casting (double to float)
+        System.out.println(f2);
+
+        double d3 = 30.5;
+        int i = (int) d3;
+        System.out.println(i);
+
+        int i2 = 40;
+        float f3 = (float) i2;
+        System.out.println(f3); //40.0
+
+        byte c = 10;
+        long l1 = c;
+        short c2 = (short) l1;
+        int i3 = c2;
+        float f4 = i3;
+        long l2 = (long) f4;
+        System.out.println(l2);
+    }
+}
+</code></pre>
+
+<h2>Program 5:</h2>
+<pre><code>package org.tcs.pack;
+
+public class DataTypeRanges {
+    public static void main(String[] args) {
+        //Whole Numbers
+        //1 bytes (8 bits)
+        //Default Value = 0
+        byte b1 = -128;
+        byte b2 = 127;
+
+        //2 bytes (16 bits)
+        //Default Value = 0
+        short s1 = 32767;
+        short s2 = -32768;
+
+        //16 bytes (32 bits)
+        //Default Java DataType
+        //Default Value = 0
+        int i1 = 2147483647;
+        int i2 = -2147483648;
+
+        //8 bytes (64 bits)
+        //Default Value = 0
+        long l1 = 9223372036854775807l;
+        long l2 = -9223372036854775808l;
+
+        //Decimal Numbers
+        //4 bytes (≈6–7 decimal digits)
+        //Default Value = 0.0
+        float f = 4.574829532346324658f;
+        System.out.println(f);
+
+        //8 bytes (≈15–16 decimal digits)
+        //Default Java DataType
+        //Default Value = 0.0
+        double d = 3.797693134862315737421231234231323213123;
+        System.out.println(d);
+
+        //Boolean
+        //Default value = false
+        boolean b = true;
+        System.out.println(b);
+
+        //char 2 bytes
+        //Default value = null
+        char c = 'R';
+
+        //Collection of char values
+        //Default value = null
+        String s = "Alex";
+    }
+}
+</code></pre>
+
+<h2>Program 6:</h2>
+<pre><code>package org.tcs.pack;
+
+public class TCSAverageSalary {
+    //Basic Pay, Shift Allowance, HRA
+    //Method create, return, Object, Oops foundation
+    int total; //Instance Variable / Global Variable
+
+    private int prem(int bp, int sa, int hra) { //Stack
+        int totalSalary = bp+sa+hra;
+        return totalSalary;
+    }
+
+    private int ramya(int bp, int sa, int hra) {
+        int totalSalary = bp+sa+hra;
+        return totalSalary;
+    }
+
+    private int ganesh(int bp, int sa, int hra) {
+        int totalSalary = bp+sa+hra;
+        return totalSalary;
+    }
+
+    private int alex(int bp, int sa, int hra) {
+        int totalSalary = bp+sa+hra;
+        return totalSalary;
+    }
+
+    public static void main(String[] args) {
+        TCSAverageSalary tcs = new TCSAverageSalary(); //Heap
+        int premSalary = tcs.prem(12000, 4000, 2000);
+        int ramyaSalary = tcs.ramya(13000, 4000, 2000);
+        int ganeshSalary = tcs.ganesh(12000, 5000, 2000);
+        int alexSalary = tcs.alex(12000, 4000, 1000);
+
+        System.out.println(premSalary);
+        System.out.println(ramyaSalary);
+        System.out.println(ganeshSalary);
+        System.out.println(alexSalary);
+
+        int avg = (premSalary+ramyaSalary+ganeshSalary+alexSalary)/5;
+        System.out.println(avg);
+    }
+}
+</code></pre>
+
+<h2>Program 7:</h2>
+<pre><code>package org.tcs.pack;
+
+public class StudentMarks {
+    private int mark1() {
+        int tamil = 100;
+        int english = 100;
+        int maths = 100;
+        int science = 100;
+        int social = 100;
+        //int total = tamil+english+maths+science+social;
+        // return total;
+        return tamil+english+maths+science+social;
+    }
+
+    private int mark2(int tamil, int english, int maths, int science, int social) {
+        return tamil+english+maths+science+social;
+    }
+
+    private int mark3(int maths, int science, int social) {
+        int tamil = 100;
+        int english = 100;
+        return tamil+english+maths+science+social;
+    }
+
+    //Method Overloading
+    public static void main(String[] args) {
+        StudentMarks sm = new StudentMarks();
+        int totalMarks1 = sm.mark1();
+        int totalMarks2 = sm.mark2(56, 78, 90, 45, 79);
+        int totalMarks3 = sm.mark3(89, 97, 50);
+        int average = totalMarks3/5;
+        System.out.println(average);
+    }
+}
+</code></pre>
+
+<h2>General Fact:</h2>
+<p>To convert String to Integer:<br>
+<code>Integer.parseInt(string);</code> //converts string to int only if numbers are present in string</p>
+
+</body>
+</html>

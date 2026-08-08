@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>String Notes</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 950px;
+    margin: 30px auto;
+    padding: 0 20px;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1, h2, h3 {
+    color: #1a1a1a;
+  }
+  h2 {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 4px;
+    margin-top: 40px;
+  }
+  pre {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 15px;
+    overflow-x: auto;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 13.5px;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: Consolas, "Courier New", monospace;
+  }
+  ul, ol {
+    margin-top: 4px;
+  }
+  .diagram-box {
+    border: 1px solid #999;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    background: #fafafa;
+  }
+  .diagram-flex {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .box {
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 8px 18px;
+    background: #fff;
+    text-align: center;
+  }
+  .heap-region {
+    border: 2px solid #333;
+    border-radius: 40px;
+    padding: 20px;
+    text-align: center;
+    background: #eef4ff;
+  }
+  .heap-region .title {
+    font-weight: bold;
+    color: #b30000;
+    margin-bottom: 10px;
+  }
+  .caption {
+    font-size: 13px;
+    color: #555;
+    text-align: center;
+    margin-top: 8px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15px 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: left;
+  }
+  th {
+    background: #f0f0f0;
+  }
+</style>
+</head>
+<body>
+
+<h1>STRING:</h1>
+<p>Collection of characters or words enclosed within double quotes<br>
+String is an immutable object</p>
+
+<h2>String implements 3 Interfaces:</h2>
+<ol>
+  <li>Serializable</li>
+  <li>Comparable</li>
+  <li>CharSequence (String, StringBuffer, StringBuilder)</li>
+</ol>
+
+<h2>String Functions:</h2>
+<ul>
+  <li><strong>charAt()</strong>: It is used to print the particular character</li>
+  <li><strong>length()</strong>: It is used to find the length of the String</li>
+  <li><strong>contains()</strong>: Contains() is a method, is used to check the particular character or word in the string</li>
+  <li><strong>Equals()</strong>: equals is a method is used to check our string index is true or false</li>
+  <li><strong>Equalsignorecase()</strong>: It is like a equals() method but it is not case sensitive</li>
+  <li><strong>split()</strong>: split() is a method, is used to split the string by space or character or word or whatever</li>
+  <li><strong>toUpperCase()</strong>: is used to convert the string into uppercase</li>
+  <li><strong>toLowerCase()</strong>: is used to convert the string into lowercase</li>
+  <li><strong>substring()</strong>: It is used to print from, which character we want in the string index</li>
+  <li><strong>indexOf()</strong>: It is used to print the position of the character in the string (If multiple characters are present, it will take the first position)</li>
+  <li><strong>lastIndexof()</strong>: If multiple same character, it takes last one</li>
+  <li><strong>replace()</strong>: replace() is a method, it is used to replace the index character or word</li>
+  <li><strong>isEmpty()</strong>: It is used to check the index length is zero</li>
+  <li><strong>startsWith()</strong>: It is used to check the index starts with particular word or character</li>
+  <li><strong>endsWith()</strong>: It is used to check the index ends with particular word or character</li>
+  <li><strong>compareTo()</strong>: It is a method, it is used to compare the character based on ASCII value</li>
+  <li><strong>concat()</strong>: It is used to merge 2 or more string values</li>
+  <li><strong>trim()</strong>: The .trim() method removes only leading and trailing whitespace (like spaces, tabs, or newlines) from the string. It does not touch spaces inside the string.</li>
+  <li><strong>join()</strong>: It is used to join multiple string with a character</li>
+</ul>
+
+<h2>Fact:</h2>
+<pre><code>char letter = 'A';
+int asciiValue = (int) letter;
+
+String s="A";
+int i = s.compareTo("A");
+System.out.println(i);
+</code></pre>
+
+<h2>String Literal:</h2>
+<ul>
+  <li>Uses Heap memory effectively</li>
+  <li>Eg: <strong>String name = "Ramya";</strong></li>
+</ul>
+
+<h2>Non-Literal:</h2>
+<ul>
+  <li>New Keyword</li>
+  <li>Eg: <strong>String name = new String("Ramya");</strong></li>
+</ul>
+
+<div class="diagram-box">
+  <div class="diagram-flex">
+    <div>
+      <p><strong>Literal String:</strong></p>
+      <pre style="margin:0;">String name1 = "Ramya"
+String name2 = "Ramya"</pre>
+      <div class="box" style="margin-top:10px;">name1</div>
+      <div class="box" style="margin-top:10px;">name2</div>
+    </div>
+    <div class="heap-region">
+      <div class="title">HEAP MEMORY</div>
+      <div class="caption" style="margin-bottom:5px;">Same memory for same value</div>
+      <div class="box">Ramya</div>
+      <br>
+      <div class="caption">Different memory for same value</div>
+      <div class="box" style="margin-top:5px;">Alex</div>
+      <div class="box" style="margin-top:5px;">Alex</div>
+    </div>
+    <div>
+      <p><strong>Non-Literal String:</strong></p>
+      <pre style="margin:0;">String user1 = new String("Alex");
+String user2 = new String("Alex");</pre>
+      <div class="box" style="margin-top:10px;">User1</div>
+      <div class="box" style="margin-top:10px;">User2</div>
+    </div>
+  </div>
+</div>
+
+<h2>String Methods &amp; Function!!!!</h2>
+<pre><code>package statement;
+
+public class StringBasic {
+    public static void main(String[] args) {
+        String basic = "We 3 are learning Java!!!";
+        String name = "PremKumar";
+        String space = "";
+
+        char charAt = basic.charAt(10);
+        System.out.println(charAt);
+
+        int length = basic.length();
+        System.out.println(length);
+
+        boolean contains = basic.contains("Java!");
+        System.out.println(contains);
+
+        boolean equals = name.equals("PremKumar");
+        System.out.println(equals);
+
+        boolean equalsIgnoreCase = name.equalsIgnoreCase("premkumar");
+        System.out.println(equalsIgnoreCase);
+
+        String upperCase = name.toUpperCase();
+        System.out.println(upperCase);
+
+        String lowerCase = name.toLowerCase();
+        System.out.println(lowerCase);
+
+        int indexOf = basic.indexOf('n');
+        System.out.println(indexOf);
+
+        String replace = basic.replace("Java", "Python");
+        System.out.println(replace);
+
+        boolean empty = space.isEmpty();
+        System.out.println(empty);
+
+        boolean startsWith = name.startsWith("Pre");
+        System.out.println(startsWith);
+
+        boolean endsWith = basic.endsWith("Java!");
+        System.out.println(endsWith);
+
+        String person1 = "Alexispraba";
+        String person2 = "Ramya";
+        String concat = person1.concat(person2);
+        System.out.println(concat);
+
+        String substring = person1.substring(6);
+        System.out.println(substring);
+
+        String substring2 = person1.substring(1, 4);
+        System.out.println(substring2);
+
+        String trim = basic.trim();
+        System.out.println(trim);
+
+        System.out.println(String.join("-", "20", "04", "2025"));
+
+        String today1 = "Sunday";
+        String today2 = "Mondayyyyy";
+        int compareTo = today1.compareTo(today2);
+        System.out.println(compareTo);
+
+        String sentence = "I am Ramya and am working in TCS";
+        String[] split = sentence.split(" ");
+        System.out.println(split[0]);
+        System.out.println(split[1]);
+        System.out.println(split[2]);
+        System.out.println(split[3]);
+        System.out.println(split[4]);
+        System.out.println(split[5]);
+        System.out.println(split[6]);
+        System.out.println(split[7]);
+
+        System.out.println("Below is for loop");
+        for (int i = 0; i < split.length; i++) {
+            System.out.println(split[i]);
+        }
+
+        System.out.println("Below is while loop");
+        int i=0;
+        while (i<split.length) {
+            System.out.println(split[i]);
+            i++;
+        }
+
+        System.out.println("Below is enhance for loop");
+        for (String everyword : split) {
+            System.out.println(everyword);
+        }
+
+        System.out.println("Below is do while loop");
+        int j=0;
+        do {
+            System.out.println(split[j]);
+            j++;
+        } while (j<split.length);
+    }
+}
+</code></pre>
+
+<h2>Mutable:</h2>
+<ul>
+  <li>we can't store duplicate values in the same memory.</li>
+  <li>We can change the value in memory</li>
+  <li>In concatenation, it takes same memory (append())</li>
+</ul>
+
+<h2>Immutable:</h2>
+<ul>
+  <li>We can store more duplicate value in same memory</li>
+  <li>We can't change the value in memory</li>
+  <li>In concatenation, it creates new memory (concat())</li>
+</ul>
+
+<h2>String Buffer: (New keyword)</h2>
+<ul>
+  <li>Same as String, Collection of characters or words enclosed within double quotes</li>
+  <li>Mutable</li>
+  <li>Also a child of CharSequence (Interface)</li>
+  <li>Synchronized</li>
+  <li><strong>Thread-Safe</strong></li>
+</ul>
+
+<h2>String Builder: (New keyword)</h2>
+<ul>
+  <li>Same as String, Collection of characters or words enclosed within double quotes</li>
+  <li>Mutable</li>
+  <li>Also a child of CharSequence (Interface)</li>
+  <li>Non-Synchronized</li>
+  <li><strong>Not Thread-Safe</strong></li>
+</ul>
+
+<div class="diagram-box">
+  <p style="text-align:center; font-weight:bold;">STRING - IMMUTABLE</p>
+  <div class="diagram-flex">
+    <pre style="margin:0;">String firstName = "Prem";
+String lastName = "Kumar";
+OR
+String firstName = new String("Prem");
+String lastName = new String("Kumar");
+
+String concatenated = firstName.concat(lastName);</pre>
+    <div class="heap-region">
+      <div class="caption">Reference: 100</div>
+      <div class="box">firstName</div>
+      <div class="caption" style="margin-top:10px;">Reference: 101</div>
+      <div class="box">lastName</div>
+      <div class="caption" style="margin-top:10px;">Reference: 102</div>
+      <div class="box">concatenated</div>
+    </div>
+  </div>
+</div>
+
+<h2>Functions in StringBuffer and StringBuilder:</h2>
+<p><strong>Fact:</strong> Both Classes have same Functions</p>
+<ol>
+  <li>Append (Same as Concat in String)</li>
+  <li>charAt</li>
+  <li>Capacity - Size of the memory slot</li>
+  <li>compareTo</li>
+  <li>Delete - Delete a Substring</li>
+  <li>Equals</li>
+  <li>indexOf</li>
+  <li>Insert</li>
+  <li>Length</li>
+  <li>Replace</li>
+  <li>Reverse</li>
+  <li>subString</li>
+</ol>
+
+<div class="diagram-box">
+  <p style="text-align:center; font-weight:bold;">StringBuffer and StringBuilder - Mutable</p>
+  <div class="diagram-flex">
+    <pre style="margin:0;">StringBuffer firstName = new StringBuffer("Prem");
+StringBuffer lastName = new StringBuffer("Kumar");
+AND
+StringBuilder firstName = new StringBuilder("Prem");
+StringBuilder lastName = new StringBuilder("Kumar");
+
+StringBuffer appended = firstName.append(lastName);
+AND
+StringBuilder appended = firstName.append(lastName);</pre>
+    <div class="heap-region">
+      <div class="caption">Reference: 200</div>
+      <div class="box">firstName<br>appended</div>
+      <div class="caption" style="margin-top:10px;">Reference: 201</div>
+      <div class="box">lastName</div>
+      <div class="caption" style="margin-top:10px;">Reference: 202</div>
+      <div class="box" style="text-decoration: line-through;">appended</div>
+    </div>
+  </div>
+</div>
+
+<h2>String, StringBuffer and StringBuilder:</h2>
+<pre><code>package test.learn;
+
+public class StringConcepts {
+    public static void main(String[] args) {
+        //Immutable
+        String name1 = "Ramya"; //String Literal
+        String name2 = "Ramya";
+        System.out.println(System.identityHashCode(name1));
+        System.out.println(System.identityHashCode(name2));
+
+        String obj1 = new String("Ramya"); //Non-Literal
+        String obj2 = new String("Ramya");
+        System.out.println(obj1);
+        System.out.println(obj2);
+
+        String concat = obj1.concat(obj2);
+        System.out.println(concat);
+        System.out.println(System.identityHashCode(obj1));
+        System.out.println(System.identityHashCode(obj2));
+        System.out.println(System.identityHashCode(concat));
+        System.out.println(obj1);
+
+        //Mutable
+        StringBuffer sbuffer1 = new StringBuffer("Alex");
+        StringBuffer sbuffer2 = new StringBuffer("Alex");
+        System.out.println(sbuffer1);
+        System.out.println(sbuffer2);
+
+        StringBuffer append = sbuffer1.append(sbuffer2);
+        System.out.println(append);
+        System.out.println(System.identityHashCode(sbuffer1));
+        System.out.println(System.identityHashCode(sbuffer2));
+        System.out.println(System.identityHashCode(append));
+        System.out.println(sbuffer1);
+
+        //Mutable
+        StringBuilder sbuilder1 = new StringBuilder("Prem");
+        StringBuilder sbuilder2 = new StringBuilder("Prem");
+        System.out.println(System.identityHashCode(sbuilder1));
+        System.out.println(System.identityHashCode(sbuilder2));
+        System.out.println(sbuilder1);
+        System.out.println(sbuilder2);
+
+        StringBuilder append2 = sbuilder1.append(sbuilder2);
+        System.out.println(append2);
+        System.out.println(System.identityHashCode(sbuilder1));
+        System.out.println(System.identityHashCode(sbuilder2));
+        System.out.println(System.identityHashCode(append2));
+        System.out.println(sbuilder1);
+    }
+}
+</code></pre>
+
+<pre><code>package test.learn;
+
+public class MutableFunctions {
+    public static void main(String[] args) {
+        //0123
+        StringBuffer firstName = new StringBuffer("Prem");
+        StringBuffer lastName = new StringBuffer("Kumar");
+
+        StringBuffer reverse = lastName.reverse();
+        System.out.println(reverse);
+
+        StringBuffer replace = firstName.replace(0, 4, "Alex");
+        System.out.println(replace);
+
+        String substring = lastName.substring(3, 5);
+        System.out.println(substring);
+
+        StringBuffer insert = firstName.insert(4, '2');
+        System.out.println(insert);
+
+        int indexOf = lastName.indexOf("a");
+        System.out.println(indexOf);
+
+        boolean equals = firstName.equals(lastName);
+        System.out.println(equals);
+
+        char charAt = firstName.charAt(3);
+        System.out.println(charAt);
+
+        int compareTo = firstName.compareTo(lastName);
+        System.out.println(compareTo);
+
+        StringBuffer delete = lastName.delete(1, 3);
+        System.out.println(delete);
+
+        int capacity = firstName.capacity();
+        System.out.println(capacity);
+
+        int length1 = firstName.length();
+        System.out.println(length1);
+    }
+}
+</code></pre>
+
+<h2>Difference between Mutable and immutable String:</h2>
+<pre><code>package test.learn;
+
+public class MutableFunctions {
+    public static void main(String[] args) {
+        //0123
+        StringBuffer firstName = new StringBuffer("Prem");
+        StringBuffer lastName = new StringBuffer("Kumar");
+
+        int length1 = firstName.length();
+        System.out.println(length1);
+
+        StringBuffer append = firstName.append(lastName);
+        System.out.println(append);
+
+        int length2 = firstName.length();
+        System.out.println(length2);
+
+        System.out.println("--------------------------------------------------------");
+
+        String firstName1 = new String("Prem");
+        String lastName1 = new String("Kumar");
+
+        int length3 = firstName1.length();
+        System.out.println(length3);
+
+        String concat = firstName1.concat(lastName1);
+        System.out.println(concat);
+
+        int length4 = firstName1.length();
+        System.out.println(length4);
+    }
+}
+</code></pre>
+
+<h2>Program 9:</h2>
+<pre><code>package org.tcs.pack;
+
+public class StringPool {
+    public static void main(String[] args) {
+        //Literal
+        String s1 = "Alex";
+        String s2 = "Alex";
+        String s3 = s2;
+        System.out.println(s1==s3); //true
+        System.out.println(System.identityHashCode(s1));
+        System.out.println(System.identityHashCode(s2));
+        System.out.println(System.identityHashCode(s3));
+
+        //Non-Literal
+        String t1 = new String("Alex");
+        String t2 = new String("Alex");
+        System.out.println(t1==t2); //false
+        System.out.println(System.identityHashCode(t1));
+        System.out.println(System.identityHashCode(t2));
+
+        System.out.println(t1.equals(t2));
+    }
+}
+</code></pre>
+
+<h2>For above program:</h2>
+<div class="diagram-box">
+  <div class="diagram-flex">
+    <div>
+      <p style="text-align:center;">String s = "Alex";</p>
+      <div class="box">s1</div>
+      <div class="box" style="margin-top:5px;">s2</div>
+      <div class="box" style="margin-top:5px;">s3</div>
+    </div>
+    <div class="heap-region">
+      <div class="box">Alex</div>
+    </div>
+    <div>
+      <p style="text-align:center;">String t = new String("Alex");</p>
+      <div class="box">t1</div>
+      <div class="box" style="margin-top:5px;">t2</div>
+    </div>
+    <div class="heap-region">
+      <div class="box">Alex</div>
+      <div class="box" style="margin-top:5px;">Alex</div>
+    </div>
+  </div>
+</div>
+
+<h2>String: (Java Heap / String Pool)</h2>
+<div class="diagram-box">
+  <p style="text-align:center; font-weight:bold;">Java Heap</p>
+  <div class="diagram-flex">
+    <div>
+      <pre style="margin:0;">String s1 = "Cat";
+String s2 = "Cat";
+
+String s3 = new String("Cat");
+
+s1 == s2; //true
+s1 == s3; //false</pre>
+    </div>
+    <div class="heap-region">
+      <div class="box">"Cat"</div>
+      <div class="box" style="margin-top:5px;">"Dog"</div>
+      <div class="caption" style="margin-top:10px;">String Pool</div>
+      <div class="box" style="margin-top:5px;">"Cat"</div>
+    </div>
+  </div>
+</div>
+
+<pre><code>package string;
+
+public class StringClass1 {
+    public static void main(String[] args) {
+        String s = "   kisdnfijwndfinweijdnWIOJEFNwiend1238789377(*&(*^&%&^&((*";
+        String statement = "We are attending night class and learning Java!";
+        String[] split = statement.split(" ");
+
+//      System.out.println(split[0]);
+//      System.out.println(split[1]);
+//      System.out.println(split[2]);
+//      System.out.println(split[3]);
+//      System.out.println(split[4]);
+//      System.out.println(split[5]);
+//      System.out.println(split[6]);
+//      System.out.println(split[7]);
+
+        // Sequence
+        // Reverse
+        for (int i = 0; i < split.length; i++) {
+            System.out.println(split[i]);
+        }
+        System.out.println("============================");
+        for (int i = split.length - 1; i >= 0; i--) {
+            System.out.print(split[i]);
+            System.out.print(" ");
+        }
+        System.out.println();
+        System.out.println("============================");
+
+        String s2 = "Alex and Prem and Ramya and Ganesh";
+        String[] split2 = s2.split(" and ");
+        int j = 0;
+        while (j < split2.length) {
+            System.out.println(split2[j]);
+            j++;
+        }
+    }
+}
+</code></pre>
+
+<pre><code>package string;
+
+public class StringClass2 {
+    public static void main(String[] args) {
+        String str = "Jananayagan";
+        String str3 = "jananayagan";
+        System.out.println(str);
+
+        int length = str.length();
+        System.out.println(length);
+
+        char char1 = str.charAt(6);
+        System.out.println(char1);
+
+        String str2 = "Vijay's ";
+        String concat = str2.concat(str);
+        System.out.println(concat);
+
+        boolean contains = str.contains("nayagan");
+        System.out.println(contains);
+
+        boolean equals = str.equals(str3);
+        System.out.println(equals);
+
+        boolean equalsIgnoreCase = str.equalsIgnoreCase(str3);
+        System.out.println(equalsIgnoreCase);
+    }
+}
+</code></pre>
+
+<pre><code>package string;
+
+public class StringClass3 {
+    public static void main(String[] args) {
+        //0123456789
+        String text = "Dog-bites!";
+        int length = text.length();
+
+        //substring
+        String substring = text.substring(3);
+        System.out.println(substring);
+
+        String substring2 = text.substring(3, 9);
+        System.out.println(substring2);
+
+        String substring3 = text.substring(4, 7);
+        System.out.println(substring3);
+
+        String substring4 = text.substring(0, 3);
+        System.out.println(substring4);
+
+        String substring5 = text.substring(0, length-2);
+        System.out.println(substring5);
+    }
+}
+</code></pre>
+
+<pre><code>public class StringClass4 {
+    public static void main(String[] args) {
+        String statement = "We are attending night class and learning Java!";
+        String[] split = statement.split(" ");
+        //String[] split = {"We", "are", "attending", "night", "class", "and", "learning", "Java!"}
+
+        for(int i = 0; i<split.length; i++) {
+            System.out.println(split[i]);
+        }
+        System.out.println("---------------");
+        for (String string : split) {
+            System.out.println(string);
+        }
+        System.out.println("---------------");
+    }
+}
+</code></pre>
+
+<h2>Immutable String: (Stack / Heap / Pool / Garbage Collection)</h2>
+<div class="diagram-box">
+  <div class="diagram-flex">
+    <div>
+      <p style="text-align:center; font-weight:bold;">Stack</p>
+      <table>
+        <tr><td style="text-decoration:line-through;">st</td><td style="text-decoration:line-through;">568</td></tr>
+        <tr><td>str2</td><td>657</td></tr>
+        <tr><td>str</td><td>657</td></tr>
+      </table>
+    </div>
+    <div class="heap-region">
+      <div class="title" style="color:#000;">Heap - Pool</div>
+      <div class="box">Prem (657)</div>
+      <div class="box" style="margin-top:5px; text-decoration:line-through;">prem</div>
+      <div class="box" style="margin-top:5px;">Ganesh (567)</div>
+      <div class="box" style="margin-top:5px;">Ganesh TCS (568)</div>
+    </div>
+    <div class="box" style="align-self:flex-start;">Garbage Collection</div>
+  </div>
+</div>
+
+<h2>Mutable String:</h2>
+<div class="diagram-box">
+  <div class="diagram-flex">
+    <div>
+      <p style="text-align:center; font-weight:bold;">Stack</p>
+      <table>
+        <tr><td>sb</td><td>770</td></tr>
+        <tr><td>st</td><td>990</td></tr>
+      </table>
+    </div>
+    <div class="heap-region">
+      <div class="box">Alex (990)</div>
+      <div class="box" style="margin-top:5px;">Alex (770)</div>
+      <div class="box" style="margin-top:5px; text-decoration:line-through;">Alex Praba</div>
+    </div>
+  </div>
+</div>
+
+<pre><code>package string;
+
+public class StringBasics {
+    public static void main(String[] args) {
+
+        //String str1 = new String("Prem");
+
+        //String Constant Pooling
+        String str = "Prem";
+        String str2 = "Prem";
+
+        System.out.println(str.hashCode());
+        System.out.println(str2.hashCode());
+
+        String st = "Ganesh";
+
+        System.out.println(st.hashCode()); //998
+        st = st + " TCS";
+
+        System.out.println(st.hashCode()); //098
+
+        System.out.println(st);
+    }
+}
+</code></pre>
+
+<pre><code>package mutable.immutable;
+
+public class Immutable {
+    public static void main(String[] args) {
+        //Cannot Change
+        String st = new String("Alex");
+        String concat = st.concat(" Praba");
+        System.out.println(st);
+        System.out.println(st.hashCode());
+        System.out.println(concat.hashCode());
+    }
+}
+</code></pre>
+
+<pre><code>package mutable.immutable;
+
+public class Mutable {
+    public static void main(String[] args) {
+        //Changeable
+        StringBuffer sb = new StringBuffer("Alex");
+        StringBuffer append = sb.append(" Praba");
+        System.out.println(sb);
+        System.out.println(sb.hashCode());
+        System.out.println(append.hashCode());
+
+        StringBuilder sbui = new StringBuilder("Alex");
+        sbui.append(" Praba");
+        System.out.println(sbui);
+    }
+}
+</code></pre>
+
+<pre><code>package mutable.immutable;
+
+public class ImmutableFunctions {
+    public static void main(String[] args) {
+        //0123
+        String st = "Prem%Kumar%TCS$$";
+
+        String concat = st.concat(" Kumar");
+        System.out.println(concat);
+
+        int length = st.length();
+        System.out.println(length);
+
+        char charAt = st.charAt(3);
+        System.out.println(charAt);
+
+        boolean equals = st.equals("Prem");
+        System.out.println(equals);
+
+        boolean empty = st.isEmpty();
+        System.out.println(empty);
+
+        int indexOf = st.indexOf('e'); //Char argument
+        System.out.println(indexOf);
+
+        String substring = st.substring(1, 3);
+        System.out.println(substring);
+
+        //Direct reverse is not possible
+        String replace = st.replace('P', 'p');
+        System.out.println(replace);
+
+        String replace2 = st.replace("rem", "REM");
+        System.out.println(replace2);
+
+        //String Regex (Regular Expressions)
+        String replaceAll = st.replaceAll("[&, %, /]", "");
+        System.out.println(replaceAll);
+
+        String replaceFirst = st.replaceFirst("[&, %, /]", "");
+        System.out.println(replaceFirst);
+
+        int indexOf1 = st.indexOf("m"); //String argument
+        System.out.println(indexOf1);
+
+        int lastIndexOf = st.lastIndexOf('m');
+        System.out.println(lastIndexOf);
+
+        String s1 = new String("Alex");
+        String s2 = new String("Alex");
+        boolean equals2 = s1.equals(s2);
+        System.out.println(equals2);
+
+        //1-10-2026
+        String join = String.join("/", "1", "10", "2026");
+        System.out.println(join);
+
+        String s = " Alex Praba ";
+        String trim = s.trim();
+        System.out.println(trim);
+
+        int compareTo = s.compareTo("Alex Praba");
+        System.out.println(compareTo);
+
+        String d = "Fighter Jet";
+        d.contains("Jet");
+
+        boolean startsWith = d.startsWith("Fighter");
+        System.out.println(startsWith);
+
+        boolean endsWith = d.endsWith("Jet");
+        System.out.println(endsWith);
+
+        String str = "lijnsdlifSIJDNFIJWNDFILNIkljsdnfijsndfi;ONASLIJDNILAJFVN";
+        String upperCase = str.toUpperCase();
+        System.out.println(upperCase);
+
+        String lowerCase = str.toLowerCase();
+        System.out.println(lowerCase);
+
+        int a = 10;
+        String valueOf = String.valueOf(1234.678); //changes any datatype to String
+        System.out.println(valueOf);
+
+        String str1 = "Alex";
+        String repeat = str1.repeat(15);
+        System.out.println(repeat);
+
+        char[] charArray = str1.toCharArray(); // {'A', 'l', 'e', 'x'}
+        System.out.println(charArray[3]);
+    }
+}
+</code></pre>
+
+<h2>Mutable:</h2>
+<pre><code>package mutable.immutable;
+
+public class MutableFunctions {
+    public static void main(String[] args) {
+        StringBuffer sb = new StringBuffer("Prem");
+        StringBuffer append = sb.append(" Kumar");
+        sb.append(" TCS");
+        System.out.println(sb);
+
+        int length = sb.length();
+        System.out.println(length);
+
+        char charAt = sb.charAt(5);
+        System.out.println(charAt);
+        //01234567890
+
+        boolean equals = sb.equals("Prem Kumar TCS");
+        System.out.println(equals);
+
+        boolean empty = sb.isEmpty();
+        System.out.println(empty);
+
+        int indexOf = sb.indexOf("e"); //String argument
+        System.out.println(indexOf);
+
+        String substring = sb.substring(8, 10);
+        System.out.println(substring);
+
+        StringBuffer reverse = sb.reverse();
+        System.out.println(reverse);
+
+        StringBuffer reverse1 = sb.reverse();
+        System.out.println(reverse1);
+
+        sb.delete(8, 10);
+        System.out.println(sb);
+
+        sb.deleteCharAt(6);
+        System.out.println(sb);
+
+        sb.insert(6, 'u');
+        System.out.println(sb);
+
+        sb.replace(9, 12, "EY");
+        System.out.println(sb);
+
+        StringBuffer sb1 = new StringBuffer("Prem");
+        StringBuffer sb2 = new StringBuffer("Prem");
+
+        int compareTo = sb2.compareTo(sb1);
+        System.out.println(compareTo);
+
+        StringBuffer sb3 = new StringBuffer("123456789");
+        int capacity = sb3.capacity();
+        System.out.println(capacity);
+
+        int indexOf1 = sb.indexOf("m"); //String argument
+        System.out.println(indexOf1);
+
+        int lastIndexOf = sb.lastIndexOf("m");
+        System.out.println(lastIndexOf);
+
+        String st = sb.toString();
+        System.out.println(st);
+
+        StringBuffer s1 = new StringBuffer("Alex");
+        StringBuffer s2 = new StringBuffer("Alex");
+
+        boolean equals2 = s1.equals(s1);
+        System.out.println(equals2);
+    }
+}
+</code></pre>
+
+<h2>String separately for Ramya:</h2>
+<div class="diagram-box">
+  <div class="diagram-flex">
+    <div>
+      <p style="text-align:center; font-weight:bold;">Stack</p>
+      <table>
+        <tr><td style="text-decoration:line-through;">r</td><td style="text-decoration:line-through;">110</td><td>120</td></tr>
+        <tr><td>t2</td><td>103</td></tr>
+        <tr><td>t1</td><td>102</td></tr>
+        <tr><td>s3</td><td>101</td></tr>
+        <tr><td>s2</td><td>101</td></tr>
+        <tr><td>s1</td><td>101</td></tr>
+      </table>
+    </div>
+    <div class="heap-region">
+      <div class="caption">String Constant Pool</div>
+      <div class="diagram-flex" style="gap:10px;">
+        <div>
+          <div class="caption">101</div>
+          <div class="box">Alex</div>
+          <div class="caption" style="margin-top:5px;">102</div>
+          <div class="box" style="margin-top:5px;">Alex</div>
+          <div class="caption" style="margin-top:5px;">103</div>
+          <div class="box" style="margin-top:5px;">Alex</div>
+        </div>
+        <div>
+          <div class="caption">120</div>
+          <div class="box">Ramya N</div>
+          <div class="caption" style="margin-top:5px;">110</div>
+          <div class="box" style="margin-top:5px;">Ramya</div>
+          <div class="caption">Garbage Collection</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="diagram-box">
+  <div class="diagram-flex">
+    <div>
+      <p style="text-align:center; font-weight:bold;">Stack</p>
+      <table>
+        <tr><td style="text-decoration:line-through;">append2</td><td>200</td></tr>
+        <tr><td>append</td><td>200</td></tr>
+        <tr><td>str</td><td>200</td></tr>
+        <tr><td>Concat</td><td>104</td></tr>
+        <tr><td>str</td><td>101</td></tr>
+      </table>
+    </div>
+    <div class="heap-region">
+      <div class="diagram-flex" style="gap:10px;">
+        <div>
+          <div class="caption">101</div>
+          <div class="box">Ramya</div>
+          <div class="caption" style="margin-top:5px;">104</div>
+          <div class="box" style="margin-top:5px;">RamyaZoho</div>
+        </div>
+        <div>
+          <div class="caption">200</div>
+          <div class="box" style="text-decoration:line-through;">Ramya</div>
+          <div class="box" style="margin-top:5px; text-decoration:line-through;">RamyaZoho</div>
+          <div class="box" style="margin-top:5px;">RamyaZohoChennai</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<pre><code>// MutableString.java
+public class MutableString {
+    public static void main(String[] args) {
+        StringBuffer str = new StringBuffer("Ramya");
+        StringBuffer append = str.append("Zoho");
+        StringBuffer append2 = str.append("Chennai");
+
+        System.out.println(str);
+        System.out.println(append);
+        System.out.println(append2);
+
+        System.out.println(str.hashCode());
+        System.out.println(append.hashCode());
+    }
+}
+
+// ImmutableString.java
+package ramya;
+
+public class ImmutableString {
+    public static void main(String[] args) {
+        String str = "Ramya";
+        String str1 = "Ramya";
+        String concat = str.concat("Ramya");
+
+        System.out.println(str);
+        System.out.println(concat);
+
+        System.out.println(str.hashCode());
+        System.out.println(str1.hashCode());
+        System.out.println(concat.hashCode());
+    }
+}
+</code></pre>
+
+</body>
+</html>

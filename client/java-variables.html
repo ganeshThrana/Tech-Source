@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Variables Notes</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1, h2, h3 {
+    color: #1a1a1a;
+  }
+  h2 {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 4px;
+    margin-top: 40px;
+  }
+  pre {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 15px;
+    overflow-x: auto;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: Consolas, "Courier New", monospace;
+  }
+  ul, ol {
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Types of Variables:</h1>
+<ol>
+  <li><strong>Local Variable</strong> - Accessed within a method, a block or a constructor</li>
+  <li><strong>Global/Instance Variable</strong> - Global access throughout the class or even other classes when inheriting</li>
+  <li><strong>Static Variable</strong> - A static variable in Java is a class-level variable — which means it is shared by all instances (objects) of that class instead of each object having its own copy</li>
+</ol>
+
+<h2>Fact:</h2>
+<p>Static Variables or Methods can be accessed inside Non-Static methods<br>
+Non-Static Variables or Methods cannot be accessed inside Static methods</p>
+
+<h2>Static: (Can be used in below)</h2>
+<ol>
+  <li>Methods</li>
+  <li>Variables</li>
+  <li>Blocks</li>
+</ol>
+
+<h2>Variables:</h2>
+<pre><code>package test.learn;
+
+public class Variables {
+    String employee1, employee2, employee3;
+    int empID1, empID2, empID3;
+
+    void ramya() {
+        employee1 = "Ramya";
+        empID1 = 1234;
+        System.out.println(employee1+" has ID "+empID1);
+    }
+
+    private void prem() {
+        employee2 = "Prem";
+        empID2 = 1224;
+        System.out.println(employee2+" has ID "+empID2);
+    }
+
+    private void alex() {
+        employee3 = "Alex";
+        empID3 = 1223;
+        System.out.println(employee3+" has ID "+empID3);
+    }
+
+    public static void main(String[] args) {
+        Variables var = new Variables();
+        var.alex();
+        var.ramya();
+        var.prem();
+    }
+}
+</code></pre>
+
+<pre><code>package test.learn;
+
+public class TypesOfVariables extends Variables {
+    int a, b, c;
+
+    private void method1() {
+        a = 2;
+        b = 3;
+        c = 4;
+        int d = a + b + c;
+        System.out.println(d);
+    }
+
+    private void method2() {
+        a = 4;
+        b = 5;
+        c = 6;
+        int d = a * b * c;
+        System.out.println(d);
+    }
+
+    private void method3() {
+        int d = a + b + c;
+        System.out.println(d);
+    }
+
+    public static void main(String[] args) {
+        TypesOfVariables t = new TypesOfVariables();
+        t.method2();
+        t.method3();
+        t.method1();
+    }
+}
+</code></pre>
+
+<pre><code>package test.learn;
+
+public class TypesOfVariables2 {
+    // These are GLOBAL or INSTANCE variables (accessible throughout the class)
+    int a, b, c, d;
+
+    // This method uses both global and local variables
+    private void method1() {
+        // Assigning values to global variables
+        a = 2;
+        b = 3;
+        c = 4;
+
+        // Local variable (only exists inside this method)
+        int result = a + b + c;
+
+        // Assigning result to global variable 'd'
+        d = result;
+
+        System.out.println("---- Inside method1 ----");
+        System.out.println("Sum using global variables a, b, c: " + result); // 9
+        System.out.println("Value stored in global variable 'd': " + d);
+    }
+
+    private void method2() {
+        // Local variable 'a' (shadows global 'a')
+        int a = 10;
+
+        // Using local 'a' and global b & c
+        b = 3;
+        c = 4;
+        d = a * b * c;
+
+        System.out.println("---- Inside method2 ----");
+        System.out.println("Now, 'a' = "+a+" is local, b = "+b+" is global, c = "+c+" is global");
+        System.out.println("Result (local a * global b * global c): " + d); // 120
+
+        // If you want to print global 'a' specifically:
+        System.out.println("Global variable 'a' is still: " + this.a); // still 2
+    }
+
+    public static void main(String[] args) {
+        TypesOfVariables2 t = new TypesOfVariables2();
+        t.method1();
+        t.method2();
+
+        // Using global variable 'd' in main method
+        System.out.println("---- Inside main ----");
+        System.out.println("Final value of global 'd': " + t.d); // 120
+    }
+}
+</code></pre>
+
+<h1>Static, Final and Non-static Global Variable:</h1>
+
+<h2>Static:</h2>
+<pre><code>public class GoodStudent {
+    static String student = "Ganesh";
+
+    public static void main(String[] args) {
+        GoodStudent gs1 = new GoodStudent();
+        gs1.student = "Alex";
+
+        GoodStudent gs2 = new GoodStudent();
+        gs2.student = "Prem";
+
+        student = "Ramya";
+
+        // What is the output for below statements?
+        System.out.println("Clever Student is: " + gs1.student); // Ramya
+        System.out.println("Clever Student is: " + gs2.student); // Ramya
+        System.out.println("Clever Student is: " + student); // Ramya
+    }
+}
+</code></pre>
+
+<h2>Final:</h2>
+<pre><code>package org.tcs.pack;
+
+public class GoodStudent {
+    final static String student = "Ganesh";
+
+    public static void main(String[] args) {
+        GoodStudent gs1 = new GoodStudent();
+        gs1.student = "Alex";
+
+        GoodStudent gs2 = new GoodStudent();
+        gs2.student = "Prem";
+
+        student = "Ramya";
+
+        // What is the output for below statements?
+        System.out.println("Clever Student is: " + gs1.student); // Ramya
+        System.out.println("Clever Student is: " + gs2.student); // Ramya
+        System.out.println("Clever Student is: " + student); // Ramya
+    }
+}
+</code></pre>
+
+<h2>Non-static Global variable:</h2>
+<pre><code>public class GoodStudent {
+    String student = "Ganesh";
+
+    public static void main(String[] args) {
+        GoodStudent gs1 = new GoodStudent();
+        gs1.student = "Alex";
+
+        GoodStudent gs2 = new GoodStudent();
+        gs2.student = "Prem";
+
+        //student = "Ramya";
+
+        // What is the output for below statements?
+        System.out.println("Clever Student is: " + gs1.student); // Alex
+        System.out.println("Clever Student is: " + gs2.student); // Prem
+        //System.out.println("Clever Student is: " + student); // Ramya
+    }
+}
+</code></pre>
+
+<pre><code>//final variable - cannot change the value
+//final class - Cannot inherit
+//final method - Cannot override
+</code></pre>
+
+<p>Add points for finalize keyword</p>
+
+</body>
+</html>

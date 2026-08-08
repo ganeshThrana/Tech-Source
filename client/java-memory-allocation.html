@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Memory in Java Notes</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1, h2, h3 {
+    color: #1a1a1a;
+  }
+  h2 {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 4px;
+    margin-top: 40px;
+  }
+  pre {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 15px;
+    overflow-x: auto;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: Consolas, "Courier New", monospace;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15px 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  th {
+    background: #4a6fa5;
+    color: #fff;
+  }
+  tr:nth-child(even) {
+    background: #eef2f8;
+  }
+
+  /* Simple diagram styling */
+  .diagram-box {
+    border: 1px solid #999;
+    border-radius: 6px;
+    padding: 20px;
+    margin: 20px 0;
+    background: #fafafa;
+  }
+  .diagram-flex {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .memtable {
+    border-collapse: collapse;
+  }
+  .memtable th, .memtable td {
+    border: 1px solid #333;
+    padding: 6px 16px;
+    text-align: center;
+  }
+  .memtable th {
+    background: #ddd;
+    color: #000;
+  }
+  .label {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .heap-oval {
+    border: 2px solid #333;
+    border-radius: 50%;
+    padding: 15px 25px;
+    display: inline-block;
+    text-align: center;
+  }
+  .gc-note {
+    font-size: 13px;
+    text-align: center;
+    margin-top: 5px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Program 8:</h1>
+<pre><code>package org.tcs.pack;
+
+public class MemoryInJava {
+    int gv = 0;
+
+    private void method1(int a) {
+        int lv1 = 0;
+        int lv2 = 1;
+        int lv3 = 2;
+    }
+
+    public static void main(String[] args) {
+        MemoryInJava mij1 = new MemoryInJava();
+        MemoryInJava mij2 = new MemoryInJava();
+        mij2.method1(8);
+
+        mij2 = new MemoryInJava();
+    }
+}
+</code></pre>
+
+<h2>Memory Diagram (Stack / JVM / Heap)</h2>
+<div class="diagram-box">
+  <div class="diagram-flex">
+
+    <div>
+      <div class="label">method1</div>
+      <table class="memtable">
+        <tr><td>lv1</td><td>0</td></tr>
+        <tr><td>lv2</td><td>1</td></tr>
+        <tr><td>lv3</td><td>2</td></tr>
+      </table>
+      <p style="text-align:center; margin-top:10px;"><strong>Stack</strong><br>(Last in First Out)</p>
+      <div class="label">main</div>
+      <table class="memtable">
+        <tr><td>mij1</td><td>101</td></tr>
+        <tr><td>mij2</td><td>102</td></tr>
+      </table>
+    </div>
+
+    <div style="flex:1; text-align:center;">
+      <p><strong>JVM</strong></p>
+      <p style="margin-top:60px;"><strong>HEAP</strong></p>
+      <div style="display:flex; justify-content:space-around; align-items:flex-start; margin-top:10px;">
+        <div>
+          <div style="border:1px solid #333; padding:10px 20px; border-radius:6px;">mij1</div>
+        </div>
+        <div>
+          <div class="heap-oval">
+            <div style="border:1px solid #333; padding:10px 20px; border-radius:6px;">mij2</div>
+            <div class="gc-note">Eligible for Garbage Collection</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:20px;">
+        <div style="border:1px solid #333; padding:10px 20px; border-radius:6px; display:inline-block;">mij2</div>
+      </div>
+      <p style="margin-top:20px;">gv = 0</p>
+    </div>
+
+  </div>
+  <p style="font-size:13px; color:#555;">
+    <em>mij1 (101) points to the first mij1 object on the heap.<br>
+    mij2 (102) points to the new mij2 object on the heap after reassignment.<br>
+    The original mij2 object is no longer referenced and becomes eligible for Garbage Collection.</em>
+  </p>
+</div>
+
+<h2>Stack vs Heap (Reference Example)</h2>
+<div class="diagram-box">
+  <div class="diagram-flex" style="justify-content:space-between;">
+    <div>
+      <div class="label">Stack</div>
+      <pre style="margin:0;"><code>int x = 10;
+
+s1 --&gt; ------</code></pre>
+    </div>
+    <div>
+      <div class="label">Heap</div>
+      <div style="border:1px solid #333; background:#cfe2ff; padding:15px; border-radius:4px;">
+        [Student object]<br>
+        name = 'Alex'
+      </div>
+    </div>
+  </div>
+  <p style="font-size:13px; color:#555; margin-top:10px;">
+    <em>The primitive variable x = 10 is stored directly on the Stack.<br>
+    The reference s1 is stored on the Stack, but it points to the actual [Student object] stored on the Heap.</em>
+  </p>
+</div>
+
+<h2>Heap vs Stack (Reference / Value / Object / Array)</h2>
+<div class="diagram-box">
+  <p>
+    <strong>The Stack</strong> holds: a <em>reference</em> (pointing to an object), a <em>value</em> (e.g. 32), and another <em>reference</em> (pointing to an array).<br>
+    <strong>The Heap</strong> holds the actual <em>Object</em> and <em>array</em> that the stack references point to.
+  </p>
+</div>
+
+<h2>Heap vs Stack:</h2>
+<table>
+  <tr><th>Heap</th><th>Stack</th></tr>
+  <tr><td><strong>Cost:</strong> More</td><td><strong>Cost:</strong> Less</td></tr>
+  <tr><td><strong>Access Time:</strong> Slower</td><td><strong>Access Time:</strong> Faster</td></tr>
+  <tr><td><strong>Safety:</strong> Not Thread safe, data stored visible to all threads</td><td><strong>Safety:</strong> Thread safe, data stored can only be accessed by the owner Thread</td></tr>
+  <tr><td><strong>Sizing:</strong> Resizing is possible</td><td><strong>Sizing:</strong> Fixed size</td></tr>
+  <tr><td><strong>Data structure:</strong> Hierarchical</td><td><strong>Data structure:</strong> Linear (LIFO)</td></tr>
+  <tr><td><strong>Size:</strong> Larger than stack memory.</td><td><strong>Size:</strong> Small than heap memory.</td></tr>
+  <tr><td><strong>Main Issue:</strong> Memory fragmentation</td><td><strong>Main Issue:</strong> Shortage of memory</td></tr>
+  <tr><td><strong>Allocation Deallocation:</strong> Manual by programmer and Garbage Collector</td><td><strong>Allocation Deallocation:</strong> Automatic by compiler</td></tr>
+</table>
+
+</body>
+</html>

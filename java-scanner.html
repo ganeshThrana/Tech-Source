@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scanner Notes</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1, h2, h3 {
+    color: #1a1a1a;
+  }
+  h2 {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 4px;
+    margin-top: 40px;
+  }
+  pre {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 15px;
+    overflow-x: auto;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: Consolas, "Courier New", monospace;
+  }
+  ul, ol {
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Scanner:</h1>
+<p>Gets user input in console</p>
+<p>Syntax: <code>Scanner sc = new Scanner(System.in);</code></p>
+<p>Syntax: to get the values from the user</p>
+<ul>
+  <li>Byte - <code>nextByte();</code></li>
+  <li>Short - <code>nextShort();</code></li>
+  <li>Int - <code>nextInt();</code></li>
+  <li>Long - <code>nextLong();</code></li>
+  <li>Float - <code>nextFloat();</code></li>
+  <li>Double - <code>nextDouble();</code></li>
+  <li>Char - <code>next().charAt(0);</code></li>
+  <li>String - <code>next();</code></li>
+  <li>String - <code>nextLine();</code></li>
+  <li>Boolean - <code>nextBoolean();</code></li>
+</ul>
+
+<h2>String:</h2>
+<p><code>nextLine()</code> is used to include space<br>
+<code>String s = sc.nextLine();</code></p>
+
+<h2>Program 1:</h2>
+<pre><code>package org.tcs.pack;
+
+import java.util.Scanner;
+
+public class TCS1 {
+    public static void main(String[] args) {
+        //System.out.println("Alex");
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Please enter the Company Name: ");
+        String company = scanner.nextLine();
+
+        System.out.println("Please enter the Age: ");
+        int age = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("Please enter the City Name: ");
+        String city = scanner.nextLine();
+
+        System.out.println("Please enter the Salary: ");
+        float salary = scanner.nextFloat();
+
+        System.out.println("Is he active?");
+        boolean active = scanner.nextBoolean();
+
+        System.out.println("Alex is working in "+company);
+        System.out.println("Alex is "+age+ " years old! and is "+active);
+        System.out.println("Alex is living in "+city+ " and earning "+salary+" LPA");
+    }
+}
+</code></pre>
+
+<h2>Program 2:</h2>
+<pre><code>package org.tcs.pack;
+
+import java.util.Scanner;
+
+public class TCS2 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Please enter first number");
+        int num1 = scanner.nextInt();
+
+        System.out.println("Please enter second number");
+        int num2 = scanner.nextInt();
+
+        System.out.println("Please enter third number");
+        int num3 = scanner.nextInt();
+
+        System.out.println(num1+num2+num3);
+    }
+}
+</code></pre>
+
+</body>
+</html>

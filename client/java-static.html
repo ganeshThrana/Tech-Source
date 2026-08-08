@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Static Keyword Notes</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1, h2, h3 {
+    color: #1a1a1a;
+  }
+  h2 {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 4px;
+    margin-top: 40px;
+  }
+  pre {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 15px;
+    overflow-x: auto;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    white-space: pre-wrap;
+  }
+  code {
+    font-family: Consolas, "Courier New", monospace;
+  }
+</style>
+</head>
+<body>
+
+<h1>Static Method and Static Block:</h1>
+<pre><code>package test.learn;
+
+public class StaticClass {
+    private static void staticMethod() {
+        System.out.println("This is Method1");
+    }
+
+    private void nonStaticMethod() {
+        System.out.println("This is Method2");
+    }
+
+    static {
+        System.out.println("This is a static block2"); // This runs first
+    }
+
+    public static void main(String[] args) {
+        StaticClass.staticMethod();
+        StaticClass staticClass = new StaticClass();
+        staticClass.nonStaticMethod();
+    }
+
+    static {
+        System.out.println("This is a static block"); // This runs before main, then main method runs
+    }
+}
+</code></pre>
+
+<h2>Static Variables:</h2>
+<pre><code>package test.learn;
+
+public class StaticVariables {
+    String name;
+    int salary;
+    static String location;
+
+    public static void main(String[] args) {
+        StaticVariables obj1 = new StaticVariables();
+        obj1.name="Alex";
+        obj1.salary=1000;
+        location="Salem";
+
+        StaticVariables obj2 = new StaticVariables();
+        obj2.name="Ramya";
+        obj2.salary=2000;
+        location="Chennai";
+
+        StaticVariables obj3 = new StaticVariables();
+        obj3.name="Prem";
+        obj3.salary=3000;
+        location="Bangalore";
+
+        System.out.println(obj1.name);
+        System.out.println(obj1.salary);
+        System.out.println(location);
+
+        System.out.println(obj2.name);
+        System.out.println(obj2.salary);
+        System.out.println(location);
+
+        System.out.println(obj3.name);
+        System.out.println(obj3.salary);
+        System.out.println(location);
+    }
+}
+</code></pre>
+
+<h2>Program 12:</h2>
+<pre><code>package org.tcs.pack;
+
+public class StaticKeyword {
+    static int gst = 15; //Static variable belongs to class //21
+    static String cm = "Stalin";
+
+    private void method2() {
+        int price = 100;
+        price = 200;
+        price = 300;
+        price = 1000;
+        System.out.println(price);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(cm);
+        System.out.println(gst);
+
+        StaticKeyword tn = new StaticKeyword();
+        tn.gst = 18;
+
+        StaticKeyword kl = new StaticKeyword();
+        kl.gst = 20;
+        kl.gst = 21;
+        kl.cm = "Ajith";
+        cm = "Rajini";
+
+        System.out.println(tn.gst);
+        System.out.println(kl.gst);
+        System.out.println(tn.cm);
+        System.out.println(kl.cm);
+    }
+}
+</code></pre>
+
+</body>
+</html>

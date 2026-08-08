@@ -2,503 +2,378 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Java OOPS Foundation Notes</title>
+<title>OOPS Notes</title>
 <style>
-  :root{
-    --bg:#f6f5f2;
-    --ink:#22252a;
-    --sub:#5a5f68;
-    --accent:#3b6ea5;
-    --accent2:#b5533c;
-    --code-bg:#1e2126;
-    --code-ink:#e6e6e6;
-    --card:#ffffff;
-    --border:#e2e0da;
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+    line-height: 1.6;
+    color: #222;
   }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family:"Georgia","Times New Roman",serif;
-    line-height:1.6;
+  h1, h2, h3 {
+    color: #1a1a1a;
   }
-  .wrap{
-    max-width:880px;
-    margin:0 auto;
-    padding:48px 24px 100px;
+  h2 {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 4px;
+    margin-top: 40px;
   }
-  h1{
-    font-size:2.2rem;
-    margin-bottom:4px;
-    letter-spacing:0.5px;
+  pre {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 15px;
+    overflow-x: auto;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    white-space: pre-wrap;
   }
-  .subtitle{
-    color:var(--sub);
-    font-family:Arial, sans-serif;
-    font-size:0.95rem;
-    margin-bottom:36px;
+  code {
+    font-family: Consolas, "Courier New", monospace;
   }
-  h2{
-    font-size:1.4rem;
-    margin-top:48px;
-    padding-bottom:8px;
-    border-bottom:2px solid var(--accent2);
-    display:inline-block;
+  ul {
+    margin-top: 4px;
   }
-  h3{
-    font-family:Arial, sans-serif;
-    font-size:1.05rem;
-    color:var(--accent);
-    margin-top:28px;
-    text-transform:uppercase;
-    letter-spacing:1px;
-  }
-  p{margin:10px 0;}
-  ul{padding-left:22px;}
-  li{margin:6px 0;}
-  .card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:20px 24px;
-    margin:18px 0;
-  }
-  .grid2{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:16px;
-  }
-  @media (max-width:640px){
-    .grid2{grid-template-columns:1fr;}
-  }
-  .pillar{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-left:4px solid var(--accent);
-    border-radius:6px;
-    padding:12px 16px;
-    font-family:Arial, sans-serif;
-  }
-  .pillar b{color:var(--accent2);}
-  ol.steps{padding-left:20px;}
-  ol.steps li{margin:8px 0;}
-  .tree{
-    font-family:"Consolas","Menlo",monospace;
-    background:var(--code-bg);
-    color:var(--code-ink);
-    padding:18px 22px;
-    border-radius:8px;
-    font-size:0.9rem;
-    line-height:1.7;
-    white-space:pre;
-    overflow-x:auto;
-  }
-  pre{
-    background:var(--code-bg);
-    color:var(--code-ink);
-    padding:18px 20px;
-    border-radius:8px;
-    overflow-x:auto;
-    font-family:"Consolas","Menlo",monospace;
-    font-size:0.88rem;
-    line-height:1.5;
-    margin:16px 0;
-  }
-  .kw{color:#e07b53;}
-  .type{color:#63a4d8;}
-  .str{color:#9fca6b;}
-  .cmt{color:#7d8590;font-style:italic;}
-  .num{color:#d19a66;}
-  table{
-    border-collapse:collapse;
-    width:100%;
-    font-family:Arial, sans-serif;
-    font-size:0.92rem;
-    margin:14px 0;
-  }
-  th,td{
-    border:1px solid var(--border);
-    padding:8px 14px;
-    text-align:left;
-  }
-  th{
-    background:#efece5;
-    color:var(--ink);
-  }
-  .badge{
-    display:inline-block;
-    font-family:Arial, sans-serif;
-    font-size:0.75rem;
-    padding:3px 10px;
-    border-radius:12px;
-    margin-left:10px;
-    vertical-align:middle;
-    background:#dce9f7;
-    color:var(--accent);
-  }
-  hr{
-    border:none;
-    border-top:1px solid var(--border);
-    margin:40px 0;
-  }
-  .shortcuts{
-    font-family:Arial, sans-serif;
-  }
-  .shortcuts li{
-    margin:6px 0;
-  }
-  kbd{
-    background:#efece5;
-    border:1px solid var(--border);
-    border-radius:4px;
-    padding:2px 6px;
-    font-family:"Consolas","Menlo",monospace;
-    font-size:0.85rem;
+  .tree {
+    font-family: Consolas, "Courier New", monospace;
+    background: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
   }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <h1>Java OOPS Foundation</h1>
-  <div class="subtitle">Study notes — Core Concepts, Project Structure &amp; Practice Programs</div>
+<h1>Foundation of OOPS</h1>
+<ol>
+  <li><strong>Object</strong> - Object is an Instance of a class</li>
+  <li><strong>Method</strong> - A method is a block of code that does a specific task.</li>
+  <li><strong>Class</strong> - Collection of Methods, Variables and Objects (Blueprint)</li>
+</ol>
 
-  <h2>Foundation of OOPS</h2>
-  <div class="card">
-    <ul>
-      <li><strong>Object</strong> — An instance of a class</li>
-      <li><strong>Method</strong> — A block of code that does a specific task</li>
-      <li><strong>Class</strong> — Collection of methods, variables and objects (the blueprint)</li>
-    </ul>
-  </div>
+<h2>Pillars of OOPS</h2>
+<ol>
+  <li>Inheritance</li>
+  <li>Abstraction (Inheritance+Polymorphism)</li>
+  <li>Polymorphism</li>
+  <li>Encapsulation</li>
+</ol>
 
-  <h2>Pillars of OOPS</h2>
-  <div class="grid2">
-    <div class="pillar"><b>1. Inheritance</b></div>
-    <div class="pillar"><b>2. Abstraction</b> (Inheritance + Polymorphism)</div>
-    <div class="pillar"><b>3. Polymorphism</b></div>
-    <div class="pillar"><b>4. Encapsulation</b></div>
-  </div>
+<h1>Java Project Hierarchy</h1>
+<p>Project &gt; Packages &gt; Class &gt; Method &gt; Code</p>
 
-  <h2>Java Project Hierarchy</h2>
-  <div class="card">
-    <p style="font-family:Arial, sans-serif; font-weight:bold;">Project &gt; Packages &gt; Class &gt; Method &gt; Code</p>
+<h2>1. Project - TataConsultancyServices - Pascal Notation</h2>
+<p>A Project is like a big folder that contains everything you need to build an application.</p>
+<p>🛠 In coding:</p>
+<ul>
+  <li>It has all your code, libraries, config files, and resources.</li>
+  <li>Example: A project named SeleniumTests might contain all your test cases, dependencies (like Selenium), and reports.</li>
+</ul>
 
-    <table>
-      <tr><th>Level</th><th>Example</th><th>Notation</th></tr>
-      <tr><td>Project</td><td>TataConsultancyServices</td><td>Pascal</td></tr>
-      <tr><td>Package</td><td>tata.consultancy.services</td><td>Camel</td></tr>
-      <tr><td>Class</td><td>TataConsultancyServices</td><td>Pascal</td></tr>
-      <tr><td>Method</td><td>tataConsultancyServices()</td><td>Camel</td></tr>
-    </table>
+<h2>2. Package - tata.consultancy.services - Camel Notation</h2>
+<p>A Package is like a small folder inside the project that helps organize your code.<br>
+Contains similar classes.</p>
+<p>🧠 Why it's useful:</p>
+<ul>
+  <li>Keeps your code organized</li>
+  <li>Avoids name conflicts</li>
+  <li>Helps in reusing code</li>
+</ul>
 
-    <h3>Project — a big folder for the whole application</h3>
-    <ul>
-      <li>Contains all your code, libraries, config files, and resources</li>
-      <li>Example: a project named <code>SeleniumTests</code> might contain all test cases, dependencies (like Selenium), and reports</li>
-    </ul>
+<h2>3. Class - TataConsultancyServices - Pascal Notation</h2>
+<p>A Class is like a blueprint to create something (usually objects).</p>
+<p>🧱 In Java:</p>
+<ul>
+  <li>A class contains variables and methods</li>
+  <li>You use it to define behavior or logic</li>
+</ul>
 
-    <h3>Package — a smaller folder that organizes code</h3>
-    <ul>
-      <li>Groups similar classes together</li>
-      <li>Keeps code organized</li>
-      <li>Avoids name conflicts</li>
-      <li>Helps in reusing code</li>
-    </ul>
+<h2>4. Method - tataConsultancyServices - Camel Notation</h2>
+<p>A Method is like a task or function inside a class. It tells Java what to do.</p>
+<p>💬 In Java:</p>
+<ul>
+  <li>A method is a block of code that performs a specific action</li>
+  <li>You can call it whenever you need that action</li>
+</ul>
 
-    <h3>Class — a blueprint for creating objects</h3>
-    <ul>
-      <li>Contains variables and methods</li>
-      <li>Used to define behavior or logic</li>
-    </ul>
+<div class="tree">
+Project: "ChennaiIndia"<br>
+└── Package: "dlfCyberCIty"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── Class: "TataConsultancyServices"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── Method: "premKumar()"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── Method: "ramya()"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── Class: "EY" (Earnst&amp;Young)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── Method: "alexPraba()"
+</div>
 
-    <h3>Method — a task or function inside a class</h3>
-    <ul>
-      <li>A block of code that performs a specific action</li>
-      <li>Can be called whenever that action is needed</li>
-    </ul>
-  </div>
+<h2>Notations</h2>
+<ol>
+  <li><strong>Pascal</strong> - Project, Class, etc - First letter of all the combined words should be in capital</li>
+  <li><strong>Camel</strong> - package, method, variable, etc - first letter should be small letter</li>
+</ol>
 
-  <h3>Example Structure</h3>
-  <div class="tree">Project: "ChennaiIndia"
-└── Package: "dlfCyberCIty"
-    └── Class: "TataConsultancyServices"
-        └── Method: "premKumar()"
-        └── Method: "ramya()"
-    └── Class: "EY" (Earnst&amp;Young)
-        └── Method: "alexPraba()"</div>
+<h1>What is Compile?</h1>
+<p>- Convert to byte code as system understands</p>
 
-  <h2>Notations</h2>
-  <div class="card">
-    <table>
-      <tr><th>Notation</th><th>Used for</th><th>Rule</th></tr>
-      <tr><td>Pascal</td><td>Project, Class, etc.</td><td>First letter of every combined word is capital</td></tr>
-      <tr><td>Camel</td><td>Package, method, variable, etc.</td><td>First letter is lowercase</td></tr>
-    </table>
-  </div>
+<h1>What is running?</h1>
+<p>- Convert and Run Java understandable code</p>
 
-  <h2>Compile vs Run</h2>
-  <div class="card">
-    <table>
-      <tr><th>Term</th><th>Meaning</th></tr>
-      <tr><td>Compile</td><td>Convert code to byte code so the system understands it (Compile Time — during coding)</td></tr>
-      <tr><td>Run</td><td>Convert and run Java-understandable code (Run Time — while the program executes)</td></tr>
-    </table>
-  </div>
+<p><strong>Compile Time</strong> - During the process of coding<br>
+<strong>Run Time</strong> - At the run time of the program</p>
 
-  <h2>Eclipse Shortcuts</h2>
-  <div class="card shortcuts">
-    <ul>
-      <li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> — Align / format the code</li>
-      <li><kbd>Ctrl</kbd> + <kbd>Space</kbd> — Auto-complete method names, variables, classes, etc.</li>
-      <li><kbd>Ctrl</kbd> + <kbd>2</kbd>, then <kbd>L</kbd> — Get / assign a return type for any value</li>
-      <li><kbd>Ctrl</kbd> + Click — Navigate through the project</li>
-    </ul>
-  </div>
+<h2>Shortcuts</h2>
+<p>Align the code in Eclipse: <code>ctrl+shift+f</code><br>
+To take returntype: <code>ctrl+2</code>, then <code>L</code></p>
 
-  <div class="card">
-    <p><strong>Facts:</strong></p>
-    <ul>
-      <li><code>println</code> — prints and moves to the next line</li>
-      <li><code>print</code> — prints and stays on the same line</li>
-    </ul>
-  </div>
+<h2>Short Cuts</h2>
+<ol>
+  <li><strong>Ctrl+space</strong> - Auto-filling method names, variables, classes, etc</li>
+  <li><strong>Ctrl+2 and L</strong> - Get return type for any value</li>
+  <li><strong>Ctrl+click</strong> - Navigation through the project</li>
+</ol>
 
-  <hr>
+<h1>Simple Variable, Class, Method, Object, Package and Project Creation</h1>
 
-  <h2>Program 1 <span class="badge">Variables &amp; Data Types</span></h2>
-  <h3>DataTypes.java</h3>
-  <pre><span class="kw">package</span> test.learn;
+<h2>Program 1:</h2>
+<pre><code>package test.learn;
 
-<span class="kw">public class</span> <span class="type">DataTypes</span> {
+public class DataTypes {
+    // String is a non-primitive datatype
+    // mostly used
+    String name = "Alex Praba"; // Collection of characters
+    int age = 22;
+    String gender = "Male";
+    boolean educationCompleted = true;
+    // String name2 = "Prem";
+    // Integer age2 = 21;
+    // Boolean b=false;
+    // rarely used
+    byte experience = 4;
+    short height = 176;
+    long phone = 9876543212l;
+    float temp = 96.4f;
+    double d = 34567.6543;
+    char c = 'A';
 
-    <span class="cmt">// String is a non-primitive datatype, mostly used</span>
-    <span class="type">String</span> name = <span class="str">"Alex Praba"</span>; <span class="cmt">// Collection of characters</span>
-    <span class="kw">int</span> age = <span class="num">22</span>;
-    <span class="type">String</span> gender = <span class="str">"Male"</span>;
-    <span class="kw">boolean</span> educationCompleted = <span class="kw">true</span>;
-
-    <span class="cmt">// rarely used</span>
-    <span class="kw">byte</span> experience = <span class="num">4</span>;
-    <span class="kw">short</span> height = <span class="num">176</span>;
-    <span class="kw">long</span> phone = <span class="num">9876543212l</span>;
-    <span class="kw">float</span> temp = <span class="num">96.4f</span>;
-    <span class="kw">double</span> d = <span class="num">34567.6543</span>;
-    <span class="kw">char</span> c = <span class="str">'A'</span>;
-
-    <span class="kw">public void</span> heightFunction() {
-        <span class="cmt">//Alex Praba's height is 176</span>
-        System.out.println(name+<span class="str">"'s height is "</span>+height);
+    public void heightFunction() {
+        //Alex Praba's height is 176
+        System.out.println(name+"'s height is "+height);
     }
 
-    <span class="kw">public void</span> personalDetails() {
-        <span class="cmt">// Alex Praba whose age is 22 and gender is male, has the temperature of 96.4%</span>
-        System.out.println(name + <span class="str">" whose age is "</span> + age + <span class="str">" and gender is "</span> + gender
-            + <span class="str">"male, has the temperature of "</span> + temp + <span class="str">"%"</span>);
+    public void personalDetails() {
+        // Alex Praba whose age is 22 and gender is male, has the temperature of 96.4%
+        System.out.println(name + " whose age is " + age + " and gender is " + gender + "male, has the temperature of "
+                + temp + "%");
     }
 
-    <span class="kw">public static void</span> main(<span class="type">String</span>[] args) {
-        <span class="cmt">//ClassName objectName = new ClassName();</span>
-        DataTypes on = <span class="kw">new</span> DataTypes();
+    public static void main(String[] args) {
+        //ClassName objectName = new ClassName();
+        DataTypes on = new DataTypes();
+        //on.personalDetails();heightFunction
         on.heightFunction();
     }
-}</pre>
+}
+</code></pre>
 
-  <h2>Program 2 <span class="badge">Methods &amp; Objects</span></h2>
-  <h3>Test.java</h3>
-  <pre><span class="kw">package</span> test.learn;
+<h2>Program 2: Methods and Object</h2>
+<pre><code>package test.learn;
 
-<span class="kw">public class</span> <span class="type">Test</span> {
+public class Test {
+    String str = "Alex";
+    int mark = 60;
+    long phone = 9876543211l;
 
-    <span class="type">String</span> str = <span class="str">"Alex"</span>;
-    <span class="kw">int</span> mark = <span class="num">60</span>;
-    <span class="kw">long</span> phone = <span class="num">9876543211l</span>;
-
-    <span class="kw">public void</span> Studentname() {
-        System.out.println(<span class="str">"Alex"</span>);
+    public void Studentname() {
+        System.out.println("Alex");
     }
 
-    <span class="kw">public void</span> studentList() {
+    public void studentList() {
         System.out.println();
     }
 
-    <span class="kw">public void</span> StudentMark() {
-        System.out.println(<span class="str">"60"</span>);
+    public void StudentMark() {
+        System.out.println("60");
     }
 
-    <span class="kw">public void</span> StudentAddress() {
-        System.out.println(<span class="str">"Chennai"</span>);
+    public void StudentAddress() {
+        System.out.println("Chennai");
     }
 
-    <span class="kw">public void</span> combined() {
-        System.out.println(str+<span class="str">" got "</span>+mark+<span class="str">" marks and his phone number is "</span>+phone);
+    public void combined() {
+        System.out.println(str+" got "+mark+" marks and his phone number is "+phone);
     }
 
-    <span class="kw">public static void</span> main(<span class="type">String</span>[] arg) {
-        Test info = <span class="kw">new</span> Test();
+    public static void main(String[] arg) {
+        Test info = new Test();
         info.combined();
     }
-}</pre>
+}
+</code></pre>
 
-  <h2>Parameterized Methods</h2>
-  <h3>ParameterizedMethods.java</h3>
-  <pre><span class="kw">package</span> polymorphism;
+<h2>Parameterized Methods:</h2>
+<pre><code>package polymorphism;
 
-<span class="kw">public class</span> <span class="type">ParameterizedMethods</span> {
-
-    <span class="kw">public void</span> employee(<span class="type">String</span> name, <span class="kw">int</span> age, <span class="kw">float</span> exp) {
-        <span class="cmt">//Ramya has been hired who is 20 years old 0.5 years of experience</span>
-        System.out.println(name+<span class="str">" has been hired who is "</span>+age+<span class="str">" years old "</span>+exp+<span class="str">" years of experience"</span>);
+public class ParameterizedMethods {
+    public void employee(String name, int age, float exp) {
+        //Ramya has been hired who is 20 years old 0.5 years of experience
+        System.out.println(name+" has been hired who is "+age+" years old "+exp+" years of experience");
     }
 
-    <span class="kw">public void</span> activeFunction(<span class="type">String</span> name, <span class="kw">boolean</span> active) {
-        <span class="cmt">//Is Alex an active employee? false</span>
-        System.out.println(<span class="str">"Is "</span>+name+<span class="str">" an active employee? "</span>+active);
+    public void activeFunction(String name, boolean active) {
+        //Is Alex an active employee? false
+        System.out.println("Is "+name+" an active employee? "+active);
     }
 
-    <span class="kw">public static void</span> main(<span class="type">String</span>[] args) {
-        ParameterizedMethods obj = <span class="kw">new</span> ParameterizedMethods();
-        obj.employee(<span class="str">"Ramya"</span>, <span class="num">20</span>, <span class="num">0.5f</span>);
-        obj.employee(<span class="str">"Alex"</span>, <span class="num">22</span>, <span class="num">1.5f</span>);
-        obj.employee(<span class="str">"Prem"</span>, <span class="num">23</span>, <span class="num">2.2f</span>);
-        obj.activeFunction(<span class="str">"Alex"</span>, <span class="kw">false</span>);
+    public static void main(String[] args) {
+        ParameterizedMethods obj = new ParameterizedMethods();
+        obj.employee("Ramya", 20, 0.5f);
+        obj.employee("Alex", 22, 1.5f);
+        obj.employee("Prem", 23, 2.2f);
+        obj.activeFunction("Alex", false);
     }
-}</pre>
+}
+</code></pre>
 
-  <h2>Return Type</h2>
-  <h3>ReturnType.java</h3>
-  <pre><span class="kw">package</span> polymorphism;
+<h2>Return Type:</h2>
+<pre><code>package polymorphism;
 
-<span class="kw">public class</span> <span class="type">ReturnType</span> {
+public class ReturnType {
+    // int alex = 750;
+    // int ramya = 1500;
+    // int prem = 750;
 
-    <span class="kw">private int</span> alexAmount(<span class="kw">int</span> alex) {
-        <span class="kw">return</span> alex;
-    }
-
-    <span class="kw">private int</span> ramyaAmount(<span class="kw">int</span> ramya) {
-        <span class="kw">return</span> ramya;
-    }
-
-    <span class="kw">private int</span> premAmount(<span class="kw">int</span> prem) {
-        <span class="kw">return</span> prem;
+    private int alexAmount(int alex) {
+        return alex;
     }
 
-    <span class="kw">public static void</span> main(<span class="type">String</span>[] args) {
-        ReturnType obj = <span class="kw">new</span> ReturnType();
-        <span class="kw">int</span> alexAmountSent = obj.alexAmount(<span class="num">750</span>);
-        <span class="kw">int</span> ramyaAmountSent = obj.ramyaAmount(<span class="num">1500</span>);
-        <span class="kw">int</span> premAmountSent = obj.premAmount(<span class="num">750</span>);
+    private int ramyaAmount(int ramya) {
+        return ramya;
+    }
 
-        <span class="kw">int</span> total = alexAmountSent + ramyaAmountSent + premAmountSent;
+    private int premAmount(int prem) {
+        return prem;
+    }
+
+    public static void main(String[] args) {
+        ReturnType obj = new ReturnType();
+        int alexAmountSent = obj.alexAmount(750);
+        int ramyaAmountSent = obj.ramyaAmount(1500);
+        int premAmountSent = obj.premAmount(750);
+
+        int total = alexAmountSent + ramyaAmountSent + premAmountSent;
         System.out.println(total);
     }
-}</pre>
+}
+</code></pre>
 
-  <h2>Grouping Methods</h2>
-  <h3>StaticVariables.java</h3>
-  <pre><span class="kw">package</span> test.learn;
+<h2>Grouping Methods:</h2>
+<pre><code>package test.learn;
 
-<span class="kw">public class</span> <span class="type">StaticVariables</span> {
-
-    <span class="kw">private void</span> nameMethod() {
-        System.out.println(<span class="str">"My name is Alex"</span>);
+public class StaticVariables {
+    private void nameMethod() {
+        System.out.println("My name is Alex");
     }
 
-    <span class="kw">private void</span> salaryMethod() {
-        System.out.println(<span class="str">"My salary is 2000"</span>);
+    private void salaryMethod() {
+        System.out.println("My salary is 2000");
     }
 
-    <span class="kw">private void</span> cityMethod() {
-        System.out.println(<span class="str">"I am in Chennai"</span>);
+    private void cityMethod() {
+        System.out.println("I am in Chennai");
     }
 
-    <span class="kw">private void</span> climate() {
-        System.out.println(<span class="str">"Chennai is so Cool today"</span>);
+    private void climate() {
+        System.out.println("Chennai is so Cool today");
     }
 
-    <span class="kw">private void</span> prediction() {
-        System.out.println(<span class="str">"Rain is expected tomorrow"</span>);
+    private void prediction() {
+        System.out.println("Rain is expected tomorrow");
     }
 
-    <span class="kw">private void</span> personalDetails() {
-        <span class="kw">this</span>.nameMethod();
-        <span class="kw">this</span>.cityMethod();
-        <span class="kw">this</span>.salaryMethod();
+    private void personalDetails() {
+        this.nameMethod();
+        this.cityMethod();
+        this.salaryMethod();
     }
 
-    <span class="kw">private void</span> commonData() {
-        <span class="kw">this</span>.climate();
-        <span class="kw">this</span>.prediction();
+    private void commonData() {
+        this.climate();
+        this.prediction();
     }
 
-    <span class="kw">public static void</span> main(<span class="type">String</span>[] args) {
-        StaticVariables obj = <span class="kw">new</span> StaticVariables();
+    public static void main(String[] args) {
+        StaticVariables obj = new StaticVariables();
         obj.personalDetails();
         obj.commonData();
     }
-}</pre>
+}
+</code></pre>
 
-  <h2>Program 3 <span class="badge">Method Calling</span></h2>
-  <h3>MethodCalling.java</h3>
-  <pre><span class="kw">package</span> org.tcs.pack;
+<h2>Facts</h2>
+<p>Println - print in next line<br>
+Print - print in same line</p>
 
-<span class="kw">public class</span> <span class="type">MethodCalling</span> {
+<h2>Program 3:</h2>
+<pre><code>package org.tcs.pack;
 
-    <span class="kw">private void</span> cooking() {
-        <span class="kw">this</span>.buyingGroceries();
-        <span class="kw">this</span>.washingUtensils();
-        System.out.println(<span class="str">"Cooking is completed"</span>);
+public class MethodCalling {
+    private void cooking() {
+        this.buyingGroceries();
+        this.washingUtensils();
+        System.out.println("Cooking is completed");
     }
 
-    <span class="kw">private void</span> washingUtensils() {
-        System.out.println(<span class="str">"Wash"</span>);
+    private void washingUtensils() {
+        System.out.println("Wash");
     }
 
-    <span class="kw">private void</span> buyingGroceries() {
-        System.out.println(<span class="str">"Buy"</span>);
+    private void buyingGroceries() {
+        System.out.println("Buy");
     }
 
-    <span class="kw">private void</span> travelling() {
-        <span class="kw">this</span>.packingThings();
-        System.out.println(<span class="str">"Travel good!"</span>);
+    private void travelling() {
+        this.packingThings();
+        System.out.println("Travel good!");
     }
 
-    <span class="kw">private void</span> packingThings() {
-        System.out.println(<span class="str">"Pack"</span>);
+    private void packingThings() {
+        System.out.println("Pack");
     }
 
-    <span class="kw">public static void</span> main(<span class="type">String</span>[] args) {
-        MethodCalling mc = <span class="kw">new</span> MethodCalling();
+    public static void main(String[] args) {
+        MethodCalling mc = new MethodCalling();
         mc.cooking();
         mc.travelling();
     }
-}</pre>
+}
+</code></pre>
 
-  <h2>Program 4 <span class="badge">Return Keyword</span></h2>
-  <h3>ReturnKeyword.java</h3>
-  <pre><span class="kw">package</span> org.tcs.pack;
+<h2>Program 4:</h2>
+<pre><code>package org.tcs.pack;
 
-<span class="kw">public class</span> <span class="type">ReturnKeyword</span> {
-
-    <span class="kw">private int</span> addTwoNumbers() {
-        <span class="kw">int</span> a = <span class="num">2</span>;
-        <span class="kw">int</span> b = <span class="num">3</span>;
-        <span class="kw">int</span> c = a + b;
-        <span class="kw">return</span> c;
+public class ReturnKeyword {
+    private int addTwoNumbers() {
+        int a = 2;
+        int b = 3;
+        int c = a + b;
+        //System.out.println(c);
+        return c;
     }
 
-    <span class="kw">public static void</span> main(<span class="type">String</span>[] args) {
-        ReturnKeyword rk = <span class="kw">new</span> ReturnKeyword();
-        <span class="kw">int</span> add = rk.addTwoNumbers();
-        <span class="kw">int</span> d = <span class="num">6</span>;
+    public static void main(String[] args) {
+        ReturnKeyword rk = new ReturnKeyword();
+        int add = rk.addTwoNumbers();
+        int d = 6;
         System.out.println(d+add);
     }
 
-    <span class="cmt">//Pre defined
-    //User defined</span>
-}</pre>
+    //PRe defined
+    //User defined
+}
+</code></pre>
 
-</div>
 </body>
 </html>
